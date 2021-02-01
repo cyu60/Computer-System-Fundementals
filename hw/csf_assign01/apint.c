@@ -44,8 +44,6 @@ ApInt *apint_create_from_hex(const char *hex) {
 }
 
 void apint_destroy(ApInt *ap) {
-	/* TODO: implement */
-	// assert(0);
 	// printf("free: %lu\n", ap->data[0]);
 	// free(ap->data);
 	free(ap);
@@ -66,8 +64,7 @@ int apint_is_negative(const ApInt *ap) {
 uint64_t apint_get_bits(const ApInt *ap, unsigned n) {
 	/* TODO: implement */
 	return ap->data[n];
-	// Need to implement for large bits!
-	
+	// Need to implement for large bits!	
 }
 
 int apint_highest_bit_set(const ApInt *ap) {
@@ -126,34 +123,28 @@ char *apint_format_as_hex(const ApInt *ap) {
 }
 
 ApInt *apint_negate(const ApInt *ap) {
-	/* TODO: implement */
-	// assert(0);
-	ApInt * neg_val = malloc(sizeof(ApInt) + ap->len*sizeof(uint64_t));
-	// uint64_t * neg_data = malloc(sizeof(uint64_t));
-	// if (!apint_is_zero(ap)) {
-		neg_val->flags = ap->flags == 0 ? 1 : 0;
-	// }
-	// TODO: Need to change the vals?
-	neg_val->len = ap->len;
-	neg_val->data[0] = ap->data[0];
-	// neg_data[0] = ap->data[0];
-	// neg_val->data = neg_data;
 
+	ApInt * neg_val = malloc(sizeof(ApInt) + ap->len * sizeof(uint64_t));
+	neg_val->len = ap->len;
+	// TODO: Need to change the vals?
+	neg_val->data[0] = ap->data[0];
+
+	if (apint_is_zero(ap)) {
+		neg_val->flags = 0;
+		return neg_val;
+	}
+	
 	// printf("org data: %lu\n", ap->data[0]);
 	// printf("new data (saved): %lu\n", *neg_val->data);
-	
+	neg_val->flags = ap->flags == 0 ? 1 : 0;	
 	return neg_val;
 }
 
 ApInt *apint_add(const ApInt *a, const ApInt *b) {
-	/* TODO: implement */
+
 	// printf("\ndata: %lu, %lu", a->data[0], b->data[0]);
 	// Allocate space
 	ApInt * result = malloc(sizeof(ApInt) + sizeof(uint64_t));
-	// uint64_t * result_data = malloc(sizeof(uint64_t));
-	
-	// unint64_t abs_a = a->data[0];
-	// unint64_t abs_b = b->data[0];
 	
 	// Same sign
 	if (apint_is_negative(a) == apint_is_negative(b)) {
@@ -199,9 +190,11 @@ int apint_compare(const ApInt *left, const ApInt *right) {
 		return right->flags - left->flags;
 	}
 	// cmp len - TODO
+	// Careful of flip between neg and non-neg
 	// cmp ints - u64
 	if (left->data[0] != right->data[0]) {
-		int compareResult = left->data[0] > right->data[0];
+		// Check needs to be flipped if
+		int compareResult = apint_is_negative(left) ? left->data[0] < right->data[0] : left->data[0] > right->data[0];
 		// printf("\ncompare res: %i\n", compareResult == 0 ? -1 : 1);
 		return compareResult == 0 ? -1 : 1;
 	}
