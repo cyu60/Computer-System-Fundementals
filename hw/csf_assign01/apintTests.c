@@ -24,6 +24,7 @@ typedef struct {
 	ApInt *max1;
 	ApInt *minus1;
 	/* TODO: add additional fields of test fixture */
+	ApInt *_ap110660361;
 } TestObjs;
 
 TestObjs *setup(void);
@@ -38,6 +39,7 @@ void testAdd(TestObjs *objs);
 void testSub(TestObjs *objs);
 /* TODO: add more test function prototypes */
 void testApInt_is_negative(TestObjs *objs);
+void testNull(TestObjs *objs);
 
 int main(int argc, char **argv) {
 	TEST_INIT();
@@ -59,6 +61,7 @@ int main(int argc, char **argv) {
 	TEST(testSub);
 	/* TODO: use TEST macro to execute more test functions */
 	TEST(testApInt_is_negative);
+	TEST(testNull);
 
 	TEST_FINI();
 }
@@ -71,6 +74,11 @@ TestObjs *setup(void) {
 	objs->max1 = apint_create_from_u64(0xFFFFFFFFFFFFFFFFUL);
 	objs->minus1 = apint_negate(objs->ap1);
 	/* TODO: initialize additional members of test fixture */
+	objs->_ap110660361 = apint_negate(objs->ap110660361);
+	// int testInt = 1;
+	// objs->testInt_should_fail = apint_create_from_u64(testInt);
+
+
 
 	return objs;
 }
@@ -82,14 +90,30 @@ void cleanup(TestObjs *objs) {
 	apint_destroy(objs->max1);
 	apint_destroy(objs->minus1); // ISSUE?
 	/* TODO: destroy additional members of test fixture */
+	apint_destroy(objs->_ap110660361);
 
 	free(objs);
+}
+
+void testNull(TestObjs *objs) {
+	ApInt * nullptr;
+	// try {
+		// apint_get_bits(nullptr, 0);
+	// } catch {
+
+	// }
+	// ASSERT(0UL == apint_get_bits(objs->ap0, 0));
+	// ASSERT(1UL == apint_get_bits(objs->ap1, 0));
+	// ASSERT(110660361UL == apint_get_bits(objs->ap110660361, 0));
+	// ASSERT(0xFFFFFFFFFFFFFFFFUL == apint_get_bits(objs->max1, 0));
+	// ASSERT(0xFFFFFFFFFFFFFFFFUL == apint_get_bits(objs->max1, 0));
 }
 
 void testCreateFromU64(TestObjs *objs) {
 	ASSERT(0UL == apint_get_bits(objs->ap0, 0));
 	ASSERT(1UL == apint_get_bits(objs->ap1, 0));
 	ASSERT(110660361UL == apint_get_bits(objs->ap110660361, 0));
+	ASSERT(0xFFFFFFFFFFFFFFFFUL == apint_get_bits(objs->max1, 0));
 	ASSERT(0xFFFFFFFFFFFFFFFFUL == apint_get_bits(objs->max1, 0));
 }
 

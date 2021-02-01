@@ -20,8 +20,8 @@ typedef struct {
 	/* TODO: add fields */
 	uint32_t len;   /* number of data values */
 	uint32_t flags; /* flags (currently, just sign bit) 1 (neg) vs 0 (pos) */
-	uint64_t *data; /* data values */
-	// How is this data an array? Linked list?
+	uint64_t data[]; /* data values */
+	// uint64_t *data; /* data values */
 } ApInt;
 
 /* Constructors and destructors */
