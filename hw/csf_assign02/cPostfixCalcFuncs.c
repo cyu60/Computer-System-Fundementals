@@ -124,6 +124,7 @@ const char *consumeInt(const char *s, long *pval) {
   int cur = 0;
   do {
     pval[cur] = (long) s[cur];
+    printf("%li", pval[cur]);
     cur++;
   }
   while (isDigit(s[cur]));
