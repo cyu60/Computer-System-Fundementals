@@ -18,4 +18,44 @@ long eval(const char *s) {
   /* Note: this function should be implemented by calling functions
    * declared in cPostfixCalc.h and defined in cPostfixCalcFuncs.c
    */
+  long count = 0;
+  long stack[MAX_STACK];
+  
+  // Values
+  long val;
+  long left;
+  long right;
+
+  // Operants
+  int op;
+
+  while (s[0] != '\0' && s != NULL) { // not EOF
+    s = skipws(s);
+    int token = tokenType(s);
+    if (token == TOK_INT) {
+      count++;
+      s = consumeInt(s, &val);
+    } else if (token == TOK_OP) {
+      // Check the length
+      if (count < 2) {
+        fatalError("insufficient arguments");
+      }
+      right = stackPop(stack, &count);
+      left = stackPop(stack, &count);
+      s = consumeOp(s, &op);
+      // s[0] is the op?
+      val = evalOp(op, left, right);
+    } else { // unknown
+      fatalError("unrecognized character");
+    }
+    // Need to always push something back
+    stackPush(stack, &count, val); // need to pass address for count
+  }
+
+if (count != 1) {
+  fatalError("string cannot be computed");
+}
+
+return stackPop(stack, &count);
+
 }
