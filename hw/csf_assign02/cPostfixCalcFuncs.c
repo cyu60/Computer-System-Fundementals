@@ -76,6 +76,14 @@ int isDigit(int c) {
  */
 const char *skipws(const char *s) {
   /* TODO: implement */
+  while (isSpace(s[0])) {
+    s+=1; // shift s by 1
+  }
+  return s[0] == '\0' ? NULL : s;
+  // if (s[0] == '\0') { // EOL no non-space
+  //   return NULL;
+  // }
+  // return s;
 }
 
 /*
