@@ -23,6 +23,7 @@ long addPositive(long a, long b) {
  */
 void fatalError(const char *msg) {
   /* TODO: implement */
+  printf("Error: %s", msg);
 }
 
 /*
@@ -40,6 +41,9 @@ void fatalError(const char *msg) {
  */
 int isSpace(int c) {
   /* TODO: implement */
+  // 32 is space, 9 should be tab?
+  return c == 32 || c == 9;
+
 }
 
 /*
@@ -54,6 +58,8 @@ int isSpace(int c) {
  */
 int isDigit(int c) {
   /* TODO: implement */
+  // 0 is 48, 9 is 57
+  return c >= 48 && c <= 57;
 }
 
 /*
