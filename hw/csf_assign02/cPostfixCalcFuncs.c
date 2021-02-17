@@ -215,7 +215,7 @@ long stackPop(long stack[], long *count) {
   // Check empty stack
   if (*count == 0) {
     fatalError("stack is empty");
-    return NULL; // Need to check?
+    return -1; // Need to check? Error code?
   }
 
   *count-=1;
@@ -249,5 +249,5 @@ long evalOp(int op, long left, long right) {
   default:
     break;
   }
-  return NULL;
+  return -1;
 }
