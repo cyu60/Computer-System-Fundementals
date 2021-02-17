@@ -123,8 +123,8 @@ const char *consumeInt(const char *s, long *pval) {
   /* TODO: implement */
   int cur = 0;
   do {
-    pval += (long) (s[cur] - 48) * (10 ^ 0) ; // offset for ascii
-    printf("\n%li\n", pval);
+    *pval += (long) (s[cur] - 48) * (10 ^ 0) ; // offset for ascii
+    printf("\n%li\n", *pval);
     cur++;
   }
   while (isDigit(s[cur]));
