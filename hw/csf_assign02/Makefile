@@ -26,7 +26,7 @@ LDFLAGS = -no-pie
 
 # Rule for compiling and assembling a .c file to produce a .o file
 %.o : %.c
-	gcc $(CFLAGS) -c $*.c -o $*.o
+	gcc $(CFLAGS) -lm -c $*.c -o $*.o
 
 # Default target: build all executables
 all : $(EXES)
