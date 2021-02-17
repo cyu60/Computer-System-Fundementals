@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "cPostfixCalc.h"
 
+#include <math.h> // for pow
+
 /*
  * Example function (see tests in cTests.c)
  */
@@ -123,8 +125,8 @@ const char *consumeInt(const char *s, long *pval) {
   /* TODO: implement */
   int cur = 0;
   do {
-    pval[0] += (long) (s[cur] - 48) * (10 ^ 0) ; // offset for ascii
-    printf("\n%li\n", pval[0]);
+    *pval += (long) (s[cur] - 48) * pow(10, cur); // offset for ascii
+    printf("\n%li\n", *pval);
     cur++;
   }
   while (isDigit(s[cur]));
