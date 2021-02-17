@@ -31,9 +31,9 @@ LDFLAGS = -no-pie
 # Default target: build all executables
 all : $(EXES)
 
-# C version of postfix calculator
+# C version of postfix calculator -- need to ask about edits of -lm for math.h
 cPostfixCalc : cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o
-	gcc -o $@ $(LDFLAGS) cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o
+	gcc -o $@ $(LDFLAGS) -lm cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o 
 
 # Unit test program for C functions
 cTests : cTests.o tctest.o cPostfixCalcFuncs.o cPostfixCalcEval.o

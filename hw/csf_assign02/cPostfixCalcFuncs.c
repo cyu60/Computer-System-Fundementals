@@ -26,6 +26,7 @@ long addPositive(long a, long b) {
 void fatalError(const char *msg) {
   /* TODO: implement */
   printf("Error: %s", msg);
+  exit(1); // no return?
 }
 
 /*
@@ -248,5 +249,5 @@ long evalOp(int op, long left, long right) {
   default:
     break;
   }
-  
+  return NULL;
 }
