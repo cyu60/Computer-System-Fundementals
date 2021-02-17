@@ -98,7 +98,7 @@ int tokenType(const char *s) {
   /* TODO: implement */
   if (isDigit(s[0])) {
     return TOK_INT;
-  } else if (s[0] == '*' || s[0] == '+' || s[0] == '/') { // isOp
+  } else if (s[0] == '*' || s[0] == '+' || s[0] == '-' || s[0] == '/') { // isOp
     return TOK_OP;
   }
   return TOK_UNKNOWN;
@@ -123,7 +123,7 @@ const char *consumeInt(const char *s, long *pval) {
   /* TODO: implement */
   int cur = 0;
   do {
-    pval[cur] = s[cur];
+    pval[cur] = (long) s[cur];
     cur++;
   }
   while (isDigit(s[cur]));
