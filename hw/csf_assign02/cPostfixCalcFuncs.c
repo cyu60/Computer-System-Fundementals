@@ -76,14 +76,11 @@ int isDigit(int c) {
  */
 const char *skipws(const char *s) {
   /* TODO: implement */
+  // TODO: Shift with Cur, rather than affecting string?
   while (isSpace(s[0])) {
     s+=1; // shift s by 1
   }
-  return s[0] == '\0' ? NULL : s;
-  // if (s[0] == '\0') { // EOL no non-space
-  //   return NULL;
-  // }
-  // return s;
+  return s[0] == '\0' ? NULL : s; // EOL no non-space
 }
 
 /*
@@ -99,6 +96,12 @@ const char *skipws(const char *s) {
  */
 int tokenType(const char *s) {
   /* TODO: implement */
+  if (isDigit(s[0])) {
+    return TOK_INT;
+  } else if (s[0] == '*' || s[0] == '+' || s[0] == '/') { // isOp
+    return TOK_OP
+  }
+  return TOK_UNKNOWN;
 }
 
 /*
@@ -118,6 +121,24 @@ int tokenType(const char *s) {
  */
 const char *consumeInt(const char *s, long *pval) {
   /* TODO: implement */
+  int cur = 0;
+  do {
+    pval[cur] = s[cur];
+    cur++;
+  }
+  while (isDigit(s[cur]))
+
+  return s += cur;
+  // read in the int
+  // check the next
+  // if is Digit
+    // repead
+  // pval[0] = s[0];
+  // int cur = 0;
+  // do {
+  //   s[cur] = pval[cur];
+  // }
+  // while (isDigit(s[cur])) {
 }
 
 /*
