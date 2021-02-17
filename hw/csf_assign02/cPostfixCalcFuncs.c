@@ -99,7 +99,7 @@ int tokenType(const char *s) {
   if (isDigit(s[0])) {
     return TOK_INT;
   } else if (s[0] == '*' || s[0] == '+' || s[0] == '/') { // isOp
-    return TOK_OP
+    return TOK_OP;
   }
   return TOK_UNKNOWN;
 }
