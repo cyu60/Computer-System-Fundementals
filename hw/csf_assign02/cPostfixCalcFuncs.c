@@ -24,7 +24,6 @@ long addPositive(long a, long b) {
  *   msg - description of the error which occurred
  */
 void fatalError(const char *msg) {
-  /* TODO: implement */
   printf("\nError: %s\n", msg);
   exit(1); // no return?
 }
@@ -43,7 +42,6 @@ void fatalError(const char *msg) {
  *   spaces and tabs)
  */
 int isSpace(int c) {
-  /* TODO: implement */
   // 32 is space, 9 should be tab?
   return c == 32 || c == 9;
 
@@ -60,7 +58,6 @@ int isSpace(int c) {
  *   1 if c is a digit, 0 otherwise
  */
 int isDigit(int c) {
-  /* TODO: implement */
   // 0 is 48, 9 is 57
   return c >= 48 && c <= 57;
 }
@@ -78,12 +75,16 @@ int isDigit(int c) {
  *   is reached
  */
 const char *skipws(const char *s) {
-  /* TODO: implement */
   // TODO: Shift with Cur, rather than affecting string?
-  while (isSpace(s[0])) {
-    s+=1; // shift s by 1
+  int cur = 0;
+  while (isSpace(s[cur])) {
+    cur++;
   }
-  return s[0] == '\0' ? NULL : s; // EOL no non-space
+  return s[cur] == '\0' ? NULL : s + cur; // EOL no non-space
+  // while (isSpace(s[0])) {
+  //   s+=1; // shift s by 1
+  // }
+  // return s[0] == '\0' ? NULL : s; // EOL no non-space
 }
 
 /*
@@ -139,7 +140,7 @@ const char *consumeInt(const char *s, long *pval) {
     // printf("\n%li\n", *pval);
   }
 
-  return s += len;
+  return s + len;
   // read in the int
   // check the next
   // if is Digit
@@ -167,6 +168,7 @@ const char *consumeInt(const char *s, long *pval) {
 const char *consumeOp(const char *s, int *op) {
   /* TODO: implement */
   *op = s[0];
+  // return s++; // ?? 
   return s+=1; 
 }
 

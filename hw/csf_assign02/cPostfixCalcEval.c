@@ -30,12 +30,16 @@ long eval(const char *s) {
   int op;
 
   while (s[0] != '\0' && s != NULL) { // not EOF
+
+
     s = skipws(s);
+    printf("\ns: %c ", s[0]);
     int token = tokenType(s);
     if (token == TOK_INT) {
-      count++;
       s = consumeInt(s, &val);
     } else if (token == TOK_OP) {
+      printf("c: %li\n", count);
+
       // Check the length
       if (count < 2) {
         fatalError("insufficient arguments");
@@ -52,6 +56,7 @@ long eval(const char *s) {
     stackPush(stack, &count, val); // need to pass address for count
   }
 
+printf("c: %li\n", count);
 if (count != 1) {
   fatalError("string cannot be computed");
 }
