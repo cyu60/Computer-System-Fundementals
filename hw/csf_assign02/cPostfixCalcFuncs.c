@@ -126,7 +126,7 @@ const char *consumeInt(const char *s, long *pval) {
     pval[cur] = s[cur];
     cur++;
   }
-  while (isDigit(s[cur]))
+  while (isDigit(s[cur]));
 
   return s += cur;
   // read in the int
