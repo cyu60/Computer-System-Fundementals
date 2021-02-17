@@ -122,16 +122,23 @@ int tokenType(const char *s) {
  *   pointer to the first character in the string that is not a digit
  */
 const char *consumeInt(const char *s, long *pval) {
-  /* TODO: implement */
-  int cur = 0;
-  do {
-    *pval += (long) (s[cur] - 48) * pow(10, cur); // offset for ascii
-    printf("\n%li\n", *pval);
-    cur++;
-  }
-  while (isDigit(s[cur]));
 
-  return s += cur;
+  int len = 0;
+  *pval = 0; // reset 0
+  
+  // find total len
+  while (isDigit(s[len])) {
+    len++;
+  }
+
+  // Build the number
+  for (int i = 0; i < len; i++) { // consider boundaries
+    // find the right most digit
+    *pval += (long) (s[len - i - 1] - 48) * (long) pow(10, i); // offset for ascii
+    // printf("\n%li\n", *pval);
+  }
+
+  return s += len;
   // read in the int
   // check the next
   // if is Digit
@@ -158,6 +165,8 @@ const char *consumeInt(const char *s, long *pval) {
  */
 const char *consumeOp(const char *s, int *op) {
   /* TODO: implement */
+  *op = s[0];
+  return s+=1; 
 }
 
 /*
@@ -178,6 +187,13 @@ const char *consumeOp(const char *s, int *op) {
  */
 void stackPush(long stack[], long *count, long val) {
   /* TODO: implement */
+  if (*count >= MAX_STACK) {
+    fatalError("the stack is full");
+    return;
+  }
+
+  stack[*count] = val; // already offset by 1
+  *count += 1;
 }
 
 /*
@@ -195,7 +211,14 @@ void stackPush(long stack[], long *count, long val) {
  *   the value popped from the stack
  */
 long stackPop(long stack[], long *count) {
-  /* TODO: implement */
+  // Check empty stack
+  if (*count == 0) {
+    fatalError("stack is empty");
+    return NULL; // Need to check?
+  }
+
+  *count-=1;
+  return stack[*count]; // already offset by 1
 }
 
 /*
@@ -210,5 +233,20 @@ long stackPop(long stack[], long *count) {
  *   the result of applying the operator to the operands
  */
 long evalOp(int op, long left, long right) {
-  /* TODO: implement */
+  switch (op)
+  {
+  case '+':
+    return left + right;
+  case '-':
+    return left - right;
+  case '*':
+    return left * right;
+  case '/':
+    return left / right;
+    // break;
+  
+  default:
+    break;
+  }
+  
 }
