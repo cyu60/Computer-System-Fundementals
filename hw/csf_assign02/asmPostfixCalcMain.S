@@ -7,7 +7,7 @@
 
 /* TODO: add string constants and other read-only data here */
 
-.section .text
+.section .text 
 
 /*
  * main function: program entry point
