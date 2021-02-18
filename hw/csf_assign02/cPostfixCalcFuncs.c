@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "cPostfixCalc.h"
 
-#include <math.h> // for pow
-
 /*
  * Example function (see tests in cTests.c)
  */
@@ -124,21 +122,17 @@ int tokenType(const char *s) {
  */
 const char *consumeInt(const char *s, long *pval) {
 
-  int len = 0;
   *pval = 0; // reset 0
   
-  // find total len
-  while (isDigit(s[len])) {
-    len++;
+  while (isDigit(s[0])) {
+    *pval *= 10;
+    // printf("s[0] = %c\n", s[0]);
+    *pval += s[0] - 48; // offset for ascii
+    s++;
+    // printf("pval: %li\n", *pval);
   }
 
-  // Build the number
-  for (int i = 0; i < len; i++) { // consider boundaries
-    // find the right most digit
-    *pval += (long) (s[len - i - 1] - 48) * (long) pow(10, i); // offset for ascii
-  }
-
-  return s + len;
+  return s;
 }
 
 /*
