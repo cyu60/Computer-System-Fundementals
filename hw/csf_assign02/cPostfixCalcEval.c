@@ -29,11 +29,13 @@ long eval(const char *s) {
   // Operants
   int op;
 
-  while (s[0] != '\0' && s != NULL) { // not EOF
+  while (s != NULL && s[0] != '\0') { // not EOF
 
 
+    printf("\nall good");
     s = skipws(s);
     printf("\ns: %c ", s[0]);
+    // printf("\nall good here ");
     int token = tokenType(s);
     if (token == TOK_INT) {
       s = consumeInt(s, &val);
@@ -45,15 +47,27 @@ long eval(const char *s) {
         fatalError("insufficient arguments");
       }
       right = stackPop(stack, &count);
+      printf("r: %li\n", right);
+
       left = stackPop(stack, &count);
+      printf("l: %li\n", left);
+
       s = consumeOp(s, &op);
-      // s[0] is the op?
+      printf("op: %c\n",op);
+
       val = evalOp(op, left, right);
+      printf("val: %li\n", val);
+      printf("s[0]: %i\n",s[0]);
+
     } else { // unknown
       fatalError("unrecognized character");
     }
+    
+
     // Need to always push something back
     stackPush(stack, &count, val); // need to pass address for count
+    printf("\nall good to push");
+    printf("\ns: %li", stack[0]);
   }
 
 printf("c: %li\n", count);
@@ -61,6 +75,9 @@ if (count != 1) {
   fatalError("string cannot be computed");
 }
 
-return stackPop(stack, &count);
+long res = stackPop(stack, &count);
+printf("res: %li\n", res);
+
+return res;
 
 }
