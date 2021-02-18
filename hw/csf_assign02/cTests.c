@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
 	TEST(testPop);
 	TEST(testEvalOp);
 	TEST(testEval);
-	// TEST(testEvalInvalid);
+	TEST(testEvalInvalid);
 
 	TEST_FINI();
 }
@@ -271,11 +271,11 @@ void testEvalOp(TestObjs *objs) {
 }
 
 void testEval(TestObjs *objs) {
-	// ASSERT(1L == eval("1"));
-	// ASSERT(2L == eval("1 1 +"));
-	// ASSERT(3L == eval("4 1 -"));
-	// ASSERT(33L == eval("11 3 *"));
-	// ASSERT(27L == eval("3 4 5 + *"));
+	ASSERT(1L == eval("1"));
+	ASSERT(2L == eval("1 1 +"));
+	ASSERT(3L == eval("4 1 -"));
+	ASSERT(33L == eval("11 3 *"));
+	ASSERT(27L == eval("3 4 5 + *"));
 
 	/* make sure eval can handle arbitrary whitespace */
 	ASSERT(6L == eval("  1  \t 5\t\t + \t"));

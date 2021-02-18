@@ -76,15 +76,15 @@ int isDigit(int c) {
  */
 const char *skipws(const char *s) {
   // TODO: Shift with Cur, rather than affecting string?
-  int cur = 0;
-  while (isSpace(s[cur])) {
-    cur++;
-  }
-  return s[cur] == '\0' ? NULL : s + cur; // EOL no non-space
-  // while (isSpace(s[0])) {
-  //   s+=1; // shift s by 1
+  // int cur = 0;
+  // while (isSpace(s[cur])) {
+  //   cur++;
   // }
-  // return s[0] == '\0' ? NULL : s; // EOL no non-space
+  // return s[cur] == '\0' ? NULL : s + cur; // EOL no non-space
+  while (isSpace(s[0])) {
+    s+=1; // shift s by 1
+  }
+  return s[0] == '\0' ? NULL : s; // EOL no non-space
 }
 
 /*
@@ -99,7 +99,6 @@ const char *skipws(const char *s) {
  *   the token type
  */
 int tokenType(const char *s) {
-  /* TODO: implement */
   if (isDigit(s[0])) {
     return TOK_INT;
   } else if (s[0] == '*' || s[0] == '+' || s[0] == '-' || s[0] == '/') { // isOp
@@ -137,20 +136,9 @@ const char *consumeInt(const char *s, long *pval) {
   for (int i = 0; i < len; i++) { // consider boundaries
     // find the right most digit
     *pval += (long) (s[len - i - 1] - 48) * (long) pow(10, i); // offset for ascii
-    // printf("\n%li\n", *pval);
   }
 
   return s + len;
-  // read in the int
-  // check the next
-  // if is Digit
-    // repead
-  // pval[0] = s[0];
-  // int cur = 0;
-  // do {
-  //   s[cur] = pval[cur];
-  // }
-  // while (isDigit(s[cur])) {
 }
 
 /*
@@ -166,9 +154,7 @@ const char *consumeInt(const char *s, long *pval) {
  *   a pointer to the second character of s
  */
 const char *consumeOp(const char *s, int *op) {
-  /* TODO: implement */
   *op = s[0];
-  // return s++; // ?? 
   return s+=1; 
 }
 
@@ -189,7 +175,6 @@ const char *consumeOp(const char *s, int *op) {
  *   nothing
  */
 void stackPush(long stack[], long *count, long val) {
-  /* TODO: implement */
   if (*count >= MAX_STACK) {
     fatalError("the stack is full");
     return;
@@ -246,8 +231,6 @@ long evalOp(int op, long left, long right) {
     return left * right;
   case '/':
     return left / right;
-    // break;
-  
   default:
     break;
   }
