@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cPostfixCalc.h"
-
+ 
 /*
  * eval - evaluate a postfix expression
  * Should directly or indirectly call fatalError if the expression is invalid.
