@@ -58,9 +58,6 @@ if (count != 1) {
   fatalError("string cannot be computed");
 }
 
-// long res = stackPop(stack, &count);
-// printf("res: %li\n", res);
-
 return stackPop(stack, &count);
 
 }

@@ -22,8 +22,8 @@ long addPositive(long a, long b) {
  *   msg - description of the error which occurred
  */
 void fatalError(const char *msg) {
-  printf("\nError: %s\n", msg);
-  exit(1); // no return?
+  printf("Error: %s\n", msg);
+  exit(1); // no return
 }
 
 /*
@@ -40,7 +40,7 @@ void fatalError(const char *msg) {
  *   spaces and tabs)
  */
 int isSpace(int c) {
-  // 32 is space, 9 should be tab?
+  // 32 is space, 9 should be tab
   return c == 32 || c == 9;
 
 }
@@ -73,12 +73,6 @@ int isDigit(int c) {
  *   is reached
  */
 const char *skipws(const char *s) {
-  // TODO: Shift with Cur, rather than affecting string?
-  // int cur = 0;
-  // while (isSpace(s[cur])) {
-  //   cur++;
-  // }
-  // return s[cur] == '\0' ? NULL : s + cur; // EOL no non-space
   while (isSpace(s[0])) {
     s+=1; // shift s by 1
   }
@@ -126,10 +120,8 @@ const char *consumeInt(const char *s, long *pval) {
   
   while (isDigit(s[0])) {
     *pval *= 10;
-    // printf("s[0] = %c\n", s[0]);
     *pval += s[0] - 48; // offset for ascii
     s++;
-    // printf("pval: %li\n", *pval);
   }
 
   return s;
@@ -198,7 +190,6 @@ long stackPop(long stack[], long *count) {
     fatalError("stack is empty");
     return -1; // Need to check? Error code?
   }
-
   *count-=1;
   return stack[*count]; // already offset by 1
 }
@@ -224,6 +215,9 @@ long evalOp(int op, long left, long right) {
   case '*':
     return left * right;
   case '/':
+    if (right == 0) {
+      fatalError("division by 0 is undefined"); // Handle division by 0 // NO NEED TO HANDLE!!
+    }
     return left / right;
   default:
     break;
