@@ -75,6 +75,23 @@ fatalError:
 	.globl isSpace
 isSpace:
 	/* TODO: implement */
+	subq $8, %rsp               /* align stack pointer */
+	cmpq $32, %rdi				/* Compare %rdi to 32, ascii code for space */
+	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
+
+	cmpq $9, %rdi				/* Compare %rdi to 9, ascii code for tab character */
+	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
+
+	jmp .LisSpaceFalse			/* If not space, jump to .LisSpaceFalse */
+
+.LisSpaceTrue
+	movq $1, %rax				/* Set return value to 1 if is space char */
+	addq $8, %rsp				/* restore stack pointer */
+	ret
+
+.LisSpaceFalse
+	movq $0, %rax				/* Set return value to 0 if not space */
+	addq $8, %rsp				/* restore stack pointer */
 	ret
 
 /*
