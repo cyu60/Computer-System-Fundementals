@@ -172,7 +172,7 @@ skipws:
 
 .LcheckIsSpace:
 	/* Need to move the first arg??*/
-	movb (%rdi), %di /* pass the first smaller val into di? */
+	movq (%rdi), %di /* pass the first smaller val into di? */
 	call isSpace
 	cmp $1, %rax /* check with return value*/
 	je .LIsSpacetop
