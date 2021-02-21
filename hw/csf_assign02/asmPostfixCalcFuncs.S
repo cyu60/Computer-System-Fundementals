@@ -70,6 +70,7 @@ fatalError:
 	movq $eErrorMsg, %rdi 	/* pass the formating as the first arg*/
 	call printf
 	/* Do I need to restore the stack here??? */
+	movq $1, %rdi
 	call exit 				/* Call the exit code  function */
 
 9:	jmp 9b                       /* should not get here */
@@ -173,7 +174,7 @@ skipws:
 
 .LcheckIsSpace:
 	/* Need to move the first arg??*/
-	/* How do we pass the first char in an char array to rdi?? */
+	/* How do we pass the first char in an char array to rdi?? ie access s[0]*/
 	/* movw %di ,(%rdi) */ /* pass the first smaller val into di? */
 	/* movq %rdi, %r10 /* store rdi in r10 */
 	call isSpace
