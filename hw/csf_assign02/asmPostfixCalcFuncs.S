@@ -57,6 +57,7 @@ addPositive:
 	.globl fatalError
 fatalError:
 	/* TODO: implement */
+	subq $8, %rsp                /* align stack pointer */
 	
 	/* store rdi in a different func */
 	/* add the formating to the strings */
@@ -68,6 +69,7 @@ fatalError:
 	movl %edi, %esi 		/* pass the 1st arg as the 2nd arg */
 	movq $eErrorMsg, %rdi 	/* pass the formating as the first arg*/
 	call printf
+	/* Do I need to restore the stack here??? */
 	call exit 				/* Call the exit code  function */
 
 9:	jmp 9b                       /* should not get here */
@@ -158,6 +160,29 @@ isDigit:
 	.globl skipws
 skipws:
 	/* TODO: implement */
+	subq $8, %rsp               /* align stack pointer */
+
+	/* Note: s is stored in rdi as it is the first pointer */
+	/* while loop */
+	jmp .LcheckIsSpace
+
+/* increment s by 1 */
+.LIsSpacetop:
+	incq %rdi /* add 1 to s */
+
+.LcheckIsSpace:
+	/* Need to move the first arg??*/
+	call isSpace
+	cmp $1, %rax /* check with return value*/
+	je .LIsSpacetop
+	/* increment s by 1 */
+
+	/* if loop -- not necessary? \0 == null?? */
+	/* cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
+	/* je .LisEndOfLine			/* If space, jump to .LisSpaceTrue */
+
+	addq $8, %rsp				/* restore stack pointer */
+
 	ret
 
 /*
