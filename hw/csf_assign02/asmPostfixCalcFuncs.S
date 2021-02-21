@@ -178,8 +178,8 @@ skipws:
 	/* increment s by 1 */
 
 	/* if loop -- not necessary? \0 == null?? */
-	/* cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
-	/* je .LisEndOfLine			/* If space, jump to .LisSpaceTrue */
+	/* cmpq $48, %rdi */			/* Compare %rdi to 40, ascii code for 0 */
+	/* je .LisEndOfLine	*/		/* If space, jump to .LisSpaceTrue */
 
 	addq $8, %rsp				/* restore stack pointer */
 
