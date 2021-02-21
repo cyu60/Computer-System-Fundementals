@@ -84,12 +84,12 @@ isSpace:
 
 	jmp .LisSpaceFalse			/* If not space, jump to .LisSpaceFalse */
 
-.LisSpaceTrue
+.LisSpaceTrue:
 	movq $1, %rax				/* Set return value to 1 if is space char */
 	addq $8, %rsp				/* restore stack pointer */
 	ret
 
-.LisSpaceFalse
+.LisSpaceFalse:					/* Is this even neccessary?? */
 	movq $0, %rax				/* Set return value to 0 if not space */
 	addq $8, %rsp				/* restore stack pointer */
 	ret
