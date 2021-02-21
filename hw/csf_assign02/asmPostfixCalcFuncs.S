@@ -12,6 +12,7 @@
 	.section .rodata
 
 eNegativeValue: .string "Negative value"
+eErrorMsg: .string "Error: %s\n"
 
 /* TODO: add other string constants and other read-only data here */
 
@@ -62,6 +63,8 @@ fatalError:
 	/* Call printf? */
 	/* movl %edi, %esi */
 	/* movq $sResultMsg, %rdi */
+	movl %edi, %esi
+	movq $eErrorMsg, %rdi
 	call printf
 	call exit /* Call the exit code  function */
 
