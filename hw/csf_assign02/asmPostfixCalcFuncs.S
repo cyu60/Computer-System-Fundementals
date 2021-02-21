@@ -168,11 +168,14 @@ skipws:
 
 /* increment s by 1 */
 .LIsSpacetop:
-	incq %rdi /* add 1 to s */
+	incq %rdi /* add 1 to s, will need more? */
+	/* incq %r10 /* add 1 to s, will need more? */
 
 .LcheckIsSpace:
 	/* Need to move the first arg??*/
-	movw (%rdi), %di /* pass the first smaller val into di? */
+	/* How do we pass the first char in an char array to rdi?? */
+	/* movw %di ,(%rdi) */ /* pass the first smaller val into di? */
+	/* movq %rdi, %r10 /* store rdi in r10 */
 	call isSpace
 	cmp $1, %rax /* check with return value*/
 	je .LIsSpacetop
