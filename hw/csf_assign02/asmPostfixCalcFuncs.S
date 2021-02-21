@@ -57,11 +57,11 @@ addPositive:
 fatalError:
 	/* TODO: implement */
 	
-	; store rdi in a different func
-	; add the formating to the strings
-	; Call printf?
-	; movl %edi, %esi
-	; movq $sResultMsg, %rdi
+	/* store rdi in a different func */
+	/* add the formating to the strings */
+	/* Call printf? */
+	/* movl %edi, %esi */
+	/* movq $sResultMsg, %rdi */
 	call printf
 	call exit /* Call the exit code  function */
 
