@@ -93,10 +93,10 @@ fatalError:
 isSpace:
 	/* TODO: implement */
 	subq $8, %rsp               /* align stack pointer */
-	cmpq $32, %rdi				/* Compare %rdi to 32, ascii code for space */
+	cmpq $32, (%rdi)				/* Compare %rdi to 32, ascii code for space */
 	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
 
-	cmpq $9, %rdi				/* Compare %rdi to 9, ascii code for tab character */
+	cmpq $9, (%rdi)				/* Compare %rdi to 9, ascii code for tab character */
 	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
 
 	jmp .LisSpaceFalse			/* If not space, jump to .LisSpaceFalse */
