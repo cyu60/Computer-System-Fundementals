@@ -61,12 +61,14 @@ fatalError:
 	/* store rdi in a different func */
 	/* add the formating to the strings */
 	/* Call printf? */
-	/* movl %edi, %esi */
-	/* movq $sResultMsg, %rdi */
-	movl %edi, %esi
-	movq $eErrorMsg, %rdi
+
+	/* printf("Error: %s\n", msg) */
+	/* 			^ 1st arg	 ^ 2nd arg */
+
+	movl %edi, %esi 		/* pass the 1st arg as the 2nd arg */
+	movq $eErrorMsg, %rdi 	/* pass the formating as the first arg*/
 	call printf
-	call exit /* Call the exit code  function */
+	call exit 				/* Call the exit code  function */
 
 9:	jmp 9b                       /* should not get here */
 	/* note that this function should not return */
@@ -120,6 +122,25 @@ isSpace:
 	.globl isDigit
 isDigit:
 	/* TODO: implement */
+	subq $8, %rsp               /* align stack pointer */
+	cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
+	jl .LisDigitFalse			/* If space, jump to .LisSpaceTrue */
+
+	cmpq $57, %rdi				/* Compare %rdi to 57, ascii code for 9 */
+	jg .LisDigitFalse			/* If space, jump to .LisSpaceTrue */
+
+	jmp .LisDigitTrue			/* If not space, jump to .LisSpaceFalse */
+
+.LisDigitTrue:
+	movq $1, %rax				/* Set return value to 1 if is space char */
+	addq $8, %rsp				/* restore stack pointer */
+	ret
+
+.LisDigitFalse:					/* Is this even neccessary?? */
+	movq $0, %rax				/* Set return value to 0 if not space */
+	addq $8, %rsp				/* restore stack pointer */
+	ret
+
 	ret
 
 /*
