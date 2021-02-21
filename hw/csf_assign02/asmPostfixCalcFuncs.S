@@ -181,6 +181,7 @@ skipws:
 	/* cmpq $48, %rdi */			/* Compare %rdi to 40, ascii code for 0 */
 	/* je .LisEndOfLine	*/		/* If space, jump to .LisSpaceTrue */
 
+	mov %rdi, %rax 				/* assign the current pointer to the return value */
 	addq $8, %rsp				/* restore stack pointer */
 
 	ret
