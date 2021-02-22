@@ -67,12 +67,12 @@ fatalError:
 	/* printf("Error: %s\n", msg) */
 	/* 			^ 1st arg	 ^ 2nd arg */
 
-	movl %edi, %esi 		/* pass the 1st arg as the 2nd arg */
-	movq $eErrorMsg, %rdi 	/* pass the formating as the first arg*/
+	movl %edi, %esi 			/* pass the 1st arg as the 2nd arg */
+	movq $eErrorMsg, %rdi 		/* pass the formating as the first arg*/
 	call printf
-	/* Do I need to restore the stack here??? */
-	movq $1, %rdi
-	call exit 				/* Call the exit code  function */
+
+	movq $1, %rdi				/* Pass the exit code 1 */
+	call exit 					/* Call the exit code  function */
 
 9:	jmp 9b                       /* should not get here */
 	/* note that this function should not return */
@@ -124,12 +124,12 @@ isSpace:
 isDigit:
 	subq $8, %rsp               /* Align stack pointer */
 	cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
-	jl .LisDigitFalse			/* If digit, jump to .LisDigitTrue */
+	jl .LisDigitFalse			/* If not digit, jump to .LisDigitFalse */
 
 	cmpq $57, %rdi				/* Compare %rdi to 57, ascii code for 9 */
-	jg .LisDigitFalse			/* If digit, jump to .LisDigitTrue */
+	jg .LisDigitFalse			/* If not digit, jump to .LisDigitFalse */
 
-	jmp .LisDigitTrue			/* If not space, jump to .LisSpaceFalse */
+	jmp .LisDigitTrue			/* If space, jump to .LisSpaceTrue */
 
 .LisDigitTrue:
 	movq $1, %rax				/* Set return value to 1 if is space char */
@@ -167,21 +167,21 @@ skipws:
 	incq %r10
 
 .LcheckIsSpace:
-	cmpq $0, (%r10) 		/* Check for null char, marking end of string */
-	je .LisNullChar			/* If null char, exit loop and return null */
+	cmpq $0, (%r10) 			/* Check for null char, marking end of string */
+	je .LisNullChar				/* If null char, exit loop and return null */
 	
-	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	call isSpace
-	cmp $1, %rax 			/* Check with return value*/
-	je .LIsSpacetop			/* Increment s by 1 */
+	cmp $1, %rax 				/* Check with return value*/
+	je .LIsSpacetop				/* Increment s by 1 */
 
-	movq %r10, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	movq %r10, %rax 			/* Assign the current pointer to the return value */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisNullChar:
-	movq $0, %rax			/* If end of string reached, set return value to 0 (NULL) */
-	addq $8, %rsp			/* Restore stack pointer */
+	movq $0, %rax				/* If end of string reached, set return value to 0 (NULL) */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 /*
@@ -221,17 +221,17 @@ tokenType:
 
 .LisDigitToken:
 	movq $TOK_INT, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisOperantToken:
-	movq $TOK_OP, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	movq $TOK_OP, %rax 			/* Assign the current pointer to the return value */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisUnkownToken:
-	movq $TOK_UNKNOWN, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	movq $TOK_UNKNOWN, %rax 	/* Assign the current pointer to the return value */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 
@@ -261,20 +261,20 @@ consumeInt:
 	jmp .LcheckIsDigit
 
 .LIsDigitTop:
-	imulq $10, %r11			/* rsi (p) *= 10 */
-	addq %rdi ,%r11			/* p += s[0] -- %rdi is s[0] since we overwrite earlier */ 
-	subq $48 ,%r11			/* p -= 48 offset for ascii */ 
-	incq %r10				/* Increment r10 by 1 to move to next char in s */
+	imulq $10, %r11				/* rsi (p) *= 10 */
+	addq %rdi ,%r11				/* p += s[0] -- %rdi is s[0] since we overwrite earlier */ 
+	subq $48 ,%r11				/* p -= 48 offset for ascii */ 
+	incq %r10					/* Increment r10 by 1 to move to next char in s */
 
 .LcheckIsDigit:
-	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	call isDigit
-	cmp $1, %rax 			/* Check with return value*/
-	je .LIsDigitTop			/* Increment s by 1 */	
+	cmp $1, %rax 				/* Check with return value*/
+	je .LIsDigitTop				/* Increment s by 1 */	
 
-	movq  %r11 ,(%rsi)		/* Assign the p value to the actual val from pointer */
-	movq %r10, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	movq  %r11 ,(%rsi)			/* Assign the p value to the actual val from pointer */
+	movq %r10, %rax 			/* Assign the current pointer to the return value */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 /*
@@ -294,13 +294,13 @@ consumeOp:
 	subq $8, %rsp               /* Align stack pointer */
 	movq %rdi, %r10				/* Copy s to r10 */
 
-	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	
-	movq  %rdi ,(%rsi)		/* Assign the s[0] value to op */
+	movq  %rdi ,(%rsi)			/* Assign the s[0] value to op */
 	
-	incq %r10				/* Increment r10 by 1 to move to next char in s (s+=1) */
-	movq %r10, %rax 		/* Assign the current pointer to the return value */
-	addq $8, %rsp			/* Restore stack pointer */
+	incq %r10					/* Increment r10 by 1 to move to next char in s (s+=1) */
+	movq %r10, %rax 			/* Assign the current pointer to the return value */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 
@@ -392,43 +392,43 @@ evalOp:
 
 	/* Check which operant operant */
 	cmpl $42, %edi				/* Compare %edi to 42, ascii code for '*' */
-	je .LisMultiply			/* If '*', jump to .LisMultiply */
+	je .LisMultiply				/* If '*', jump to .LisMultiply */
 	cmpl $43, %edi				/* Compare %edi to 43, ascii code for '+' */
-	je .LisAdd			/* If '+', jump to .LisAdd */
+	je .LisAdd					/* If '+', jump to .LisAdd */
 	cmpl $45, %edi				/* Compare %edi to 45, ascii code for '-' */
-	je .LisSubtract			/* If '-', jump to .LisSubtract */
+	je .LisSubtract				/* If '-', jump to .LisSubtract */
 	cmpl $47, %edi				/* Compare %edi to 47, ascii code for '/' */
-	je .LisDivide			/* If '/', jump to .LisDivide */
+	je .LisDivide				/* If '/', jump to .LisDivide */
 
 .LisMultiply:
-	imulq %rdx, %rsi /* set %rsi to %rdx (right) * %rsi (left) */
+	imulq %rdx, %rsi 			/* set %rsi to %rdx (right) * %rsi (left) */
 	movq %rsi, %rax
-	addq $8, %rsp			/* Restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisAdd:
 	addq %rdx, %rsi 
 	movq %rsi, %rax
-	addq $8, %rsp			/* Restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisSubtract:
-	subq %rdx, %rsi  		/* Order should be correct? */ 
+	subq %rdx, %rsi  			/* rsi (left) - rdx (right) */ 
 	movq %rsi, %rax
-	addq $8, %rsp			/* Restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 .LisDivide:
-	movq %rsi, %rdi /* store 1nd val in rdi */
-	movq %rdx, %rsi /* store 2nd val in rsi */
+	movq %rsi, %rdi 			/* store 1nd val in rdi */
+	movq %rdx, %rsi 			/* store 2nd val in rsi */
 
 	/* Taken from the provided example code */
-	movq %rdi, %rax               /* put dividend in %rax */
-	cqto                          /* sign-extend dividend into %rdx */
-	idivq %rsi                    /* divide by the divisor */
+	movq %rdi, %rax             /* put dividend in %rax */
+	cqto                        /* sign-extend dividend into %rdx */
+	idivq %rsi                  /* divide by the divisor */
 	/* quotient is now in %rax */
 	
-	addq $8, %rsp				  /* Restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 
