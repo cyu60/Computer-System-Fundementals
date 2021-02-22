@@ -419,10 +419,15 @@ evalOp:
 	ret
 
 .LisDivide:
+	movq %rsi, %rdi /* store 1nd val in rdi */
+	movq %rax, %rsi /* store 2nd val in rsi */
+
+	/* Taken from the provided example code */
 	movq %rdi, %rax               /* put dividend in %rax */
 	cqto                          /* sign-extend dividend into %rdx */
 	idivq %rsi                    /* divide by the divisor */
 	/* quotient is now in %rax */
+	
 	addq $8, %rsp				  /* Restore stack pointer */
 	ret
 
