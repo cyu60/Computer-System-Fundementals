@@ -255,7 +255,7 @@ consumeInt:
 	subq $8, %rsp               /* Align stack pointer */
 
 	/* movq $0, %rsi				/* reset the val of p (2nd param) to zero */
-	movl $0, %r11				/* reset the val of p (2nd param) to zero */
+	movq $0, %r11				/* reset the val of p (2nd param) to zero */
 
 	/* While loop */
 	jmp .LcheckIsDigit
