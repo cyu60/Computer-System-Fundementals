@@ -332,7 +332,7 @@ stackPush:
 
 	
 	/* Asccess the stack value at count */
-	movq %rdx, (%rdi, %r10, 4) 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
+	movq %rdx, (%rdi, %r10, 8) 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
 	
 	incq (%rsi)					/* Increment count by 1 */
 
