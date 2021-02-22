@@ -330,10 +330,6 @@ stackPush:
 	/* cmpq $MAX_STACK, (%rsi)		/* Compare count to max stack */
 	je .LisStackFull			/* If stack full, jump to .LisStackFull */
 
-.LisStackFull:
-	movq $eStackFull, %rdi
-	call fatalError
-9:	jmp 9b                      /* should not get here */
 	
 	/* Asccess the stack value at count */
 	movq %rdx, (%rdi, %r10, 4) 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
@@ -342,6 +338,11 @@ stackPush:
 
 	addq $8, %rsp				/* Restore stack pointer */
 	ret
+
+.LisStackFull:
+	movq $eStackFull, %rdi
+	call fatalError
+9:	jmp 9b                      /* should not get here */
 
 /*
  * stackPop - pops a long (64 bit signed integer) value from the stack.
