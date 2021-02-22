@@ -360,11 +360,6 @@ stackPop:
 	subq $8, %rsp               /* Align stack pointer */
 	cmpq $0, (%rsi)				/* Compare count to 0 */
 	je .LisStackEmpty			/* If stack full, jump to .LisStackEmpty */
-
-.LisStackEmpty:
-	movq $eStackEmpty, %rdi
-	call fatalError
-9:	jmp 9b                      /* should not get here */
 	
 	decq (%rsi)					/* Decrement count by 1 */
 	
@@ -374,6 +369,11 @@ stackPop:
 	
 	addq $8, %rsp				/* Restore stack pointer */
 	ret
+
+.LisStackEmpty:
+	movq $eStackEmpty, %rdi
+	call fatalError
+9:	jmp 9b                      /* should not get here */
 
 /*
  * evalOp - evaluate a computation by applying an operator to two operands.
