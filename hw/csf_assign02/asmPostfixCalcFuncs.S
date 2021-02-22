@@ -261,7 +261,8 @@ consumeInt:
 	jmp .LcheckIsDigit
 
 .LIsDigitTop:
-	imulq $10, (%rsi)			/* rsi (p) *= 10 */
+	imulq $10, %rsi			/* rsi (p) *= 10 */
+	/* imulq $10, (%rsi)			/* rsi (p) *= 10 */
 	movq $0, %r11 
 	movl %edi, %r11d			/* promote the edi value to r11 of 64 bit*/
 	/* movzbl (%edi), %r11			/* promote the edi value to r11 of 64 bit*/
