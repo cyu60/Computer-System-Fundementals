@@ -324,7 +324,9 @@ consumeOp:
 stackPush:
 	subq $8, %rsp               /* Align stack pointer */
 	movq (%rsi), %r10 			/* Assgin count to r10 */
-	cmpq $MAX_STACK, %r10		/* Compare count to max stack */
+	movq $MAX_STACK, %r11
+	cmpq %r11, %r10		/* Compare count to max stack */
+	/* cmpq $MAX_STACK, %r10		/* Compare count to max stack */
 	/* cmpq $MAX_STACK, (%rsi)		/* Compare count to max stack */
 	je .LisStackFull			/* If stack full, jump to .LisStackFull */
 
