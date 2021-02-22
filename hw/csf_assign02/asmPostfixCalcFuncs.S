@@ -13,6 +13,7 @@
 
 eNegativeValue: .string "Negative value"
 eStackFull: .string "the stack is full"
+eStackEmpty: .string "stack is empty"
 eErrorMsg: .string "Error: %s\n"
 
 /* TODO: add other string constants and other read-only data here */
@@ -322,20 +323,19 @@ consumeOp:
 	.globl stackPush
 stackPush:
 	subq $8, %rsp               /* Align stack pointer */
-	movq (%rsi), %r10 /* Assgin count to r10 */
-	/* cmp (%rsi), $MAX_STACK		/* Compare count to max stack */
 	cmpq $MAX_STACK, (%rsi)		/* Compare count to max stack */
-	/* cmpq %r10, MAX_STACK		/* Compare count to max stack */
 	je .LisStackFull			/* If stack full, jump to .LisStackFull */
 
 .LisStackFull:
 	movq $eStackFull, %rdi
 	call fatalError
-9:	jmp 9b                       /* should not get here */
+9:	jmp 9b                      /* should not get here */
 	
-	movq %rdx, (%rdi, %r10, 4) /* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
-	/* Asccess the s value at count */
-	incq (%rsi)				/* Increment count by 1 */
+	/* Asccess the stack value at count */
+	movq (%rsi), %r10 			/* Assgin count to r10 */
+	movq %rdx, (%rdi, %r10, 4) 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
+	
+	incq (%rsi)					/* Increment count by 1 */
 
 	addq $8, %rsp				/* Restore stack pointer */
 	ret
@@ -356,7 +356,23 @@ stackPush:
  */
 	.globl stackPop
 stackPop:
-	/* TODO: implement */
+	subq $8, %rsp               /* Align stack pointer */
+	cmpq $0, (%rsi)				/* Compare count to 0 */
+	je .LisStackEmpty			/* If stack full, jump to .LisStackEmpty */
+
+.LisStackEmpty:
+	movq $eStackEmpty, %rdi
+	call fatalError
+9:	jmp 9b                      /* should not get here */
+	
+	decq (%rsi)					/* Decrement count by 1 */
+	
+	/* Asccess the stack value at count */
+	movq (%rsi), %r10 			/* Assgin count to r10 */
+	movq (%rdi, %r10, 4), %rax 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
+	
+
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 /*
