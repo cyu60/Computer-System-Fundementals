@@ -202,7 +202,7 @@ tokenType:
 	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it - s[0] */
 	
 	/* Check if it is an operant */
-	cmpl $42, %edi				/* Compare %edi to 32, ascii code for '*' */
+	cmpl $42, %edi				/* Compare %edi to 42, ascii code for '*' */
 	je .LisOperantToken			/* If '*', jump to .LisOpToken */
 	cmpl $43, %edi				/* Compare %edi to 43, ascii code for '+' */
 	je .LisOperantToken			/* If '+', jump to .LisOpToken */
@@ -253,31 +253,31 @@ tokenType:
 	.globl consumeInt
 consumeInt:
 	subq $8, %rsp               /* Align stack pointer */
-	movq %rdi, %r10				/* Copy s to r10 */
 
-	movq $0, %rsi				/* reset the val of p (2nd param) to zero */
+	/* movq $0, %rsi				/* reset the val of p (2nd param) to zero */
+	movl $0, %r11				/* reset the val of p (2nd param) to zero */
 
 	/* While loop */
 	jmp .LcheckIsDigit
 
 .LIsDigitTop:
-	imulq $10, %rsi			/* rsi (p) *= 10 */
-	/* imulq $10, %rsi			/* rsi (p) *= 10 */
-	movq $0, %r11 
-	movl %edi, %r11d			/* promote the edi value to r11 of 64 bit*/
+	imulq $10, %r11			/* rsi (p) *= 10 */
+	/* movl $0, %r11 
+	movl %edi, %r11			/* promote the edi value to r11 of 64 bit*/
 	/* movzbl (%edi), %r11			/* promote the edi value to r11 of 64 bit*/
-	/*  addq (%edi) ,%rsi			/* p += s[0] -- need to pad z? */ 
-	addq %r11 ,%rsi			/* p += s[0] -- need to pad z? */ 
-	subq $48 ,%rsi			/* p -= 48 offset for ascii */ 
-	incq %r10			/* Increment r10 by 1 to move to next char in s */
+	/*  addl (%edi) ,%rsi			/* p += s[0] -- need to pad z? */ 
+	addq %r10 ,%r11			/* p += s[0] -- need to pad z? */ 
+	subq $48 ,%r11			/* p -= 48 offset for ascii */ 
+	incq %rdi			/* Increment r10 by 1 to move to next char in s */
 
 .LcheckIsDigit:
-	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%edi), %r10d 	/* Copy first char stored in r10 to edi and zero extend it */
 	call isDigit
 	cmp $1, %rax 			/* Check with return value*/
 	je .LIsDigitTop			/* Increment s by 1 */	
 
-	movq %r10, %rax 		/* Assign the current pointer to the return value */
+	movq  %r11 ,(%rsi)
+	movq %rdi, %rax 		/* Assign the current pointer to the return value */
 	addq $8, %rsp			/* Restore stack pointer */
 	ret
 
