@@ -263,7 +263,7 @@ consumeInt:
 .LIsDigitTop:
 	imulq $10, %rsi			/* rsi (p) *= 10 */
 	movq $0, %r11 
-	movl (%edi), %r11d			/* promote the edi value to r11 of 64 bit*/
+	movl %edi, %r11d			/* promote the edi value to r11 of 64 bit*/
 	/* movzbl (%edi), %r11			/* promote the edi value to r11 of 64 bit*/
 	/*  addq (%edi) ,%rsi			/* p += s[0] -- need to pad z? */ 
 	addq %r11 ,%rsi			/* p += s[0] -- need to pad z? */ 
