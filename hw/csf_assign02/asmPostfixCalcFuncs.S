@@ -262,8 +262,8 @@ consumeInt:
 
 .LIsDigitTop:
 	imulq $10, %rsi			/* rsi (p) *= 10 */
-	addq %edi ,%rsi			/* p += s[0] -- need to pad z? */ 
-	dubq $48 ,%rsi			/* p -= 48 offset for ascii */ 
+	addzq %edi ,%rsi			/* p += s[0] -- need to pad z? */ 
+	subq $48 ,%rsi			/* p -= 48 offset for ascii */ 
 	incq %r10			/* Increment r10 by 1 to move to next char in s */
 
 .LcheckIsDigit:
