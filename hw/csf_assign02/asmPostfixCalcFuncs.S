@@ -253,6 +253,7 @@ tokenType:
 	.globl consumeInt
 consumeInt:
 	subq $8, %rsp               /* Align stack pointer */
+	movq %rdi, %r10				/* Copy s to r10 */
 
 	/* movq $0, %rsi				/* reset the val of p (2nd param) to zero */
 	movq $0, %r11				/* reset the val of p (2nd param) to zero */
@@ -266,18 +267,18 @@ consumeInt:
 	movl %edi, %r11			/* promote the edi value to r11 of 64 bit*/
 	/* movzbl (%edi), %r11			/* promote the edi value to r11 of 64 bit*/
 	/*  addl (%edi) ,%rsi			/* p += s[0] -- need to pad z? */ 
-	addq %r10 ,%r11			/* p += s[0] -- need to pad z? */ 
+	addq %rdi ,%r11			/* p += s[0] -- need to pad z? */ 
 	subq $48 ,%r11			/* p -= 48 offset for ascii */ 
-	incq %rdi			/* Increment r10 by 1 to move to next char in s */
+	incq %r10			/* Increment r10 by 1 to move to next char in s */
 
 .LcheckIsDigit:
-	movzbl (%edi), %r10d 	/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
 	call isDigit
 	cmp $1, %rax 			/* Check with return value*/
 	je .LIsDigitTop			/* Increment s by 1 */	
 
 	movq  %r11 ,(%rsi)
-	movq %rdi, %rax 		/* Assign the current pointer to the return value */
+	movq %r10, %rax 		/* Assign the current pointer to the return value */
 	addq $8, %rsp			/* Restore stack pointer */
 	ret
 
