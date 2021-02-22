@@ -203,13 +203,13 @@ tokenType:
 	
 	/* Check if it is an operant */
 	cmpl $42, %edi				/* Compare %edi to 42, ascii code for '*' */
-	je .LisOperantToken			/* If '*', jump to .LisOpToken */
+	je .LisOperantToken			/* If '*', jump to .LisOperantToken */
 	cmpl $43, %edi				/* Compare %edi to 43, ascii code for '+' */
-	je .LisOperantToken			/* If '+', jump to .LisOpToken */
+	je .LisOperantToken			/* If '+', jump to .LisOperantToken */
 	cmpl $45, %edi				/* Compare %edi to 45, ascii code for '-' */
-	je .LisOperantToken			/* If '-', jump to .LisOpToken */
+	je .LisOperantToken			/* If '-', jump to .LisOperantToken */
 	cmpl $47, %edi				/* Compare %edi to 47, ascii code for '/' */
-	je .LisOperantToken			/* If '/', jump to .LisOpToken */
+	je .LisOperantToken			/* If '/', jump to .LisOperantToken */
 
 	/* Check if it is a digit */
 	call isDigit				/* check if it is digit */
@@ -388,7 +388,44 @@ stackPop:
  */
 	.globl evalOp
 evalOp:
+	subq $8, %rsp               /* Align stack pointer */
+
+	/* Check which operant operant */
+	cmpl $42, %edi				/* Compare %edi to 42, ascii code for '*' */
+	je .LisMultiply			/* If '*', jump to .LisMultiply */
+	cmpl $43, %edi				/* Compare %edi to 43, ascii code for '+' */
+	je .LisAdd			/* If '+', jump to .LisAdd */
+	cmpl $45, %edi				/* Compare %edi to 45, ascii code for '-' */
+	je .LisSubtract			/* If '-', jump to .LisSubtract */
+	cmpl $47, %edi				/* Compare %edi to 47, ascii code for '/' */
+	je .LisDivide			/* If '/', jump to .LisDivide */
+
+.LisMultiply:
+	imulq %rdx, %rsi /* set %rsi to %rdx (right) * %rsi (left) */
+	movq %rsi, %rax
+	addq $8, %rsp			/* Restore stack pointer */
 	ret
+
+.LisAdd:
+	addq %rdx, %rsi 
+	movq %rsi, %rax
+	addq $8, %rsp			/* Restore stack pointer */
+	ret
+
+.LisSubtract:
+	subq %rdx, %rsi  		/* Order should be correct? */ 
+	movq %rsi, %rax
+	addq $8, %rsp			/* Restore stack pointer */
+	ret
+
+.LisDivide:
+	movq %rdi, %rax               /* put dividend in %rax */
+	cqto                          /* sign-extend dividend into %rdx */
+	idivq %rsi                    /* divide by the divisor */
+	/* quotient is now in %rax */
+	addq $8, %rsp				  /* Restore stack pointer */
+	ret
+
 
 /* vim:ft=gas:
  */
