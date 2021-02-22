@@ -12,6 +12,7 @@
 	.section .rodata
 
 eNegativeValue: .string "Negative value"
+eStackFull: .string "the stack is full"
 eErrorMsg: .string "Error: %s\n"
 
 /* TODO: add other string constants and other read-only data here */
@@ -56,7 +57,6 @@ addPositive:
  */
 	.globl fatalError
 fatalError:
-	/* TODO: implement */
 	subq $8, %rsp                /* Align stack pointer */
 	
 	/* store rdi in a different func */
@@ -140,7 +140,6 @@ isDigit:
 	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
-	ret
 
 /*
  * skipws - skips any whitespace characters (as determined by isSpace)
@@ -322,7 +321,21 @@ consumeOp:
  */
 	.globl stackPush
 stackPush:
-	/* TODO: implement */
+	subq $8, %rsp               /* Align stack pointer */
+	cmpq (%rsi), $MAX_STACK		/* Compare count to max stack */
+	jge .LisStackFull			/* If stack full, jump to .LisStackFull */
+
+.LisStackFull:
+	movq $eStackFull, %rdi
+	call fatalError
+9:	jmp 9b                       /* should not get here */
+	
+	movq (%rsi), %r10 /* Assgin count to r10 */
+	movq %rdx, (%rdi, %r10, 4) /* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
+	/* Asccess the s value at count */
+	incq (%rsi)				/* Increment count by 1 */
+
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 /*
