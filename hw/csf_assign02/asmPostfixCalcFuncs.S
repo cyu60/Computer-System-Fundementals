@@ -323,7 +323,9 @@ consumeOp:
 	.globl stackPush
 stackPush:
 	subq $8, %rsp               /* Align stack pointer */
-	cmpq $MAX_STACK, (%rsi)		/* Compare count to max stack */
+	movq (%rsi), %r10 			/* Assgin count to r10 */
+	cmpq $MAX_STACK, %r10		/* Compare count to max stack */
+	/* cmpq $MAX_STACK, (%rsi)		/* Compare count to max stack */
 	je .LisStackFull			/* If stack full, jump to .LisStackFull */
 
 .LisStackFull:
@@ -332,7 +334,6 @@ stackPush:
 9:	jmp 9b                      /* should not get here */
 	
 	/* Asccess the stack value at count */
-	movq (%rsi), %r10 			/* Assgin count to r10 */
 	movq %rdx, (%rdi, %r10, 4) 	/* stack[count] == %rdi (base) + %r10 (index) * 4 (scale factor) */
 	
 	incq (%rsi)					/* Increment count by 1 */
