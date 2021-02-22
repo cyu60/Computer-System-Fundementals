@@ -203,13 +203,13 @@ tokenType:
 	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it - s[0] */
 	
 	/* Check if it is an operant */
-	cmpb $42, %edi				/* Compare %edi to 32, ascii code for '*' */
+	cmpl $42, %edi				/* Compare %edi to 32, ascii code for '*' */
 	je .LisOperantToken			/* If '*', jump to .LisOpToken */
-	cmpb $43, %edi				/* Compare %edi to 43, ascii code for '+' */
+	cmpl $43, %edi				/* Compare %edi to 43, ascii code for '+' */
 	je .LisOperantToken			/* If '+', jump to .LisOpToken */
-	cmpb $45, %edi				/* Compare %edi to 45, ascii code for '-' */
+	cmpl $45, %edi				/* Compare %edi to 45, ascii code for '-' */
 	je .LisOperantToken			/* If '-', jump to .LisOpToken */
-	cmpb $47, %edi				/* Compare %edi to 47, ascii code for '/' */
+	cmpl $47, %edi				/* Compare %edi to 47, ascii code for '/' */
 	je .LisOperantToken			/* If '/', jump to .LisOpToken */
 
 	/* Check if it is a digit */
