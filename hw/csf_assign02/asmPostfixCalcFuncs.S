@@ -268,7 +268,7 @@ consumeInt:
 
 .LcheckIsDigit:
 	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
-	call isSpace
+	call isDigit
 	cmp $1, %rax 			/* Check with return value*/
 	je .LIsDigitTop			/* Increment s by 1 */	
 
