@@ -270,7 +270,7 @@ consumeInt:
 	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
 	call isSpace
 	cmp $1, %rax 			/* Check with return value*/
-	je .LIsSDigitTop			/* Increment s by 1 */	
+	je .LIsDigitTop			/* Increment s by 1 */	
 
 	movq %r10, %rax 		/* Assign the current pointer to the return value */
 	addq $8, %rsp			/* Restore stack pointer */
