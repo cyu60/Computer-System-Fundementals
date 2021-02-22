@@ -123,10 +123,10 @@ isSpace:
 isDigit:
 	subq $8, %rsp               /* Align stack pointer */
 	cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
-	jl .LisDigitFalse			/* If space, jump to .LisSpaceTrue */
+	jl .LisDigitFalse			/* If digit, jump to .LisDigitTrue */
 
 	cmpq $57, %rdi				/* Compare %rdi to 57, ascii code for 9 */
-	jg .LisDigitFalse			/* If space, jump to .LisSpaceTrue */
+	jg .LisDigitFalse			/* If digit, jump to .LisDigitTrue */
 
 	jmp .LisDigitTrue			/* If not space, jump to .LisSpaceFalse */
 
@@ -198,7 +198,43 @@ skipws:
 	.globl tokenType
 tokenType:
 	/* TODO: implement */
+	subq $8, %rsp               /* Align stack pointer */
+	movq %rdi, %r10				/* Copy s to r10 */
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it - s[0] */
+	
+	/* Check if it is an operant */
+	cmpq $42, %edi				/* Compare %edi to 32, ascii code for '*' */
+	je .LisOperantToken			/* If '*', jump to .LisOpToken */
+	cmpq $43, %edi				/* Compare %edi to 43, ascii code for '+' */
+	je .LisOperantToken			/* If '+', jump to .LisOpToken */
+	cmpq $45, %edi				/* Compare %edi to 45, ascii code for '-' */
+	je .LisOperantToken			/* If '-', jump to .LisOpToken */
+	cmpq $47, %edi				/* Compare %edi to 47, ascii code for '/' */
+	je .LisOperantToken			/* If '/', jump to .LisOpToken */
+
+	/* Check if it is a digit */
+	call isDigit				/* check if it is digit */
+	cmp $1, %rax 				/* Check with return value*/
+	je .LisDigitToken			    
+
+	/* otherwise, Unkown token */
+	jmp .LisUnkownToken
+
+.LisDigitToken:
+	movq $TOK_INT, %rax 		/* Assign the current pointer to the return value */
+	addq $8, %rsp			/* Restore stack pointer */
 	ret
+
+.LisOperantToken:
+	movq $TOK_OP, %rax 		/* Assign the current pointer to the return value */
+	addq $8, %rsp			/* Restore stack pointer */
+	ret
+
+.LisUnkownToken:
+	movq $TOK_UNKNOWN, %rax 		/* Assign the current pointer to the return value */
+	addq $8, %rsp			/* Restore stack pointer */
+	ret
+
 
 /*
  * consumeInt - consume one or more digit characters at the beginning
@@ -218,6 +254,7 @@ tokenType:
 	.globl consumeInt
 consumeInt:
 	/* TODO: implement */
+
 	ret
 
 /*
