@@ -322,7 +322,7 @@ consumeOp:
 	.globl stackPush
 stackPush:
 	subq $8, %rsp               /* Align stack pointer */
-	cmpq (%rsi), $MAX_STACK		/* Compare count to max stack */
+	cmpl (%rsi), $MAX_STACK		/* Compare count to max stack */
 	jge .LisStackFull			/* If stack full, jump to .LisStackFull */
 
 .LisStackFull:
