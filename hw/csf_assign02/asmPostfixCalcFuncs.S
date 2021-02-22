@@ -23,7 +23,7 @@ eErrorMsg: .string "Error: %s\n"
  */
 	.globl addPositive
 addPositive:
-	subq $8, %rsp                /* align stack pointer */
+	subq $8, %rsp                /* Align stack pointer */
 
 	movq $0, %r10                /* let %r10 be 0 */
 	cmpq %rdi, %r10              /* compare 1st param to 0 */
@@ -43,7 +43,7 @@ addPositive:
 
 .LaddPositiveDone:
 	/* the sum is now in %rax */
-	addq $8, %rsp                /* restore stack pointer */
+	addq $8, %rsp                /* Restore stack pointer */
 	ret
 
 /*
@@ -57,7 +57,7 @@ addPositive:
 	.globl fatalError
 fatalError:
 	/* TODO: implement */
-	subq $8, %rsp                /* align stack pointer */
+	subq $8, %rsp                /* Align stack pointer */
 	
 	/* store rdi in a different func */
 	/* add the formating to the strings */
@@ -92,23 +92,20 @@ fatalError:
  */
 	.globl isSpace
 isSpace:
-	/* TODO: implement */
-	subq $8, %rsp               /* align stack pointer */
+	subq $8, %rsp               /* Align stack pointer */
 	cmpq $32, %rdi				/* Compare %rdi to 32, ascii code for space */
 	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
 
 	cmpq $9, %rdi				/* Compare %rdi to 9, ascii code for tab character */
 	je .LisSpaceTrue			/* If space, jump to .LisSpaceTrue */
 
-	jmp .LisSpaceFalse			/* If not space, jump to .LisSpaceFalse */
-
-.LisSpaceTrue:
-	movq $1, %rax				/* Set return value to 1 if is space char */
+.LisSpaceFalse:					/* Is this even neccessary?? */
+	movq $0, %rax				/* Set return value to 0 if not space */
 	addq $8, %rsp				/* restore stack pointer */
 	ret
 
-.LisSpaceFalse:					/* Is this even neccessary?? */
-	movq $0, %rax				/* Set return value to 0 if not space */
+.LisSpaceTrue:
+	movq $1, %rax				/* Set return value to 1 if is space char */
 	addq $8, %rsp				/* restore stack pointer */
 	ret
 
@@ -124,8 +121,7 @@ isSpace:
  */
 	.globl isDigit
 isDigit:
-	/* TODO: implement */
-	subq $8, %rsp               /* align stack pointer */
+	subq $8, %rsp               /* Align stack pointer */
 	cmpq $48, %rdi				/* Compare %rdi to 40, ascii code for 0 */
 	jl .LisDigitFalse			/* If space, jump to .LisSpaceTrue */
 
@@ -141,7 +137,7 @@ isDigit:
 
 .LisDigitFalse:					/* Is this even neccessary?? */
 	movq $0, %rax				/* Set return value to 0 if not space */
-	addq $8, %rsp				/* restore stack pointer */
+	addq $8, %rsp				/* Restore stack pointer */
 	ret
 
 	ret
@@ -160,35 +156,32 @@ isDigit:
  */
 	.globl skipws
 skipws:
-	/* TODO: implement */
-	subq $8, %rsp               /* align stack pointer */
+	subq $8, %rsp               /* Align stack pointer */
+	movq %rdi, %r10				/* Copy s to r10 */
 
-	/* Note: s is stored in rdi as it is the first pointer */
-	/* while loop */
+	/* While loop */
 	jmp .LcheckIsSpace
 
-/* increment s by 1 */
+/* Increment r10 by 1 to move to next char in s */
 .LIsSpacetop:
-	incq %rdi /* add 1 to s, will need more? */
-	/* incq %r10 /* add 1 to s, will need more? */
+	incq %r10
 
 .LcheckIsSpace:
-	/* Need to move the first arg??*/
-	/* How do we pass the first char in an char array to rdi?? ie access s[0]*/
-	/* movw %di ,(%rdi) */ /* pass the first smaller val into di? */
-	/* movq %rdi, %r10 /* store rdi in r10 */
+	cmpq $0, (%r10) 		/* Check for null char, marking end of string */
+	je .LisNullChar			/* If null char, exit loop and return null */
+	
+	movzbl (%r10d), %edi	/* Copy first char stored in r10 to edi and zero extend it */
 	call isSpace
-	cmp $1, %rax /* check with return value*/
-	je .LIsSpacetop
-	/* increment s by 1 */
+	cmp $1, %rax 			/* Check with return value*/
+	je .LIsSpacetop			/* Increment s by 1 */
 
-	/* if loop -- not necessary? \0 == null?? */
-	/* cmpq $48, %rdi */			/* Compare %rdi to 40, ascii code for 0 */
-	/* je .LisEndOfLine	*/		/* If space, jump to .LisSpaceTrue */
+	movq %r10, %rax 		/* Assign the current pointer to the return value */
+	addq $8, %rsp			/* Restore stack pointer */
+	ret
 
-	mov %rdi, %rax 				/* assign the current pointer to the return value */
-	addq $8, %rsp				/* restore stack pointer */
-
+.LisNullChar:
+	movq $0, %rax			/* If end of string reached, set return value to 0 (NULL) */
+	addq $8, %rsp			/* Restore stack pointer */
 	ret
 
 /*
