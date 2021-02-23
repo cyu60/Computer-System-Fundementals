@@ -43,6 +43,7 @@ eval:
 	movq $0, 0(%rsp)			/* assign count to start at 0 */
 
 	/* NOTE: SHOULD CONSIDER A CALLEE SAVED REGISTER RATHER THAN r10?? */
+	/* NOTE: NEED TO DIFFERENTIATE BETWEEN ADDRESS AND VALUES FOR STACK VARS?? */
 	/* Find the 1st valid token */
 	call skipws
 	movq %rax, %r10 			/* update s value and copy to r10 */
@@ -51,17 +52,17 @@ eval:
 	jmp .LcheckString
 
 .LIsStringTop:
-	call tokenType
+	call tokenType 				/* NOTE:: getting a seg fault here!!? Need to check pointer alignment?*/
 	/* Assign token type to %r11 (int of 4 bytes) */
 	movq %rax, %r11 /* Need to use diff prefix? */
 
 	/* Check for the token type */
-	cmpq $TOK_INT, %r11				/* Compare %edi to 42, ascii code for '*' */
-	je .LisTOK_INT			/* If '*', jump to .LisTOK_INT */
-	cmpq $TOK_OP, %r11				/* Compare %edi to 43, ascii code for '+' */
-	je .LisTOK_OP			/* If '*', jump to .LisTOK_OP */
-	cmpq $TOK_UNKNOWN, %r11				/* Compare %edi to 43, ascii code for '+' */
-	je .LisTOK_UNKOWN			/* If '*', jump to .LisTOK_UNKOWN */
+	cmpq $TOK_INT, %r11				
+	je .LisTOK_INT				/* If int, jump to .LisTOK_INT */
+	cmpq $TOK_OP, %r11		
+	je .LisTOK_OP				/* If op, jump to .LisTOK_OP */
+	cmpq $TOK_UNKNOWN, %r11		
+	je .LisTOK_UNKOWN			/* If unkown, jump to .LisTOK_UNKOWN */
 
 .LisTOK_INT:
 	movq %r10, %rdi 			/* Assign the string to the first arg */
@@ -125,7 +126,7 @@ eval:
 	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	cmpq $0, %rdi 				/* Check for null char, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
-	jmp .LIsStringTop				/* Increment s by 1 */	
+	jmp .LIsStringTop				/* Go to while loop content */	
 
 .LafterCheckString:
 	movq 0(%rsp), %r11
