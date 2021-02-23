@@ -124,8 +124,10 @@ eval:
 .LcheckString:
 	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	cmpq $0, %rdi 				/* Check for null char, marking end of string (edi is part of rdi) */
-	je .LIsStringTop				/* Increment s by 1 */	
+	je .LafterCheckString
+	jmp .LIsStringTop				/* Increment s by 1 */	
 
+.LafterCheckString:
 	movq 0(%rsp), %r11
 	cmpq $1, %r11			/* check count == 1 */
 	je .LstringComputed
