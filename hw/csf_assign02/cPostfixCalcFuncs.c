@@ -141,7 +141,8 @@ const char *consumeInt(const char *s, long *pval) {
  */
 const char *consumeOp(const char *s, int *op) {
   *op = s[0];
-  return s+=1; 
+  // return s+=1; // Both works...
+  return ++s; 
 }
 
 /*
