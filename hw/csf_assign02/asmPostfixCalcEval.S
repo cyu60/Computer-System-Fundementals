@@ -46,13 +46,13 @@ eval:
 	/* NOTE: NEED TO DIFFERENTIATE BETWEEN ADDRESS AND VALUES FOR STACK VARS?? */
 	/* Find the 1st valid token */
 	call skipws
-	movq %rax, %r10 			/* update s value and copy to r10 */
+	movq %rax, %rbx 			/* update s value and copy to rbx */
 
 	/* While loop */
 	jmp .LcheckString
 
 .LIsStringTop:
-	call tokenType 				/* NOTE:: getting a seg fault here!!? Need to check pointer alignment?*/
+	call tokenType 				/* NOTE:: getting a seg fault here!!? Need to check pointer alignment? */
 	/* Assign token type to %r11 (int of 4 bytes) */
 	movq %rax, %r11 /* Need to use diff prefix? */
 
@@ -68,7 +68,7 @@ eval:
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
 	movq 8(%rsp), %rsi			/* Assign val to the 2nd arg */
 	call consumeInt
-	movq %rax, %r10 			/* update the value of s */
+	movq %rax, %rbx 			/* update the value of s */
 	jmp .LIsStringBottom 
 
 .LisTOK_UNKOWN:
@@ -91,11 +91,11 @@ eval:
 	movq 0(%rbp), %rsi
 	movq %rax, 16(%rbp)			/* assign return to left 16(%rbp) */
 
-	/* Call consome Operant */
-	movq %r10, %rdi 			/* Assign the string to the first arg */
+	/* Call consume Operant */
+	movq %rbx, %rdi 			/* Assign the string to the first arg */
 	movq 32(%rsp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
 	call consumeOp
-	movq %rax, %r10 			/* update the value of s */
+	movq %rax, %rbx 			/* update the value of s */
 
 	/* Call eval Op (op, left, right) */
 	movzbl 32(%rsp), %edi		/* Copy int stored in 32(%rsp) (op) to edi and zero extend it */

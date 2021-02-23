@@ -200,7 +200,7 @@ skipws:
 tokenType:
 	subq $8, %rsp               /* Align stack pointer */
 	movq %rdi, %r10				/* Copy s to r10 */
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it - s[0] */
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it - s[0] SEG FAULT HERE */
 	
 	/* Check if it is an operant */
 	cmpl $42, %edi				/* Compare %edi to 42, ascii code for '*' */
