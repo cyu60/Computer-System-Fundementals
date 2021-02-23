@@ -65,7 +65,7 @@ eval:
 	je .LisTOK_UNKOWN			/* If unkown, jump to .LisTOK_UNKOWN */
 
 .LisTOK_INT:
-	movq %r10, %rdi 			/* Assign the string to the first arg */
+	movq %rbx, %rdi 			/* Assign the string to the first arg */
 	movq 8(%rsp), %rsi			/* Assign val to the 2nd arg */
 	call consumeInt
 	movq %rax, %r10 			/* update the value of s */
@@ -118,7 +118,7 @@ eval:
 	movq 8(%rbp), %rdx			/* assign right val to 3nd param */
 	/* Find the next valid token */
 	call skipws
-	movq %rax, %r10 			/* update s value and copy to r10 */
+	movq %rax, %rbx 			/* update s value and copy to rbx */
 
 	jmp .LcheckString
 
