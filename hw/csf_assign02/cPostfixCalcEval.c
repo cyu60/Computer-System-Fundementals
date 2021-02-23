@@ -13,16 +13,17 @@
  *   the result of evaluating the expression
  */
 long eval(const char *s) {
-  long count = 0;
-  long stack[MAX_STACK];
   
   // Values
+  long count = 0;
   long val;
   long left;
   long right;
 
   // Operants
   int op;
+
+  long stack[MAX_STACK];
 
   // Find the first valid token
   s = skipws(s);

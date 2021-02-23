@@ -297,9 +297,7 @@ consumeOp:
 
 	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	
-	/* movl  %edi ,(%esi)			/* Assign the s[0] value to op -- (needs to be an int!) -- 3 bytes */
 	movl  %edi ,(%rsi)			/* Assign the s[0] value to op -- (needs to be an int!) -- 3 bytes */
-	/* movq  %rdi ,(%rsi)			/* Assign the s[0] value to op -- (needs to be an int!) -- 3 bytes */
 	
 	incq %r10					/* Increment r10 by 1 to move to next char in s (s+=1) */
 	movq %r10, %rax 			/* Assign the current pointer to the return value */
