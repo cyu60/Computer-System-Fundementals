@@ -78,8 +78,8 @@ eval:
 .LisTOK_OP:
 	/* Check count < 2 */
 	movq 0(%rbp), %r11		/* using r11 temp */
-	cmpq %r11, $2			/* 0(%rbp) is the long count */
-	jl .LinsufficentArgs
+	cmpq $2, %r11 			/* 0(%rbp) is the long count */
+	jg .LinsufficentArgs
 
 	/* Call stack pop (stack, count) for right */
 	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
@@ -127,7 +127,7 @@ eval:
 	je .LIsStringTop				/* Increment s by 1 */	
 
 	movq 0(%rsp), %r11
-	comq $1, %r11			/* check count == 1 */
+	cmpq $1, %r11			/* check count == 1 */
 	je .LstringComputed
 
 	jmp .LstringNotComputed
