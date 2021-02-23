@@ -166,11 +166,12 @@ skipws:
 .LIsSpacetop:
 	incq %r10
 
-.LcheckIsSpace:
-	cmpq $0, (%r10) 			/* Check for null char, marking end of string */
+.LcheckIsSpace:	
+	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
+	
+	cmpq $0, (%rdi) 			/* Check for null char, marking end of string */
 	je .LisNullChar				/* If null char, exit loop and return null */
 	
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	call isSpace
 	cmp $1, %rax 				/* Check with return value*/
 	je .LIsSpacetop				/* Increment s by 1 */
