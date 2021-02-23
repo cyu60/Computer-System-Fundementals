@@ -56,11 +56,11 @@ eval:
 	movq %rax, %r11 /* Need to use diff prefix? */
 
 	/* Check for the token type */
-	cmpl $TOK_INT, %r11				/* Compare %edi to 42, ascii code for '*' */
+	cmpq $TOK_INT, %r11				/* Compare %edi to 42, ascii code for '*' */
 	je .LisTOK_INT			/* If '*', jump to .LisTOK_INT */
-	cmpl $TOK_OP, %r11				/* Compare %edi to 43, ascii code for '+' */
+	cmpq $TOK_OP, %r11				/* Compare %edi to 43, ascii code for '+' */
 	je .LisTOK_OP			/* If '*', jump to .LisTOK_OP */
-	cmpl $TOK_UNKNOWN, %r11				/* Compare %edi to 43, ascii code for '+' */
+	cmpq $TOK_UNKNOWN, %r11				/* Compare %edi to 43, ascii code for '+' */
 	je .LisTOK_UNKOWN			/* If '*', jump to .LisTOK_UNKOWN */
 
 .LisTOK_INT:
@@ -91,7 +91,7 @@ eval:
 
 	/* Call consome Operant */
 	movq %r10, %rdi 			/* Assign the string to the first arg */
-	movl 32(%rsp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
+	movq 32(%rsp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
 	call consumeOp
 	movq %rax, %r10 			/* update the value of s */
 
@@ -113,7 +113,7 @@ eval:
 	/* update the stack with the val with stack push */
 	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	movq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
-	movq (8(%rbp)), %rdx			/* assign right val to 3nd param */
+	movq 8(%rbp), %rdx			/* assign right val to 3nd param */
 	/* Find the next valid token */
 	call skipws
 	movq %rax, %r10 			/* update s value and copy to r10 */
@@ -125,7 +125,7 @@ eval:
 	cmpq $0, %rdi 				/* Check for null char, marking end of string (edi is part of rdi) */
 	je .LIsStringTop				/* Increment s by 1 */	
 
-	comq $1, (0(%rsp))			/* check count == 1 */
+	comq $1, 0(%rsp)			/* check count == 1 */
 	je .LstringComputed
 
 	jmp .LstringNotComputed
