@@ -184,6 +184,9 @@ void testSkipws(TestObjs *objs) {
 	ASSERT(0 == strcmp("abc", skipws("     abc")));
 	ASSERT(0 == strcmp("abc", skipws("\t\t\t\tabc")));
 	ASSERT(0 == strcmp("abc", skipws(" \tabc")));
+	ASSERT(0 == strcmp("abc", skipws("\t abc")));
+	ASSERT(0 == strcmp(NULL, skipws("")));
+	ASSERT(0 == strcmp(NULL, skipws("\t ")));
 }
 
 void testTokenType(TestObjs *objs) {
