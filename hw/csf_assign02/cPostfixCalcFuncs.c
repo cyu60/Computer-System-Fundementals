@@ -141,7 +141,7 @@ const char *consumeInt(const char *s, long *pval) {
  */
 const char *consumeOp(const char *s, int *op) {
   *op = s[0];
-  // return s+=1; // Both works...
+  // return s+=1; // Both works... https://stackoverflow.com/questions/12988140/what-is-the-difference-between-and-1-operators
   return ++s; 
 }
 
