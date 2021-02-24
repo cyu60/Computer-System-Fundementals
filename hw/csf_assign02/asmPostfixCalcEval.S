@@ -52,7 +52,7 @@ eval:
 	jmp .LcheckString
 
 .LIsStringTop:
-	call tokenType 				/* NOTE:: getting a seg fault here!!? Need to check pointer alignment? */
+	call tokenType 				/* Call tokentype to determine what type of char */
 	/* Assign token type to %r11 (int of 4 bytes) */
 	movq %rax, %r11 /* Need to use diff prefix? */
 
