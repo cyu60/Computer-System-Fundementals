@@ -120,11 +120,11 @@ eval:
 	call skipws
 	movq %rax, %rbx 			/* update s value and copy to rbx */
 
-	jmp .LcheckString
+	jmp .LcheckString    /* Don't need this jump? Since it's directly following */
 
 .LcheckString:
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
-	cmpq $0, %rdi 				/* Check for null char, marking end of string (edi is part of rdi) */
+	movl %ebx, %edi			/* Copy first char stored in rbx to edi and zero extend it */
+	cmpq $0, (%edi) 				/* Check for null char, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
 	jmp .LIsStringTop				/* Go to while loop content */	
 
