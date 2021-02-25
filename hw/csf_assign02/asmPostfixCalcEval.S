@@ -28,6 +28,7 @@ eCannotCompute: .string "string cannot be computed"
  */
 	.globl eval
 eval:
+	/* Will need to push and restore the rbx and r12 pointers? */
 	pushq %rbp
 	subq $208, %rsp				/* 0(%rbp) is the long count */
 								/* 8(%rbp) is the long val */
@@ -68,7 +69,7 @@ eval:
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
 	movq 8(%rbp), %r12			/* Find the val pointer -- assign to r12*/
 	movq %r12, %rsi			/* Assign val pointer to the 2nd arg */
-	call consumeInt
+	call consumeInt				/* Getting a seg fault here?? */
 	movq %rax, %rbx 			/* update the value of s */
 	jmp .LIsStringBottom 
 
