@@ -66,7 +66,7 @@ eval:
 
 .LisTOK_INT:
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
-	movq 8(%rsp), %rsi			/* Assign val to the 2nd arg */
+	movq 8(%rbp), %rsi			/* Assign val to the 2nd arg */
 	call consumeInt
 	movq %rax, %rbx 			/* update the value of s */
 	jmp .LIsStringBottom 
