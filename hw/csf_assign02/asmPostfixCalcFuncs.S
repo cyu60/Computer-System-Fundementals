@@ -167,7 +167,7 @@ skipws:
 	incq %r10
 
 .LcheckIsSpace:	
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	
 	cmpq $0, %rdi 				/* Check for null char, marking end of string (edi is part of rdi) */
 	je .LisNullChar				/* If null char, exit loop and return null */

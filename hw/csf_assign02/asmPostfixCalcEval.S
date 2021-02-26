@@ -116,18 +116,17 @@ eval:
 .LIsStringBottom:
 	/* update the stack with the val with stack push */
 	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
+	/*movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	movq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	movq 8(%rbp), %rdx			/* assign right val to 3nd param */
 	/* Find the next valid token */
 	call skipws
 	movq %rax, %rbx 			/* update s value and copy to rbx */
 
-	jmp .LcheckString    /* Don't need this jump? Since it's directly following */
-
 .LcheckString:
-	movl %ebx, %edi			/* Copy first char stored in rbx to edi and zero extend it */
-	cmpq $0, (%edi) 				/* Check for null char, marking end of string (edi is part of rdi) */
+	cmpb $0, %bl 				/* Check for null terminator, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
+	movzbl (%rbx), %edi			/* Copy first char stored in rbx to edi and zero extend it */
 	jmp .LIsStringTop				/* Go to while loop content */	
 
 .LafterCheckString:
