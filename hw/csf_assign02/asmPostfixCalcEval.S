@@ -119,6 +119,8 @@ eval:
 	/*movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	movq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	movq 8(%rbp), %rdx			/* assign right val to 3nd param */
+	call stackPush
+
 	/* Find the next valid token */
 	call skipws
 	movq %rax, %rbx 			/* update s value and copy to rbx */
