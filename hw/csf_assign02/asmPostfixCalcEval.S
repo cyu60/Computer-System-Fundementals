@@ -121,6 +121,7 @@ eval:
 	call stackPush
 
 	/* Find the next valid token */
+	movq %rbx, %rdi 			/* pass s to 1st arg */
 	call skipws
 	movq %rax, %rbx 			/* update s value and copy to rbx */
 
