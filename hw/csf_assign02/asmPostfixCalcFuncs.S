@@ -268,7 +268,7 @@ consumeInt:
 	incq %r10					/* Increment r10 by 1 to move to next char in s */
 
 .LcheckIsDigit:
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	call isDigit
 	cmp $1, %rax 				/* Check with return value*/
 	je .LIsDigitTop				/* Increment s by 1 */	
@@ -295,7 +295,7 @@ consumeOp:
 	subq $8, %rsp               /* Align stack pointer */
 	movq %rdi, %r10				/* Copy s to r10 */
 
-	movzbl (%r10d), %edi		/* Copy first char stored in r10 to edi and zero extend it */
+	movzbl (%r10), %edi		/* Copy first char stored in r10 to edi and zero extend it */
 	
 	movl  %edi ,(%rsi)			/* Assign the s[0] value to op -- (needs to be an int!) -- 3 bytes */
 	
