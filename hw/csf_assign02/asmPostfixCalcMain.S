@@ -39,9 +39,7 @@ main:
 	ret
 
 .LisTwoArg:
-	/* leaq 8(%rsi), %rsi 					/* move to  argv[1] (array of pointers of size 8) */
 	movq 8(%rsi), %rsi 					/* move to argv[1] (array of pointers of size 8) */
-	/* incq %rsi 					/* move to  argv[1] (array of pointers 8 bytes) */
 	movq %rsi, %rdi				/* assign s (argv[1]) to the first arg */
 	call eval
 
