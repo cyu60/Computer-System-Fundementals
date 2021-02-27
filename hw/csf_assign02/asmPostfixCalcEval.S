@@ -82,7 +82,7 @@ eval:
 	/* Check count < 2 */
 	/* movq 0(%rbp), %r11		/* using r11 temp */
 	cmpq $2, 0(%rbp)			/* 0(%rbp) is the long count */
-	jg .LinsufficentArgs
+	jl .LinsufficentArgs
 
 	/* Call stack pop (stack, count) for right */
 	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
