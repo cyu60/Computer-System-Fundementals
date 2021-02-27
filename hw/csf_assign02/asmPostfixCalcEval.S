@@ -98,7 +98,7 @@ eval:
 
 	/* Call consume Operant */
 	leaq %rbx, %rdi 			/* Assign the string to the first arg */
-	leaq 32(%rbp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
+	leal 32(%rbp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
 	call consumeOp
 	movq %rax, %rbx 			/* update the value of s */
 
