@@ -45,7 +45,6 @@ eval:
 
 	movq $0, 0(%rbp)			/* assign count to start at 0 */
 
-	/* NOTE: NEED TO DIFFERENTIATE BETWEEN ADDRESS AND VALUES FOR STACK VARS?? */
 	/* Find the 1st valid token */
 	call skipws
 	movq %rax, %rbx 			/* update s value and copy to rbx */
@@ -69,7 +68,7 @@ eval:
 .LisTOK_INT:
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
 	leaq 8(%rbp), %rsi			/* Assign val pointer to the 2nd arg */
-	call consumeInt				/* Getting a seg fault here?? */
+	call consumeInt				
 	movq %rax, %rbx 			/* update the value of s */
 	jmp .LIsStringBottom 
 
@@ -80,7 +79,6 @@ eval:
 
 .LisTOK_OP:
 	/* Check count < 2 */
-	/* movq 0(%rbp), %r11		/* using r11 temp */
 	cmpq $2, 0(%rbp)			/* 0(%rbp) is the long count */
 	jl .LinsufficentArgs
 
@@ -132,13 +130,12 @@ eval:
 	/* Need to check the full val and not just pointer?? */
 	cmpq $0, %rbx 				/* Check for null terminator, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
-	/* movzbl (%rbx), %edi			/* Copy first char stored in rbx to edi and zero extend it */
-	movq %rbx, %rdi			/* Copy pointer address to rdi */
-	jmp .LIsStringTop				/* Go to while loop content */	
+	movq %rbx, %rdi				/* Copy pointer address to rdi */
+	jmp .LIsStringTop			/* Go to while loop content */	
 
 .LafterCheckString:
 	movq 0(%rbp), %r11
-	cmpq $1, %r11			/* check count == 1 */
+	cmpq $1, %r11				/* check count == 1 */
 	je .LstringComputed
 
 	jmp .LstringNotComputed
