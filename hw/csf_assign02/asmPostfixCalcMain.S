@@ -40,7 +40,7 @@ main:
 
 .LisTwoArg:
 	movq 8(%rsi), %rsi 					/* move to argv[1] (array of pointers of size 8) */
-	movq %rsi, %rdi				/* assign s (argv[1]) to the first arg */
+	movq (%rsi), %rdi				/* assign s (argv[1]) to the first arg */
 	call eval
 
 	movq $sResultfmt, %rdi 		/* move the result format to the first arg */
