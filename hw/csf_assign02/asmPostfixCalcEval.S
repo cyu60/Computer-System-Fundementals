@@ -89,6 +89,7 @@ eval:
 	leaq 0(%rbp), %rsi
 	call stackPop
 	movq %rax, 24(%rbp)			/* assign return to right 24(%rbp) */
+	
 	/* Call stack pop (stack, count) for left */
 	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	leaq 0(%rbp), %rsi
