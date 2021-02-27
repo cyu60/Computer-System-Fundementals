@@ -145,7 +145,7 @@ eval:
 	leaq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	call stackPop
 
-	addq $288, %rsp 			/* restore the stack pointer */
+	addq $208, %rsp 			/* restore the stack pointer */
 	popq %r12
 	popq %rbx
 	popq %rbp
