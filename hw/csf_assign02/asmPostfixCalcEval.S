@@ -129,7 +129,7 @@ eval:
 	cmpb $0, %bl 				/* Check for null terminator, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
 	/* movzbl (%rbx), %edi			/* Copy first char stored in rbx to edi and zero extend it */
-	movzbl %rbx, %rdi			/* Copy pointer address to rdi */
+	movq %rbx, %rdi			/* Copy pointer address to rdi */
 	jmp .LIsStringTop				/* Go to while loop content */	
 
 .LafterCheckString:
