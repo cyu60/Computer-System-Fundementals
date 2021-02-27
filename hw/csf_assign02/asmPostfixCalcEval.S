@@ -141,7 +141,7 @@ eval:
 	jmp .LstringNotComputed
 
 .LstringComputed:
-	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
+	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	leaq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	call stackPop
 
