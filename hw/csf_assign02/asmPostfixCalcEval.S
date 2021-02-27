@@ -142,7 +142,7 @@ eval:
 
 .LstringComputed:
 	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
-	movq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
+	leaq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	call stackPop
 
 	addq $288, %rsp 			/* restore the stack pointer */
