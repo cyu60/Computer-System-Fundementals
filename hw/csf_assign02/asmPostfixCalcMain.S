@@ -25,7 +25,7 @@ sResultfmt: .string "Result is: %ld\n"
  */
 	.globl main
 main:
-	subq $8, %rsp                /* Align stack pointer */
+	subq $8, %rsp               /* Align stack pointer */
 
 	cmpl $2, %edi				/* check argc is 2 */
 	je .LisTwoArg
@@ -34,21 +34,21 @@ main:
 	movq $eWrongArgs, %rdi
 	call printf
 	
-	movq $1, %rdi				/* return with exit code 1 */
-	addq $8, %rsp                /* Restore stack pointer */
+	movq $1, %rax				/* return with exit code 1 */
+	addq $8, %rsp               /* Restore stack pointer */
 	ret
 
 .LisTwoArg:
-	addq $8, %rsi
-	movq (%rsi), %rdi				/* assign s (argv[1]) to the first arg */
+	addq $8, %rsi				/* move to  argv[1] (array of pointers of size 8) */
+	movq (%rsi), %rdi			/* assign s (argv[1]) to the first arg */
 	call eval
 
 	movq $sResultfmt, %rdi 		/* move the result format to the first arg */
 	movq %rax, %rsi				/* move result to the second arg */
 	call printf
 
-	movq $0, %rdi				/* return with exit code 0 */
-	addq $8, %rsp                /* Restore stack pointer */
+	movq $0, %rax				/* return with exit code 0 */
+	addq $8, %rsp               /* Restore stack pointer */
 	ret
 
 /* vim:ft=gas:
