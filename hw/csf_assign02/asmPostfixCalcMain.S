@@ -5,6 +5,10 @@
 
 .section .rodata
 
+
+eWrongArgs: .string "Wrong number of arguments\n"
+sResultfmt: .string "Result is: %ld\n"
+
 /* TODO: add string constants and other read-only data here */
 
 .section .text 
@@ -21,7 +25,30 @@
  */
 	.globl main
 main:
-	/* TODO: implement */
+	subq $8, %rsp                /* Align stack pointer */
+
+	cmpl $2, %rdi		/* check argc is 2 */
+	je .LisTwoArg
+
+.LisNotTwoArg:
+	movq $eWrongArgs, %rdi
+	call printf
+	
+	movq $1, %rdi				/* return with exit code 1 */
+	addq $8, %rsp                /* Restore stack pointer */
+	ret
+
+.LisTwoArg:
+	incq %rsi 					/* move to  argv[1] (array of pointers 8 bytes) */
+	movq %rsi, %rdi				/* assign s (argv[1]) to the first arg */
+	call eval
+
+	movq $sResultfmt, %rdi 		/* move the result format to the first arg */
+	movq %rax, %rsi				/* move result to the second arg */
+	call printf
+	
+	movq $0, %rdi				/* return with exit code 0 */
+	addq $8, %rsp                /* Restore stack pointer */
 	ret
 
 /* vim:ft=gas:
