@@ -30,6 +30,8 @@ eCannotCompute: .string "string cannot be computed"
 eval:
 	/* Will need to push and restore the rbx and r12 pointers? */
 	pushq %rbp
+	pushq %rbx
+	pushq %r12
 	subq $208, %rsp				/* 0(%rbp) is the long count */
 								/* 8(%rbp) is the long val */
 								/* 16(%rbp) is the long left */
@@ -41,9 +43,8 @@ eval:
 								/* Need an additional 12 to be multiple of 16! at 208 */
 	movq %rsp, %rbp				/* keep the base pointer */
 
-	movq $0, 0(%rsp)			/* assign count to start at 0 */
+	movq $0, 0(%rbp)			/* assign count to start at 0 */
 
-	/* NOTE: SHOULD CONSIDER A CALLEE SAVED REGISTER RATHER THAN r10?? */
 	/* NOTE: NEED TO DIFFERENTIATE BETWEEN ADDRESS AND VALUES FOR STACK VARS?? */
 	/* Find the 1st valid token */
 	call skipws
@@ -67,8 +68,7 @@ eval:
 
 .LisTOK_INT:
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
-	movq 8(%rbp), %r12			/* Find the val pointer -- assign to r12*/
-	movq %r12, %rsi			/* Assign val pointer to the 2nd arg */
+	leaq 8(%rbp), %rsi			/* Assign val pointer to the 2nd arg */
 	call consumeInt				/* Getting a seg fault here?? */
 	movq %rax, %rbx 			/* update the value of s */
 	jmp .LIsStringBottom 
@@ -85,22 +85,22 @@ eval:
 	jg .LinsufficentArgs
 
 	/* Call stack pop (stack, count) for right */
-	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
-	movq 0(%rbp), %rsi
+	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
+	leaq 0(%rbp), %rsi
 	movq %rax, 24(%rbp)			/* assign return to right 24(%rbp) */
 	/* Call stack pop (stack, count) for left */
-	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
-	movq 0(%rbp), %rsi
+	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
+	leaq 0(%rbp), %rsi
 	movq %rax, 16(%rbp)			/* assign return to left 16(%rbp) */
 
 	/* Call consume Operant */
 	movq %rbx, %rdi 			/* Assign the string to the first arg */
-	movq 32(%rsp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
+	leaq 32(%rbp), %rsi			/* Assign op to the 2nd arg (op is an int!) */
 	call consumeOp
 	movq %rax, %rbx 			/* update the value of s */
 
 	/* Call eval Op (op, left, right) */
-	movzbl 32(%rsp), %edi		/* Copy int stored in 32(%rsp) (op) to edi and zero extend it */
+	movzbl 32(%rbp), %edi		/* Copy int stored in 32(%rbp) (op) to edi and zero extend it */
 	movq 16(%rbp), %rsi			/* assign left 16(%rbp) to 2nd param */
 	movq 24(%rbp), %rdx			/* assign right 24(%rbp) to 3nd param */
 	call evalOp
@@ -115,9 +115,8 @@ eval:
 
 .LIsStringBottom:
 	/* update the stack with the val with stack push */
-	movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
-	/*movq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
-	movq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
+	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
+	leaq 0(%rbp), %rsi			/* 0(%rbp) is the long count */
 	movq 8(%rbp), %rdx			/* assign right val to 3nd param */
 	call stackPush
 
@@ -126,14 +125,15 @@ eval:
 	movq %rax, %rbx 			/* update s value and copy to rbx */
 
 .LcheckString:
-	cmpb $0, %bl 				/* Check for null terminator, marking end of string (edi is part of rdi) */
+	/* Need to check the full val and not just pointer?? */
+	cmpq $0, %rbx 				/* Check for null terminator, marking end of string (edi is part of rdi) */
 	je .LafterCheckString
 	/* movzbl (%rbx), %edi			/* Copy first char stored in rbx to edi and zero extend it */
 	movq %rbx, %rdi			/* Copy pointer address to rdi */
 	jmp .LIsStringTop				/* Go to while loop content */	
 
 .LafterCheckString:
-	movq 0(%rsp), %r11
+	movq 0(%rbp), %r11
 	cmpq $1, %r11			/* check count == 1 */
 	je .LstringComputed
 
@@ -145,6 +145,8 @@ eval:
 	call stackPop
 
 	addq $288, %rsp 			/* restore the stack pointer */
+	popq %r12
+	popq %rbx
 	popq %rbp
 	ret
 
