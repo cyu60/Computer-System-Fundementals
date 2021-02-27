@@ -80,17 +80,19 @@ eval:
 
 .LisTOK_OP:
 	/* Check count < 2 */
-	movq 0(%rbp), %r11		/* using r11 temp */
-	cmpq $2, %r11 			/* 0(%rbp) is the long count */
+	/* movq 0(%rbp), %r11		/* using r11 temp */
+	cmpq $2, 0(%rbp)			/* 0(%rbp) is the long count */
 	jg .LinsufficentArgs
 
 	/* Call stack pop (stack, count) for right */
 	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	leaq 0(%rbp), %rsi
+	call stackPop
 	movq %rax, 24(%rbp)			/* assign return to right 24(%rbp) */
 	/* Call stack pop (stack, count) for left */
 	leaq 36(%rbp), %rdi			/* 36(%rbp) is the start of long stack[20] */
 	leaq 0(%rbp), %rsi
+	call stackPop
 	movq %rax, 16(%rbp)			/* assign return to left 16(%rbp) */
 
 	/* Call consume Operant */
