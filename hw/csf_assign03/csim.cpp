@@ -7,18 +7,25 @@
 #include <map>
 #include <vector>
 #include <tuple>
+#include <sstream> 
+
+
+#include "csim.h"
+
+using std::cin;
+using std::cout;
+using std::endl; 
+using std::string;   
+using std::vector;
+using std::map;
+using std::tuple;
+using std::stringstream;
 
 int checkPowerOfTwo(int n);
 
 int main(int args, char* argv[]) {
-    using std::cin;
-    using std::cout;
-    using std::endl; 
-    using std::string;   
-    using std::vector;
-    using std::map;
-    using std::tuple;
 
+    // Error checking
     // int *loads, *stores, *loadHits, *loadMisses, *storeHits, *storeMisses, *totalCycles;
 
     if (args > 7) {
@@ -47,9 +54,18 @@ int main(int args, char* argv[]) {
         fprintf(stderr, "%s\n", "No-write-allocate and write-back called together.");
     }
     vector<tuple<char, uint32_t, bool>> cacheData;
-    while (cin) {
-        getline(cin, inputLine);
-    }
+    // while (cin) {
+    //     getline(cin, inputLine, '\n');
+    // }
+
+    // Trying to test the input read of the memory? Planning to use string stream?
+    // string test_write;
+    // stringstream input;
+    // while (cin) {
+    //     cin >> input; 
+    //     cout << input.str();
+    // }
+    
     return 0;
     
 }
@@ -63,11 +79,21 @@ int checkPowerOfTwo(int n) {
     return 1;
 }
 
-std::tuple<char, uint32_t, bool> readLine(char* inputLine) {
-    
-    // std::tuple<char, uint32_t, bool> result = ;
-    
+void print_output(int total_loads, int total_stores, int load_hits, int load_misses, int store_hits,int store_misses, int total_cycles) {
+    cout << "Total loads: " << total_loads << endl;
+    cout << "Total stores: " << total_stores << endl;
+    cout << "Load hits: " << load_hits << endl;
+    cout << "Load misses: " << load_misses << endl;
+    cout << "Store hits: " << store_hits << endl;
+    cout << "Store misses: " << store_misses << endl;
+    cout << "Total cycles: " << total_cycles << endl;
 }
+
+// std::tuple<char, uint32_t, bool> readLine(char* inputLine) {
+    
+//     // std::tuple<char, uint32_t, bool> result = ;
+    
+// }
 // int writeBack() {
 //     return NULL;
 // }
