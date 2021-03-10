@@ -17,8 +17,3 @@ int main(int argc, char **argv) {
   printf("Result is: %ld\n", result);
   return 0;
 }
-
-// Alternatives?
-	/* leaq 8(%rsi), %rsi 		*/			/* move to  argv[1] (array of pointers of size 8) */
-
-	/* incq %rsi 				*/	/* move to  argv[1] (array of pointers 8 bytes) */
