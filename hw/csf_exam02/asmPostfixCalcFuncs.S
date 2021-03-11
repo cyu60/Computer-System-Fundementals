@@ -25,14 +25,15 @@ eErrorMsg: .string "Error: %s\n"
 	.globl letter_hist
 letter_hist:
 	pushq %r12 /* preserve original value of %r12 */
-	/* subq $8, %rsp */ /* misaligned stack pointer */
-	movq %rdi, %r11 /* use %r11 as pointer to string */
+	pushq %r13 /* preserve original value of %r13???? */
+	subq $8, %rsp /* ------------------------- misaligned stack pointer??? */
+	movq %rdi, %r13 /* use %r13 as pointer to string */
 	movq %rsi, %r12 /* use %r12 as pointer to counts array */
 .Ltop:
-	cmpq $0, (%r11) /* NUL terminator reached? */
+	cmpq $0, (%r13) /* NUL terminator reached? */
 	je .Ldone /* if so, we’re done */
 	movq $0, %rdi /* need to clear the first param !!! (otherwise has junk) */
-	movb (%r11), %dil /* get next character */
+	movb (%r13), %dil /* get next character */
 	call isalpha /* call isalpha function */
 	cmpl $0, %eax /* isalpha returned 0? */
 	je .Lnext /* if so, advance to next char in string */
@@ -41,10 +42,11 @@ letter_hist:
 	subl $A_VAL, %eax /* convert to array index ------------ NEED TO HAVE THE DOLLAR SIGN */
 	incl (%r12,%rax, 4) /* increment count for this letter --------------- NEED TO CONSIDER SCALE FACTOR */
 .Lnext:
-	incq %r11 /* advance to next character */
+	incq %r13 /* advance to next character */
 	jmp .Ltop /* continue loop */
 .Ldone:
-	/* addq $8, %rsp */
+	addq $8, %rsp 
+	popq %r13 /* restore original value of %r13 --------------------- */
 	popq %r12 /* restore original value of %r12 */
 	ret
 
