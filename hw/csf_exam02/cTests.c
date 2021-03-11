@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 // }
 
 int is_min_heap(uint32_t *arr, uint32_t len){
-  u_int32_t cur = 0;
+  uint32_t cur = 0;
   // while has children
   while (cur*2 + 1 < len) {
 	  uint32_t curElement = arr[cur];
