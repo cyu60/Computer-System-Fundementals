@@ -25,7 +25,7 @@ eErrorMsg: .string "Error: %s\n"
 	.globl letter_hist
 letter_hist:
 	pushq %r12 /* preserve original value of %r12 */
-	subq $8, %rsp
+	/* subq $8, %rsp */ /* misaligned stack pointer */
 	movq %rdi, %r11 /* use %r11 as pointer to string */
 	movq %rsi, %r12 /* use %r12 as pointer to counts array */
 .Ltop:
@@ -43,10 +43,10 @@ letter_hist:
 	incq %r11 /* advance to next character */
 	jmp .Ltop /* continue loop */
 .Ldone:
-	addq $8, %rsp
+	/* addq $8, %rsp */
 	popq %r12 /* restore original value of %r12 */
 	ret
-	
+
 /*
  * addPositive function (this is just an example function)
  */
