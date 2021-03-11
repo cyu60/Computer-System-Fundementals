@@ -31,7 +31,8 @@ letter_hist:
 .Ltop:
 	cmpq $0, (%r11) /* NUL terminator reached? */
 	je .Ldone /* if so, we’re done */
-	movzbb (%r11), %dil /* get next character */
+	movq $0, %rdi /* need to clear the first param !!! (otherwise has junk) */
+	movb (%r11), %dil /* get next character */
 	call isalpha /* call isalpha function */
 	cmpl $0, %eax /* isalpha returned 0? */
 	je .Lnext /* if so, advance to next char in string */
