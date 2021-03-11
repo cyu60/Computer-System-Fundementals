@@ -298,7 +298,7 @@ is_min_heap:
 	jl .LisNotMinHeap
 	/* Check right */
 	incl %r9d
-	cmp %r9d, %esi /* see if right child exists */
+	cmp %esi, %r9d /* see if right child exists */
 	jl .LHasRightChild
 	jmp .LIsMinHeap /* Finish checking */
 
@@ -314,7 +314,7 @@ is_min_heap:
 	shll $1, %r9d		/* cur * 2 */
 	incl %r9d			/* cur + 1 */
 
-	cmp %r9d, %esi 	/* cur * 2 + 1 compare to len */
+	cmp %esi, %r9d  	/* cur * 2 + 1 compare to len */
 	/* cmp (1, %r10d, 2), %esi 	/* cur * 2 + 1 compare to len */
 	jl .LHasChildrem			/* Go to start of loop */	
 	/* Should otherwise jump to is min heap? */
