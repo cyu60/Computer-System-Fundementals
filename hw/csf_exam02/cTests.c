@@ -165,10 +165,10 @@ void testAddPositive(TestObjs *obj) {
   	ASSERT(is_min_heap(arr4, 8)); // ???
 	// ASSERT(2L == addPositive(1L, 1L));
 	// ASSERT(23L == addPositive(15L, 8L));
-	char c;
+	// char c;
 
-    c = 'm';
-    printf("%c -> %c", c, toupper(c));
+    // c = 'm';
+    // printf("%c -> %c", c, toupper(c));
 	int counts[26] = { 0 }; // all elements initially 0
 	letter_hist("Four score and seven years", counts);
 	ASSERT(counts[0] == 2); // there are two As
