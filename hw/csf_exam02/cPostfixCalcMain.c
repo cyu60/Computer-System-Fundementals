@@ -8,7 +8,7 @@
 #include "cPostfixCalc.h"
 // #include "tctest.h"
 
-int is_min_heap(uint32_t *arr, uint32_t len);
+// int is_min_heap(uint32_t *arr, uint32_t len);
 
 int main(int argc, char **argv) {
   // if (argc != 2) {
