@@ -30,5 +30,7 @@ void stackPush(long stack[], long *count, long val);
 long stackPop(long stack[], long *count);
 long evalOp(int op, long left, long right);
 long eval(const char *s);
+int is_min_heap(int *arr, int len);
+
 
 #endif /* CPOSTFIXCALC_H */
