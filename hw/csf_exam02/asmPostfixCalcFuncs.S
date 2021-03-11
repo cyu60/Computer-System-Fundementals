@@ -311,7 +311,7 @@ is_min_heap:
 
 .LcheckHasChildren:
 	movl %r10d, %r9d	/* Note: r9d will be index for left child */
-	shl %r9d, $1		/* cur * 2 */
+	shll $1, %r9d		/* cur * 2 */
 	incl %r9d			/* cur + 1 */
 
 	cmp %r9d, %esi 	/* cur * 2 + 1 compare to len */
