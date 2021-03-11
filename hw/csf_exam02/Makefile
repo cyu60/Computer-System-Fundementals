@@ -26,18 +26,18 @@ LDFLAGS = -no-pie
 
 # Rule for compiling and assembling a .c file to produce a .o file
 %.o : %.c
-	gcc $(CFLAGS) -c $*.c -o $*.o
+	gcc $(CFLAGS) -lm -c $*.c -o $*.o
 
 # Default target: build all executables
 all : $(EXES)
 
-# C version of postfix calculator -- need to ask about edits of for math.h
+# C version of postfix calculator -- need to ask about edits of -lm for math.h
 cPostfixCalc : cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o
-	gcc -o $@ $(LDFLAGS) cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o 
+	gcc -o $@ $(LDFLAGS) -lm cPostfixCalcMain.o cPostfixCalcFuncs.o cPostfixCalcEval.o 
 
 # Unit test program for C functions
 cTests : cTests.o tctest.o cPostfixCalcFuncs.o cPostfixCalcEval.o
-	gcc -o $@ $(LDFLAGS) cTests.o tctest.o cPostfixCalcFuncs.o cPostfixCalcEval.o
+	gcc -o $@ $(LDFLAGS) cTests.o tctest.o cPostfixCalcFuncs.o cPostfixCalcEval.o -lm
 
 # Assembly language version of postfix calculator
 # using cPostfixCalcMain.c
