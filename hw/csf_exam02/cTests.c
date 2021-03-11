@@ -157,12 +157,12 @@ void testAddPositive(TestObjs *obj) {
 	int arr0[] = { }; // is a min heap
 	int arr3[] = { 1, 2, 3, 4, 5, 6, 7, 8 }; // is a min heap
   	int arr2[] = { 2, 8, 11, 9, 5, 3, 12, 10 }; // is not a min heap
-  	int arr4[] = { 2, 8, 11, 9, 10, 11, 12, 9 }; // is not a min heap
+  	int arr4[] = { 2, 8, 11, 9, 10, 11, 12, 9 }; // is not a min heap -- tests strictly less than
   	ASSERT(is_min_heap(arr1, 8));
   	ASSERT(is_min_heap(arr3, 8));
   	ASSERT(is_min_heap(arr0, 0));
   	ASSERT(!is_min_heap(arr2, 8));
-  	ASSERT(is_min_heap(arr4, 8)); // ???
+  	ASSERT(!is_min_heap(arr4, 8)); // ???
 	// ASSERT(2L == addPositive(1L, 1L));
 	// ASSERT(23L == addPositive(15L, 8L));
 	// char c;
