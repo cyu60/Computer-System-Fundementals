@@ -39,7 +39,7 @@ letter_hist:
 	/* char value should still be in %edi */
 	call toupper /* convert to upper case */
 	subl $A_VAL, %eax /* convert to array index ------------ NEED TO HAVE THE DOLLAR SIGN */
-	incl (%r12,%rax) /* increment count for this letter */
+	incl (%r12,%rax, 4) /* increment count for this letter --------------- NEED TO CONSIDER SCALE FACTOR */
 .Lnext:
 	incq %r11 /* advance to next character */
 	jmp .Ltop /* continue loop */
