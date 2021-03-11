@@ -290,8 +290,8 @@ is_min_heap:
 .LHasChildrem:
 	
 	/* Check left */
-	movq (%rdi, %r10d, 4), %r11 /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
-	movq (%rdi, %r9d, 4), %r8 /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
+	movl (%rdi, %r10, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
+	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	/* movl (%rdi, %r10d, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	/* movl (%rdi, %r9d, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	cmp %r8d, %r11d
