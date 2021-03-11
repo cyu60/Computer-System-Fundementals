@@ -30,10 +30,10 @@ letter_hist:
 	movq %rdi, %r13 /* use %r13 as pointer to string */
 	movq %rsi, %r12 /* use %r12 as pointer to counts array */
 .Ltop:
-	cmpq $0, (%r13) /* NUL terminator reached? */
-	je .Ldone /* if so, we’re done */
 	movq $0, %rdi /* need to clear the first param !!! (otherwise has junk) */
 	movb (%r13), %dil /* get next character */
+	cmpq $0, %rdi /* NUL terminator reached? ----------------- NEED TO CHECK THE NEXT CHAR*/
+	je .Ldone /* if so, we’re done */
 	call isalpha /* call isalpha function */
 	cmpl $0, %eax /* isalpha returned 0? */
 	je .Lnext /* if so, advance to next char in string */
