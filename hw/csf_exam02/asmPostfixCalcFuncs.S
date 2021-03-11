@@ -310,7 +310,7 @@ is_min_heap:
 	jmp .LcheckHasChildren		/* continue with while loop*/
 
 .LcheckHasChildren:
-	movl (1, %r10d, 2), %r9d
+	movl (1, %r10, 2), %r9d
 	cmp %r9d, %esi 	/* cur * 2 + 1 compare to len */
 	/* cmp (1, %r10d, 2), %esi 	/* cur * 2 + 1 compare to len */
 	jl .LHasChildrem			/* Go to start of loop */	
