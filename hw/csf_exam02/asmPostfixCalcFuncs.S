@@ -38,7 +38,7 @@ letter_hist:
 	je .Lnext /* if so, advance to next char in string */
 	/* char value should still be in %edi */
 	call toupper /* convert to upper case */
-	subl A_VAL, %eax /* convert to array index */
+	subl $A_VAL, %eax /* convert to array index ------------ NEED TO HAVE THE DOLLAR SIGN */
 	incl (%r12,%rax) /* increment count for this letter */
 .Lnext:
 	incq %r11 /* advance to next character */
