@@ -25,6 +25,6 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-int is_min_heap(uint32_t *arr, uint32_t len){
-  return 0;
-}
+// int is_min_heap(uint32_t *arr, uint32_t len){
+//   return 0;
+// }
