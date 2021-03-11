@@ -12,7 +12,9 @@ long addPositive(long a, long b) {
   }
   return a + b;
 }
-void letter_hist(const char *str, int *counts);
+void letter_hist(const char *str, int *counts) {
+  return;
+}
 
 int is_min_heap(int *arr, int len){
   int cur = 0;
