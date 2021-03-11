@@ -25,7 +25,7 @@ eErrorMsg: .string "Error: %s\n"
 	.globl letter_hist
 letter_hist:
 	pushq %r12 /* preserve original value of %r12 */
-	pushq %r13 /* preserve original value of %r13???? */
+	pushq %r13 /* preserve original value of %r13???? ------------------ NEED TO HAVE A CALLEE SAVED VALUE */
 	subq $8, %rsp /* ------------------------- misaligned stack pointer??? */
 	movq %rdi, %r13 /* use %r13 as pointer to string */
 	movq %rsi, %r12 /* use %r12 as pointer to counts array */
@@ -323,7 +323,7 @@ is_min_heap:
 	movl (%rdi, %r10, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	cmp %r11d, %r8d
-	jl .LisNotMinHeap
+	jle .LisNotMinHeap /* Needs to be strictly less than children */
 	/* Check right */
 	incl %r9d
 	cmp %esi, %r9d /* see if right child exists */
@@ -333,7 +333,7 @@ is_min_heap:
 .LHasRightChild:
 	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r9d (index) * 4 (scale factor) */
 	cmp %r11d, %r8d
-	jl .LisNotMinHeap
+	jle .LisNotMinHeap /* Needs to be strictly less than children */
 	incl %r10d					/* Increment r10d by 1 */
 	jmp .LcheckHasChildren		/* continue with while loop*/
 
@@ -343,7 +343,6 @@ is_min_heap:
 	incl %r9d			/* cur + 1 */
 
 	cmp %esi, %r9d  	/* cur * 2 + 1 compare to len */
-	/* cmp (1, %r10d, 2), %esi 	/* cur * 2 + 1 compare to len */
 	jl .LHasChildrem			/* Go to start of loop */	
 	jmp .LIsMinHeap
 
