@@ -122,20 +122,20 @@ int main(int argc, char **argv) {
 //   return 1; // is a min heap
 // }
 
-int is_min_heap(uint32_t *arr, uint32_t len){
-  uint32_t cur = 0;
+int is_min_heap(int *arr, int len){
+  int cur = 0;
   // while has children
   while (cur*2 + 1 < len) {
-	  uint32_t curElement = arr[cur];
+	  int curElement = arr[cur];
 	//   printf("curEl: %d\n", curElement);
   // Check children element at position
-	uint32_t left = arr[cur*2 + 1];
+	int left = arr[cur*2 + 1];
 	if (left < curElement) {
 		return 0;
 	}
   // check right child
 	if (cur*2 + 2 < len) {
-		uint32_t right = arr[cur*2 + 2]; // can use same var as left?
+		int right = arr[cur*2 + 2]; // can use same var as left?
 		if (right < curElement) {
 			// printf("right: %d at %d\n", right, cur*2 + 2);
 		return 0;
@@ -152,11 +152,11 @@ int is_min_heap(uint32_t *arr, uint32_t len){
  * Example test function.
  */
 void testAddPositive(TestObjs *obj) {
-	uint32_t arr1[] = { 2, 5, 3, 9, 8, 11, 12, 10 }; // is a min heap
-	uint32_t arr0[] = { }; // is a min heap
-	uint32_t arr3[] = { 1, 2, 3, 4, 5, 6, 7, 8 }; // is a min heap
-  	uint32_t arr2[] = { 2, 8, 11, 9, 5, 3, 12, 10 }; // is not a min heap
-  	uint32_t arr4[] = { 2, 8, 11, 9, 10, 11, 12, 9 }; // is not a min heap
+	int arr1[] = { 2, 5, 3, 9, 8, 11, 12, 10 }; // is a min heap
+	int arr0[] = { }; // is a min heap
+	int arr3[] = { 1, 2, 3, 4, 5, 6, 7, 8 }; // is a min heap
+  	int arr2[] = { 2, 8, 11, 9, 5, 3, 12, 10 }; // is not a min heap
+  	int arr4[] = { 2, 8, 11, 9, 10, 11, 12, 9 }; // is not a min heap
   	ASSERT(is_min_heap(arr1, 8));
   	ASSERT(is_min_heap(arr3, 8));
   	ASSERT(is_min_heap(arr0, 0));
