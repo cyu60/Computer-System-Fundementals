@@ -13,6 +13,31 @@ long addPositive(long a, long b) {
   return a + b;
 }
 
+int is_min_heap(int *arr, int len){
+  int cur = 0;
+  // while has children
+  while (cur*2 + 1 < len) {
+	  int curElement = arr[cur];
+	//   printf("curEl: %d\n", curElement);
+  // Check children element at position
+	int left = arr[cur*2 + 1];
+	if (left < curElement) {
+		return 0;
+	}
+  // check right child
+	if (cur*2 + 2 < len) {
+		int right = arr[cur*2 + 2]; // can use same var as left?
+		if (right < curElement) {
+			// printf("right: %d at %d\n", right, cur*2 + 2);
+		return 0;
+		}
+	}
+	cur++;
+//   // if not min heap
+//   return 0;
+  }
+  return 1; // is a min heap
+}
 /*
  * fatalError - print an error message an exit with an exit code of 1.
  * Prints a message of the form "Error: <message text>" to standard output.
