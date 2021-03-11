@@ -294,7 +294,7 @@ is_min_heap:
 	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	/* movl (%rdi, %r10d, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	/* movl (%rdi, %r9d, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
-	cmp %r8d, %r11d
+	cmp %r11d, %r8d
 	jl .LisNotMinHeap
 	/* Check right */
 	incl %r9d
@@ -304,7 +304,7 @@ is_min_heap:
 
 .LHasRightChild:
 	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r9d (index) * 4 (scale factor) */
-	cmp %r8d, %r11d
+	cmp %r11d, %r8d
 	jl .LisNotMinHeap
 	incl %r10d					/* Increment r10d by 1 */
 	jmp .LcheckHasChildren		/* continue with while loop*/
