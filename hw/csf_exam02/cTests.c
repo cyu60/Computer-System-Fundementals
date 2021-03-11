@@ -164,6 +164,15 @@ void testAddPositive(TestObjs *obj) {
   	ASSERT(is_min_heap(arr4, 8)); // ???
 	// ASSERT(2L == addPositive(1L, 1L));
 	// ASSERT(23L == addPositive(15L, 8L));
+
+	int counts[26] = { 0 }; // all elements initially 0
+	letter_hist("Four score and seven years", counts);
+	ASSERT(counts[0] == 2); // there are two As
+	ASSERT(counts[1] == 0); // there are no Bs
+	ASSERT(counts[2] == 1); // there is one C
+	ASSERT(counts[4] == 4); // there are 4 Es
+	printf("Tests passed!\n");
+
 }
 
 /*

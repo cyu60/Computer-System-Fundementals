@@ -31,6 +31,7 @@ long stackPop(long stack[], long *count);
 long evalOp(int op, long left, long right);
 long eval(const char *s);
 int is_min_heap(int *arr, int len);
+void letter_hist(const char *str, int *counts);
 
 
 #endif /* CPOSTFIXCALC_H */

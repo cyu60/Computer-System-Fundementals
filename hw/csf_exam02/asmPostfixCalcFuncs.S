@@ -8,6 +8,7 @@
 .equ TOK_UNKNOWN, 2
 
 .equ MAX_STACK, 20
+.equ A_VAL, 65 /* character code of ’A’ */
 
 	.section .rodata
 
@@ -20,6 +21,32 @@ eErrorMsg: .string "Error: %s\n"
 
 	.section .text
 
+
+	.globl letter_hist
+letter_hist:
+	pushq %r12 /* preserve original value of %r12 */
+	subq $8, %rsp
+	movq %rdi, %r11 /* use %r11 as pointer to string */
+	movq %rsi, %r12 /* use %r12 as pointer to counts array */
+.Ltop:
+	cmpq $0, (%r11) /* NUL terminator reached? */
+	je .Ldone /* if so, we’re done */
+	movb (%r11), %dil /* get next character */
+	call isalpha /* call isalpha function */
+	cmpl $0, %eax /* isalpha returned 0? */
+	je .Lnext /* if so, advance to next char in string */
+	/* char value should still be in %edi */
+	call toupper /* convert to upper case */
+	subl A_VAL, %eax /* convert to array index */
+	incl (%r12,%rax) /* increment count for this letter */
+.Lnext:
+	incq %r11 /* advance to next character */
+	jmp .Ltop /* continue loop */
+.Ldone:
+	addq $8, %rsp
+	popq %r12 /* restore original value of %r12 */
+	ret
+	
 /*
  * addPositive function (this is just an example function)
  */
@@ -292,8 +319,6 @@ is_min_heap:
 	/* Check left */
 	movl (%rdi, %r10, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	movl (%rdi, %r9, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
-	/* movl (%rdi, %r10d, 4), %r11d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
-	/* movl (%rdi, %r9d, 4), %r8d /* arr[cur] == %rdi (base) + %r10d (index) * 4 (scale factor) */
 	cmp %r11d, %r8d
 	jl .LisNotMinHeap
 	/* Check right */
@@ -317,7 +342,6 @@ is_min_heap:
 	cmp %esi, %r9d  	/* cur * 2 + 1 compare to len */
 	/* cmp (1, %r10d, 2), %esi 	/* cur * 2 + 1 compare to len */
 	jl .LHasChildrem			/* Go to start of loop */	
-	/* Should otherwise jump to is min heap? */
 	jmp .LIsMinHeap
 
 .LisNotMinHeap:
