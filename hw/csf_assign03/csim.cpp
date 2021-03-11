@@ -91,9 +91,9 @@ int checkPowerOfTwo(int n) {
 //also calls other functions to operate on the line. 
 std::tuple<uint32_t, bool> readLine(string inputLine, char* func1, char* func2) {
     if(inputLine[0] == 's') {
-            if (func2 == "write-back") {
+            if (func2.compare("write-back") == 0) {
                 //int result = writeBack()
-            } else if (func2 == "write-through" ){
+            } else if (func2 == "write-through" ) {
                 //int result = writeThrough(inputLine)
             } else {
                 //fprintf(stderr, "%s\n", "Invalid input for function type");
