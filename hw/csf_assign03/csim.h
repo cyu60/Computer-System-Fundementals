@@ -78,7 +78,7 @@ class cache_sim {
 
     cache_sim(cacheSettings cache_settings);
     
-    cacheAddress get_cache_addr(unsigned raw_addr);
+    cacheAddress get_cache_addr(unsigned hex_addr);
     void print_cache(); // print the cache content for debug
     void process_ops(std::vector<std::pair<char, unsigned>>& ops);
     void print_metrics(); // print the metrics
