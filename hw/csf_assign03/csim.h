@@ -59,7 +59,7 @@ struct set
     unsigned tracker; 
 };
 
-class cache_simulator {
+class cache_sim {
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
     int storeStrat;
@@ -75,24 +75,24 @@ class cache_simulator {
     vector<set> sets; // stor all the sets
     // metric sim_metric;
 
-    cache_simulator(cacheSettings cache_settings);
+    cache_sim(cacheSettings cache_settings);
     
-    void load_data (struct_addr addr);
-    void save_data (struct_addr addr);
-    // given a memory address, returns the corresponding set index, tag, etc
-    struct_addr get_struct_addr(unsigned raw_addr);
-    // given a set index and block id, evict the block
-    std::pair<int, int> fetch_evict_block(struct_addr addr, int op_type); // save/load
-    // given a set index and tag, returns true if it is a hit.
-    int is_hit(struct_addr);
-    void process_ops(std::vector<std::pair<char, unsigned>>& ops);
-    void flush_cache();
-    void print_metrics(); // print the metrics
-    void print_cache(); // print the cache content for debug
+    // void load_data (struct_addr addr);
+    // void save_data (struct_addr addr);
+    // // given a memory address, returns the corresponding set index, tag, etc
+    // struct_addr get_struct_addr(unsigned raw_addr);
+    // // given a set index and block id, evict the block
+    // std::pair<int, int> fetch_evict_block(struct_addr addr, int op_type); // save/load
+    // // given a set index and tag, returns true if it is a hit.
+    // int is_hit(struct_addr);
+    // void process_ops(std::vector<std::pair<char, unsigned>>& ops);
+    // void flush_cache();
+    // void print_metrics(); // print the metrics
+    // void print_cache(); // print the cache content for debug
     
-    void restart_cache();
-    // get/sets for debugging tec
-    metric get_metrics();
+    // void restart_cache();
+    // // get/sets for debugging tec
+    // metric get_metrics();
 };
 
 #endif

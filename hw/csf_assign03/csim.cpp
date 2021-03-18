@@ -84,7 +84,6 @@ int main(int args, char* argv[]) {
     }
 
     // Gather the cache Data
-
     vector<traceLine> cacheData;
     traceLine curTraceLine; 
     int dummy; // for the 3rd input in the lines
@@ -94,6 +93,8 @@ int main(int args, char* argv[]) {
         cacheData.push_back(curTraceLine);
         cout << curTraceLine.operation << curTraceLine.address << endl;
     }
+
+    // Set up cache Sim 
     // while (cin) {
     //     getline(cin, inputLine, '\n');
     // }
