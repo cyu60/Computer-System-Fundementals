@@ -86,7 +86,7 @@ class cache_sim {
     
     cacheAddress get_cache_addr(unsigned hex_addr);
     void print_cache(); // print the cache content for debug
-    void process_ops(vector<traceLine>);
+    void process_ops(vector<traceLine> traces);
     void print_metrics(); // print the metrics
 
     // void load_data (struct_addr addr);
