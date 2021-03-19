@@ -93,6 +93,10 @@ int main(int args, char* argv[]) {
         cout << curTraceLine.operation << curTraceLine.address << endl;
     }
 
+    cache_sim cacheSimulator = cache_sim(cache_settings);
+    cacheAddress test = cacheSimulator.get_cache_addr(cacheData.at(0).address);
+    cout << test.index << test.tag <<endl; // should be 00??
+    cacheSimulator.print_cache();
     // Set up cache Sim 
     // while (cin) {
     //     getline(cin, inputLine, '\n');

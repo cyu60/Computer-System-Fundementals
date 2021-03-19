@@ -2,6 +2,11 @@
 #define CSIM_H
 
 #include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <utility>
+#include <math.h>
 
 using std::string;
 using std::vector;
@@ -47,7 +52,8 @@ struct cacheAddress
 
 struct block {
     cacheAddress cache_address;
-    int is_dirty;
+    int is_dirty; // 1 is dirty, 0 is not dirty
+    int is_empty; // 1 is empty, 0 is not empty 
 };
 
 struct set
@@ -60,6 +66,7 @@ struct set
 };
 
 class cache_sim {
+    public:
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
     int storeStrat;
@@ -77,18 +84,19 @@ class cache_sim {
 
     cache_sim(cacheSettings cache_settings);
     
+    cacheAddress get_cache_addr(unsigned hex_addr);
+    void print_cache(); // print the cache content for debug
+    void process_ops(vector<traceLine> traces);
+    void print_metrics(); // print the metrics
+
     // void load_data (struct_addr addr);
     // void save_data (struct_addr addr);
+    int is_hit(cacheAddress cache_address);
     // // given a memory address, returns the corresponding set index, tag, etc
-    // struct_addr get_struct_addr(unsigned raw_addr);
     // // given a set index and block id, evict the block
     // std::pair<int, int> fetch_evict_block(struct_addr addr, int op_type); // save/load
     // // given a set index and tag, returns true if it is a hit.
-    // int is_hit(struct_addr);
-    // void process_ops(std::vector<std::pair<char, unsigned>>& ops);
     // void flush_cache();
-    // void print_metrics(); // print the metrics
-    // void print_cache(); // print the cache content for debug
     
     // void restart_cache();
     // // get/sets for debugging tec
