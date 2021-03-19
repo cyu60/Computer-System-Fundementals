@@ -9,7 +9,7 @@ csim: csim.o cache_sim.o
 csim.o: csim.cpp 
 	$(CC) $(CFLAGS) -c csim.cpp
 
-cache_simu.o: csim_cpp.cpp csim.h
+cache_sim.o: cache_sim.cpp csim.h
 	$(CC) $(CFLAGS) -c cache_sim.cpp -o cache_sim.o
 
 clean:

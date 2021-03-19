@@ -2,6 +2,11 @@
 #define CSIM_H
 
 #include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <utility>
+#include <math.h>
 
 using std::string;
 using std::vector;
@@ -61,6 +66,7 @@ struct set
 };
 
 class cache_sim {
+    public:
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
     int storeStrat;
@@ -80,7 +86,7 @@ class cache_sim {
     
     cacheAddress get_cache_addr(unsigned hex_addr);
     void print_cache(); // print the cache content for debug
-    void process_ops(std::vector<std::pair<char, unsigned>>& ops);
+    void process_ops(vector<traceLine>);
     void print_metrics(); // print the metrics
 
     // void load_data (struct_addr addr);
