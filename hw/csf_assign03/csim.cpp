@@ -45,15 +45,9 @@ int main(int args, char* argv[]) {
         fprintf(stderr, "%s\n", "blocks is not a power of 2.");
         return 1;
     }
-<<<<<<< HEAD
-    int bytes = atoi(argv[3]);
-    if (checkPowerOfTwo(bytes) == 0 || bytes < 4) {
-        fprintf(stderr, "%s\n", "Bytes is not a power of 2 or is less than 4");
-=======
     cache_settings.bytes = atoi(argv[3]);
     if (checkPowerOfTwo(cache_settings.bytes) == 0 || cache_settings.bytes < 4) {
         fprintf(stderr, "%s\n", "Bytes is not a power of or is less than 4");
->>>>>>> 340afdef949ee662f7d444369a3a3d957acef94a
     }
 
     if (0==strcmp(argv[4], "write-allocate")) {
@@ -78,17 +72,6 @@ int main(int args, char* argv[]) {
     if (cache_settings.storeStrat == NO_WRITE_ALLOC && cache_settings.writeStrat == WRITE_BACK) {
         fprintf(stderr, "%s\n", "No-write-allocate and write-back called together.");
     }
-<<<<<<< HEAD
-    vector<string> rawData;
-    vector<tuple<uint32_t, bool>> cacheData;
-    while (cin) {
-        getline(cin, inputLine);
-        rawData.push_back(inputLine);
-    }
-    for (int i = 0; i < rawData.size(); i++) {
-        readLine()
-    }
-=======
     
     if (0==strcmp(argv[6], "lru")) {
         cache_settings.eviction = LRU;
@@ -123,7 +106,6 @@ int main(int args, char* argv[]) {
     //     cout << input.str();
     // }
     
->>>>>>> 340afdef949ee662f7d444369a3a3d957acef94a
     return 0; 
 }
 
@@ -132,68 +114,12 @@ int main(int args, char* argv[]) {
 int checkPowerOfTwo(int n) {
     if(n<=0) { return 0; }
     return (n & (n - 1)) == 0; // Compare the bits should all be different
-    // while(n != 1) {
-    //     n = n/2;
-    //     if(n%2 != 0 && n != 1){ return 0; }
-    // }
-    // return 1;
+    while(n != 1) {
+        n = n/2;
+        if(n%2 != 0 && n != 1){ return 0; }
+    }
+    return 1;
 }
-
-//read one line of trace data.
-//returns a tuple that has the memory address and boolean value for the dirty bit
-//also calls other functions to operate on the line. 
-<<<<<<< HEAD
-
-void readLine(string inputLine, string func1, string func2) { //TODO: change return type to a tuple
-    if(inputLine[0] == 's') {
-            if (func2.compare("write-back") == 0) {
-                //int result = writeBack()
-            } else if (func2.compare("write-through") == 0) {
-                //int result = writeThrough(inputLine)
-            } else {
-                //fprintf(stderr, "%s\n", "Invalid input for function type");
-            }
-        } else if (inputLine[0] == 'l') {
-            if(func1.compare("write-allocate") == 0) {
-                //int result = writeAllocate()
-            } else if (func1.compare("no-write-allocate") == 0) {
-                //int result = noWriteAllocate()
-            } else {
-                //fprintf(stderr, "%s\n", "Invalid input for function");
-            }
-        } else {
-            // fprintf(stderr, "%s\n", "Invalid input");
-            // exit 1;
-        }
-}
-=======
-// std::tuple<uint32_t, bool> readLine(string inputLine, char* func1, char* func2) {
-//     // if(inputLine[0] == 's') {
-//     //     //     if (func2.compare("write-back") == 0) {
-//     //     //         //int result = writeBack()
-//     //     //     } else if (func2 == "write-through" ) {
-//     //     //         //int result = writeThrough(inputLine)
-//     //     //     } else {
-//     //     //         //fprintf(stderr, "%s\n", "Invalid input for function type");
-//     //     //     }
-//     //     // } else if (inputLine[0] == 'l') {
-//     //     //     if(func1 == "write-allocate") {
-//     //     //         //int result = writeAllocate()
-//     //     //     } else if (func1 == "no-write-allocate") {
-//     //     //         //int result = noWriteAllocate()
-//     //     //     } else {
-//     //     //         //fprintf(stderr, "%s\n", "Invalid input for function");
-//     //     //     }
-//     //     // } else {
-//     //     //     // fprintf(stderr, "%s\n", "Invalid input");
-//     //     //     // exit 1;
-//         // }
-//         return NULL;
-// }
-// int writeBack() {
-//     return NULL;
-// }
->>>>>>> 340afdef949ee662f7d444369a3a3d957acef94a
 
 int writeBack() {
     return 0;
