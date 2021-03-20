@@ -236,7 +236,7 @@ void cache_sim::save(cacheAddress addr)
             if ( WRITE_THRU == this->writeThru) {
                 this->cache_metrics.total_cycles+= numBlockPerSet; // transfer straight to main hardrive
             } else { // write back
-                cur_set
+                cur_set;
             }
             
             return;
