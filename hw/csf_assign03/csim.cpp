@@ -92,13 +92,13 @@ int main(int args, char* argv[]) {
     int dummy; // for the 3rd input in the lines
     while (cin >> curTraceLine.operation >> hex >> curTraceLine.address >> dummy) {
         cacheData.push_back(curTraceLine);
-        cout << curTraceLine.operation << curTraceLine.address << endl;
+        // cout << curTraceLine.operation << curTraceLine.address << endl;
     }
     
     cache_sim cacheSimulator = cache_sim(cache_settings);
     cacheAddress test = cacheSimulator.get_cache_addr(cacheData.at(0).address);
     cout << cacheData.at(0).address << endl;
-    cout << "test index, tag: " << test.index  << " " << test.tag <<endl; // should be 00??
+    // cout << "test index, tag: " << test.index  << " " << test.tag <<endl; // should be 00??
     cacheSimulator.process_ops(cacheData);
     cacheSimulator.print_cache();
     return 0; 
