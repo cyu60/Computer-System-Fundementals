@@ -1,5 +1,7 @@
-#include "csim.h"
+//magarw13
+//cyu60
 
+#include "csim.h"
 #include <string>
 #include <cassert>
 #include <iostream>
@@ -66,21 +68,3 @@ void cache_sim::print_cache() {
     }
 } 
 
-void cache_sim::process_ops(vector<traceLine> traces) {
-    for (unsigned i = 0; i < traces.size(); i++) {
-        // process the curAddress
-        cacheAddress curAddress = this->get_cache_addr(traces.at(i).address);
-        // perform the correct operation
-        switch (traces.at(i).operation)
-        {
-        case "l":
-            this->load_data(curAddress);
-            break;
-        case "s":
-            this->save_data(curAddress);
-            break;
-        default: // throw exception? assumes well formed traces
-            break;
-        }
-    }
-}

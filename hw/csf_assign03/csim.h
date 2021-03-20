@@ -1,3 +1,6 @@
+//magarw13
+//cyu60
+
 #ifndef CSIM_H
 #define CSIM_H
 
@@ -88,19 +91,8 @@ class cache_sim {
     void print_cache(); // print the cache content for debug
     void process_ops(vector<traceLine> traces);
     void print_metrics(); // print the metrics
-
-    // void load_data (struct_addr addr);
-    // void save_data (struct_addr addr);
     int is_hit(cacheAddress cache_address);
-    // // given a memory address, returns the corresponding set index, tag, etc
-    // // given a set index and block id, evict the block
-    // std::pair<int, int> fetch_evict_block(struct_addr addr, int op_type); // save/load
-    // // given a set index and tag, returns true if it is a hit.
-    // void flush_cache();
-    
-    // void restart_cache();
-    // // get/sets for debugging tec
-    // metric get_metrics();
+
 };
 
 #endif
