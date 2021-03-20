@@ -138,39 +138,44 @@ void cache_sim::load(cacheAddress addr)
     // NEED TO THINK ABOUT CYCLES???
     cache_metrics.total_cycles++;
     // Check if hit or miss
-        // check the set
-        set* cur_set = &this->sets.at(addr.index);
-        
-        // check all blocks 
-        block* cur_block;
-        for (unsigned i = 0; i < this->numBlockPerSet; i++) {
-            cur_block = &cur_set->blocks.at(i);
-            if (cur_block->cache_address.tag == addr.tag) {
-                // hit
-                this->cache_metrics.load_hits++;
-                // Update LRU
-                if (this->eviction == LRU) {
-                    update_lru(cur_set, i);
-                }
-                return;
+    // check the set
+    set* cur_set = &this->sets.at(addr.index);
+    
+    // check all blocks 
+    block* cur_block;
+    for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+        cur_block = &cur_set->blocks.at(i);
+        if (cur_block->cache_address.tag == addr.tag) {
+            // hit
+            this->cache_metrics.load_hits++;
+            // Update LRU
+            if (this->eviction == LRU) {
+                update_lru(cur_set, i);
             }
+            return;
         }
-        // miss
-        this->cache_metrics.load_misses++;
-        // FIND THE BLOCK to evict
-        cur_block = &cur_set->blocks.at(cur_set->tracker); // block to evict
-        // if (WRITE_BACK == this->writeThru) {
-        //     check_dirty_for_eviction(cur_block);
-        // }
+    }
+    // miss
+    this->cache_metrics.load_misses++;
+    // FIND THE BLOCK to evict
+    cur_block = &cur_set->blocks.at(cur_set->tracker); // block to evict
+    // process dirty if evection is write back
+    // if (WRITE_BACK == this->writeThru) {
+    //     // process_dirty(cur_block);
+    // }
+    // Assumes write through
+    cur_block->cache_address.tag = addr.tag;
+    // 4 bytes (32 mem address) are transfered to cache
+    this->cache_metrics.total_cycles+=(this->blockSize/4) * 100; 
 
-        cur_block->cache_address.tag = addr.tag;
-        // 4 bytes (32 mem address) are transfered to cache
-        this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
+    // UPdate LRU
+    // unsigned recent_update_index = cur_set->tracker; 
+    // update_lru(cur_set, recent_update_index); // the new loaded block needs to update counter
 
-        cout << "----------------" << endl;
-        cout << "cur: " << cur_block->cache_address.tag << endl;
-        cout << "----------------" << endl;
-        this->print_cache();
+    cout << "----------------" << endl;
+    cout << "cur: " << cur_block->cache_address.tag << endl;
+    cout << "----------------" << endl;
+    this->print_cache();
 }
 
 void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
@@ -188,14 +193,13 @@ void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
 
 }
 
-// void cache_sim::check_dirty_for_eviction(block* cur_block) {
-//     if (cur_block->is_dirty == 1) {
-//         // load the existing back 
-//         this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
-//         cur_block->is_dirty == 0;
-//     }
-
-// }
+void cache_sim::process_dirty(block* cur_block) {
+    if (cur_block->is_dirty == 1) {
+        // load the existing back 
+        this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
+        cur_block->is_dirty = 0;
+    }
+}
 // block cache_sim::find_evict_block(&set cur_set) {
 //     // Assumes LRU
 
@@ -235,7 +239,7 @@ void cache_sim::save(cacheAddress addr)
             if ( WRITE_THRU == this->writeThru) {
                 this->cache_metrics.total_cycles+= numBlockPerSet; // transfer straight to main hardrive
             } else { // write back
-                cur_set
+                // cur_set
             }
             
             return;

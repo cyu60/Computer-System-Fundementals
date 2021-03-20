@@ -108,6 +108,7 @@ class cache_sim {
     void save(cacheAddress addr);
     int is_hit(cacheAddress cache_address);
     void find_evict_block(set* cur_set);
+    void process_dirty(block* cur_block);
     void update_lru(set* cur_set, unsigned cur_block_index);
     // // given a memory address, returns the corresponding set index, tag, etc
     // // given a set index and block id, evict the block
