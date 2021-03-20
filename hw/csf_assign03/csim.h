@@ -82,9 +82,9 @@ class cache_sim {
     public:
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
-    int writeAlloc;
+    int writeStrat;
     // write-through or write-back
-    int writeThru;
+    int storeStrat;
     // lru (least-recently-used) or fifo evictions
     int eviction; 
     unsigned bytePerBlock; 
@@ -103,11 +103,17 @@ class cache_sim {
     void print_cache(); // print the cache content for debug
     void process_ops(vector<traceLine> traces);
     void print_output(); // print the metrics
-
+    void directLoad(cacheAddress addr);
+    void associativeLoad(cacheAddress addr);
+    void fullyAssLoad(cacheAddress addr);
+    void directSave(cacheAddress addr);
+    void associativeSave(cacheAddress addr);
+    void fullyAssSave(cacheAddress addr);
     void load(cacheAddress addr);
     void save(cacheAddress addr);
     int is_hit(cacheAddress cache_address);
     void find_evict_block(set* cur_set);
+    void process_dirty(block* cur_block);
     void update_lru(set* cur_set, unsigned cur_block_index);
     // // given a memory address, returns the corresponding set index, tag, etc
     // // given a set index and block id, evict the block

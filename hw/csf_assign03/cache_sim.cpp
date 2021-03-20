@@ -24,8 +24,8 @@ void print_bits(int num, unsigned len=32) {
 // (this->blockSize/4) * 100 + 1????
 
 cache_sim::cache_sim(cacheSettings cache_settings) {
-    this->writeAlloc = cache_settings.storeStrat;
-    this->writeThru = cache_settings.writeStrat;
+    this->storeStrat = cache_settings.storeStrat;
+    this->writeStrat = cache_settings.writeStrat;
     this->eviction = cache_settings.eviction;
     this->numBlockPerSet = cache_settings.blocks;
     this->numSets = cache_settings.sets;
@@ -37,20 +37,16 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
 
     
     // get highest bit set for offset bit count 
-    cout << "bytes: " << cache_settings.bytes << endl;
     while (cache_settings.bytes >>= 1) {
         this->numOffsetBits++;
     }
-    cout << "num offset bits: " << this->numOffsetBits << endl;
     
     // get highest bit set for  index bit count
     // cout << "blocks: " << cache_settings.blocks << endl;
     // while (cache_settings.blocks >>= 1) ++this->numIndexBits;
-    cout << "num sets: " << this->numSets << endl;
     while (cache_settings.sets >>= 1) {
         this->numIndexBits++;
     }
-    cout << "num index bits: " << this->numIndexBits << endl;
     // cout << "num blocks: " << this->numBlockPerSet << endl;
 
     // initialize empty sets
@@ -101,77 +97,161 @@ void cache_sim::print_cache() {
 
 
 void cache_sim::process_ops(vector<traceLine> traces) {
+    cache_metrics.load_hits = 0;
+    cache_metrics.load_misses = 0;
+    cache_metrics.total_loads = 0;
+    cache_metrics.store_hits = 0;
+    cache_metrics.store_misses = 0;
+    cache_metrics.total_stores = 0;
+    cache_metrics.total_cycles = 0;
     for (unsigned i = 0; i < traces.size(); i++) {
         // process the curAddress
         cacheAddress curAddress = this->get_cache_addr(traces.at(i).address);
 
         // raw add
         // cout << "raw add: " << traces.at(i).address << endl;
-        cout << "raw add: ";
-        print_bits(traces.at(i).address);
 
         // perform the correct operation
-        switch (traces.at(i).operation)
-        {
-        case 'l':
+        if (traces.at(i).operation == 'l') {
+            cache_metrics.total_loads++;
+            // if (this->numSets >= 1 && this->numBlockPerSet == 1) {
+            //     this->directLoad(curAddress);
+            // } else if (this->numSets > 1 && this->numBlockPerSet > 1) {
+            //     this->associativeLoad(curAddress);
+            // } else if (this->numSets == 1 && this->numBlockPerSet > 1) {
+            //     this->fullyAssLoad(curAddress);
+            // }
             this->load(curAddress);
-            break;
-        case 's':
+        } else if (traces.at(i).operation == 's') {
+            cache_metrics.total_stores++;
+            // if (this->numSets >= 1 && this->numBlockPerSet == 1) {
+            //     this->directSave(curAddress);
+            // } else if (this->numSets > 1 && this->numBlockPerSet > 1) {
+            //     this->associativeSave(curAddress);
+            // } else if (this->numSets == 1 && this->numBlockPerSet > 1) {
+            //     this->fullyAssSave(curAddress);
+            // }
             this->save(curAddress);
-            break;
-        default: // throw exception? assumes well formed traces
-            break;
+        } else {
+            printf("Invalid input");
+            exit(1);
         }
     }
     this->print_output();
 }
 
+// void cache_sim::directLoad(cacheAddress addr) {
+//     set* cur_set = &this->sets.at(addr.index);
+//     block* cur_block;
+//     cur_block = &cur_set->blocks.at(0);
+//     if (cur_block->cache_address.tag == addr.tag) {
+//         // hit
+//         this->cache_metrics.load_hits++;
+//         this->cache_metrics.total_cycles++;
+//     } else {
+//         this->cache_metrics.load_misses++;
+//         this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         cur_block->cache_address.tag = addr.tag;
+//     }
+//     // Update LRU
+//     // if (this->eviction == LRU) {
+//     //     update_lru(cur_set, 0);
+//     // }
+// }
+
+// void cache_sim::associativeLoad(cacheAddress addr) {
+
+// }
+// void cache_sim::fullyAssLoad(cacheAddress addr) {
+
+// }
+
+// void cache_sim::directSave(cacheAddress addr) {
+//     set* cur_set = &this->sets.at(addr.index);
+//     block* cur_block;
+//     cur_block = &cur_set->blocks.at(0);
+//     if (cur_block->cache_address.tag == addr.tag) {
+//         // hit
+//         this->cache_metrics.store_hits++;
+//         if (!this->writeStrat) {
+//             this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         } else {
+//             this->cache_metrics.total_cycles++;
+//             cur_block->is_dirty = 1;
+//         }
+//     } else {
+//         this->cache_metrics.store_misses++;
+//         this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         cur_block->cache_address.tag = addr.tag;
+        
+//     }
+// }
+
+// void cache_sim::associativeSave(cacheAddress addr) {
+
+// }
+// void cache_sim::fullyAssSave(cacheAddress addr) {
+
+// }
+
 void cache_sim::load(cacheAddress addr)
 {
     // cout << "loading index: " << addr.index << " tag: " << addr.tag << endl;
-    cout << "loading index: ";
-    print_bits(addr.index);
-    cout << "tag: ";
-    print_bits(addr.tag);
+    // cout << "loading index: ";
+    // print_bits(addr.index);
+    // cout << "tag: ";
+    // print_bits(addr.tag);
 
     // Increase total loads
-    this->cache_metrics.total_loads++;
     // NEED TO THINK ABOUT CYCLES???
-    cache_metrics.total_cycles++;
+    
     // Check if hit or miss
-        // check the set
-        set* cur_set = &this->sets.at(addr.index);
-        
-        // check all blocks 
-        block* cur_block;
-        for (unsigned i = 0; i < this->numBlockPerSet; i++) {
-            cur_block = &cur_set->blocks.at(i);
-            if (cur_block->cache_address.tag == addr.tag) {
-                // hit
-                this->cache_metrics.load_hits++;
-                // Update LRU
-                if (this->eviction == LRU) {
-                    update_lru(cur_set, i);
-                }
-                return;
+    // check the set
+    set* cur_set = &this->sets.at(addr.index);
+    
+    // check all blocks 
+    block* cur_block;
+    for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+        cur_block = &cur_set->blocks.at(i);
+        if (cur_block->cache_address.tag == addr.tag) {
+            // hit
+            this->cache_metrics.load_hits++;
+            this->cache_metrics.total_cycles++;
+            //Update LRU
+            if (this->eviction == LRU) {
+                update_lru(cur_set, i);
+            }
+            return;
+        }
+    }
+    // miss
+    this->cache_metrics.load_misses++;
+    // 4 bytes (32 mem address) are transfered to cache
+    this->cache_metrics.total_cycles+=(this->blockSize/4) * 100; 
+    cur_block->cache_address.tag = addr.tag;
+        if (this->eviction == FIFO) {
+        cur_set->blocks.erase(cur_set->blocks.begin());
+        cur_set->blocks.push_back(*cur_block);
+    } else if (this->eviction == LRU) {
+        int maxCounter = 0;
+        int index = 0;
+        for (int i = 0; i < this->numBlockPerSet; i++) {
+            if (maxCounter < cur_set->blocks.at(i).counter) {
+                maxCounter = cur_set->blocks.at(i).counter;
+                index = i;
             }
         }
-        // miss
-        this->cache_metrics.load_misses++;
-        // FIND THE BLOCK to evict
-        cur_block = &cur_set->blocks.at(cur_set->tracker); // block to evict
-        // if (WRITE_BACK == this->writeThru) {
-        //     check_dirty_for_eviction(cur_block);
-        // }
+        cur_set->blocks.erase(cur_set->blocks.begin() + index);
+        cur_set->blocks.push_back(*cur_block);
+    }
+    //UPdate LRU
+    unsigned recent_update_index = cur_set->tracker; 
+    update_lru(cur_set, recent_update_index); // the new loaded block needs to update counter
 
-        cur_block->cache_address.tag = addr.tag;
-        // 4 bytes (32 mem address) are transfered to cache
-        this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
-
-        cout << "----------------" << endl;
-        cout << "cur: " << cur_block->cache_address.tag << endl;
-        cout << "----------------" << endl;
-        this->print_cache();
+    // cout << "----------------" << endl;
+    // cout << "cur: " << cur_block->cache_address.tag << endl;
+    // cout << "----------------" << endl;
+    // this->print_cache();
 }
 
 void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
@@ -189,31 +269,24 @@ void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
 
 }
 
-// void cache_sim::check_dirty_for_eviction(block* cur_block) {
+// void cache_sim::process_dirty(block* cur_block) {
 //     if (cur_block->is_dirty == 1) {
 //         // load the existing back 
 //         this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
-//         cur_block->is_dirty == 0;
+//         cur_block->is_dirty = 0;
 //     }
-
 // }
-// block cache_sim::find_evict_block(&set cur_set) {
-//     // Assumes LRU
+// // block cache_sim::find_evict_block(&set cur_set) {
+// //     // Assumes LRU
 
 
-// }
+// // }
 void cache_sim::save(cacheAddress addr)
 {
-    cout << "loading index: ";
-    print_bits(addr.index);
-    cout << "tag: ";
-    print_bits(addr.tag);
-
-    // Increase total loads
-    this->cache_metrics.total_stores++;
-    // NEED TO THINK ABOUT CYCLES???
-    cache_metrics.total_cycles++;
-    // save the new data
+    // cout << "loading index: ";
+    // print_bits(addr.index);
+    // cout << "tag: ";
+    // print_bits(addr.tag);
     
     // check the set
     set* cur_set = &this->sets.at(addr.index);
@@ -233,23 +306,26 @@ void cache_sim::save(cacheAddress addr)
             }
             
             // update write through
-            if ( WRITE_THRU == this->writeThru) {
-                this->cache_metrics.total_cycles+= numBlockPerSet; // transfer straight to main hardrive
-            } else { // write back
-                cur_set;
+            if ( WRITE_THRU == this->writeStrat) {
+                this->cache_metrics.total_cycles += (this->blockSize / 4 * 100 + 1); // transfer straight to main hardrive
+            } else { 
+                this->cache_metrics.total_cycles ++;
+                cur_block->is_dirty = true;
             }
             
             return;
         }
     }
-    if (this->writeThru == WRITE_THRU) {
-        // ignore dirty metric
-        this->cache_metrics.total_cycles+= (this->blockSize/4) * 100; // transfer straight to main hardrive
+    //miss
+    cache_metrics.store_misses++;
+    if (this->writeStrat == WRITE_THRU) {
+        //check if need to evict
+        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
         block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
         replace_block->cache_address.tag = addr.tag; // update tag
     }
-    cout << "----------------" << endl;
-    this->print_cache();
+    // cout << "----------------" << endl;
+    // this->print_cache();
 }
 
 

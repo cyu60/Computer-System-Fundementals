@@ -96,12 +96,8 @@ int main(int args, char* argv[]) {
     }
     
     cache_sim cacheSimulator = cache_sim(cache_settings);
-    cacheAddress test = cacheSimulator.get_cache_addr(cacheData.at(0).address);
-    cout << cacheData.at(0).address << endl;
-    // cout << "test index, tag: " << test.index  << " " << test.tag <<endl; // should be 00??
     cacheSimulator.process_ops(cacheData);
-    cacheSimulator.print_cache();
-    return 0; 
+    return 0;
 }
 
 //checks if a number is a power of 2
