@@ -21,14 +21,16 @@ void print_bits(int num, unsigned len=32) {
     // bitset<len> x(num);
     cout << x << endl;
 }
+// (this->blockSize/4) * 100 + 1????
 
 cache_sim::cache_sim(cacheSettings cache_settings) {
-    this->storeStrat = cache_settings.storeStrat;
-    this->writeStrat = cache_settings.writeStrat;
+    this->writeAlloc = cache_settings.storeStrat;
+    this->writeThru = cache_settings.writeStrat;
     this->eviction = cache_settings.eviction;
     this->numBlockPerSet = cache_settings.blocks;
     this->numSets = cache_settings.sets;
-    
+    this->blockSize = cache_settings.bytes;
+
     // reset 0
     this->numOffsetBits = 0;
     this->numIndexBits = 0;
@@ -58,6 +60,7 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
     // fill empty blocks into set
     set emptySet;
     emptySet.blocks.assign(numBlockPerSet, emptyBlk);
+    emptySet.tracker = 0; // initialize tracker to be 0
     // fill empty set into list of sets
     this->sets.assign(numSets, emptySet);
 
@@ -66,10 +69,10 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
 cacheAddress cache_sim::get_cache_addr(unsigned hex_addr) {
     cacheAddress cur;
     // Find the bit positions of index 
-    unsigned index_bits = (((1 << this->numIndexBits) - 1) << this->numOffsetBits);
+    unsigned index_bits = (((1 << this->numIndexBits) - 1) << this->numOffsetBits); // 00001110000
     // cout << index_bits << endl;
     // find the values at those posistions, shift back to the index location
-    cur.index = (hex_addr & index_bits) >> this->numOffsetBits;
+    cur.index = (hex_addr & index_bits) >> this->numOffsetBits; // 00010100110000 --> 00010100000 --> 000101
     // Determine the bit positions for tag
     unsigned tag_bits = ~((1 << (this->numIndexBits + this->numOffsetBits)) - 1);
     // find the values at the position, then shift back to correct position
@@ -138,37 +141,67 @@ void cache_sim::load(cacheAddress addr)
     // Check if hit or miss
         // check the set
         set* cur_set = &this->sets.at(addr.index);
-        // check all blocks -- direct mapping
-        block* cur_block = &cur_set->blocks.at(0);
-        if (cur_block->cache_address.tag == addr.tag) {
-            // hit
-            this->cache_metrics.load_hits++;
-            return;
-        } else {
-            // miss
-            this->cache_metrics.load_misses++;
-            // write alloc --  store immediately 
-            if (WRITE_ALLOC == this->storeStrat) {
-                cur_block->cache_address.tag = addr.tag;
-                // NEED TO CHECK CYCLES??
-                // 4 bytes (32 mem address) are transfered to cache
-                this->cache_metrics.total_cycles+=100;
+        
+        // check all blocks 
+        block* cur_block;
+        for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+            cur_block = &cur_set->blocks.at(i);
+            if (cur_block->cache_address.tag == addr.tag) {
+                // hit
+                this->cache_metrics.load_hits++;
+                // Update LRU
+                if (this->eviction == LRU) {
+                    update_lru(cur_set, i);
+                }
+                return;
             }
-            // No write alloc would just proceed
-
         }
+        // miss
+        this->cache_metrics.load_misses++;
+        // FIND THE BLOCK to evict
+        cur_block = &cur_set->blocks.at(cur_set->tracker); // block to evict
+        // if (WRITE_BACK == this->writeThru) {
+        //     check_dirty_for_eviction(cur_block);
+        // }
+
+        cur_block->cache_address.tag = addr.tag;
+        // 4 bytes (32 mem address) are transfered to cache
+        this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
+
         cout << "----------------" << endl;
         cout << "cur: " << cur_block->cache_address.tag << endl;
         cout << "----------------" << endl;
         this->print_cache();
-        // for (unsigned i = 0; i < this->numBlockPerSet; i++) {
-        //     block cur_block = cur_set.at(i);
-
-        //     if (cur_block.cache_address.tag) {
-
-        //     }
-        // }
 }
+
+void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
+    
+    // increase counter for all
+    for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+        cur_set->blocks.at(i).counter++;
+        // update tracker
+        if (cur_set->blocks.at(cur_set->tracker).counter < cur_set->blocks.at(i).counter) {
+            cur_set->tracker = i;
+        }
+    }
+    // set cur block counter to 0
+    cur_set->blocks.at(cur_block_index).counter = 0;
+
+}
+
+// void cache_sim::check_dirty_for_eviction(block* cur_block) {
+//     if (cur_block->is_dirty == 1) {
+//         // load the existing back 
+//         this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
+//         cur_block->is_dirty == 0;
+//     }
+
+// }
+// block cache_sim::find_evict_block(&set cur_set) {
+//     // Assumes LRU
+
+
+// }
 void cache_sim::save(cacheAddress addr)
 {
     cout << "loading index: ";
@@ -181,16 +214,42 @@ void cache_sim::save(cacheAddress addr)
     // NEED TO THINK ABOUT CYCLES???
     cache_metrics.total_cycles++;
     // save the new data
-        // check the set
-        set* cur_set = &this->sets.at(addr.index);
-        if (writeStrat == WRITE_THRU) {
-            // ignore dirty metric
-            cache_metrics.total_cycles+= 100; // transfer straight to main hardrive
-            block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
-            replace_block->cache_address.tag = addr.tag; // update tag
+    
+    // check the set
+    set* cur_set = &this->sets.at(addr.index);
+    
+
+    
+    // check if hit or miss
+    block* cur_block;
+    for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+        cur_block = &cur_set->blocks.at(i);
+        if (cur_block->cache_address.tag == addr.tag) {
+            // hit
+            this->cache_metrics.store_hits++;
+            // Update LRU
+            if (this->eviction == LRU) {
+                update_lru(cur_set, i);
+            }
+            
+            // update write through
+            if ( WRITE_THRU == this->writeThru) {
+                this->cache_metrics.total_cycles+= numBlockPerSet; // transfer straight to main hardrive
+            } else { // write back
+                cur_set
+            }
+            
+            return;
         }
-        cout << "----------------" << endl;
-        this->print_cache();
+    }
+    if (this->writeThru == WRITE_THRU) {
+        // ignore dirty metric
+        this->cache_metrics.total_cycles+= (this->blockSize/4) * 100; // transfer straight to main hardrive
+        block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
+        replace_block->cache_address.tag = addr.tag; // update tag
+    }
+    cout << "----------------" << endl;
+    this->print_cache();
 }
 
 
