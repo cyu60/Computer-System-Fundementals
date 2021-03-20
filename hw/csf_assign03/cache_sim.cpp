@@ -40,6 +40,7 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
         this->numOffsetBits++;
     }
     cout << "num offset bits: " << this->numOffsetBits << endl;
+    
     // get highest bit set for  index bit count
     // cout << "blocks: " << cache_settings.blocks << endl;
     // while (cache_settings.blocks >>= 1) ++this->numIndexBits;
