@@ -56,6 +56,7 @@ struct block {
     cacheAddress cache_address;
     int is_dirty; // 1 is dirty, 0 is not dirty
     int is_empty; // 0 is empty, 1 is not empty 
+    int counter; // LRU tracking/FIFO trakcing
 };
 
 struct set
@@ -81,9 +82,9 @@ class cache_sim {
     public:
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
-    int storeStrat;
+    int writeAlloc;
     // write-through or write-back
-    int writeStrat;
+    int writeThru;
     // lru (least-recently-used) or fifo evictions
     int eviction; 
     unsigned bytePerBlock; 
@@ -91,6 +92,7 @@ class cache_sim {
     unsigned numBlockPerSet;
     unsigned numIndexBits; 
     unsigned numOffsetBits;
+    unsigned blockSize;
     vector<set> sets; // store all the sets
     metrics cache_metrics;
     // metric sim_metric;
@@ -105,9 +107,11 @@ class cache_sim {
     void load(cacheAddress addr);
     void save(cacheAddress addr);
     int is_hit(cacheAddress cache_address);
+    void find_evict_block(set* cur_set);
+    void update_lru(set* cur_set, unsigned cur_block_index);
     // // given a memory address, returns the corresponding set index, tag, etc
     // // given a set index and block id, evict the block
-    std::pair<int, int> fetch_block(cacheAddress addr, char operation); // save/load
+    // std::pair<int, int> fetch_block(cacheAddress addr, char operation); // save/load
     // // given a set index and tag, returns true if it is a hit.
     // void flush_cache();
     
