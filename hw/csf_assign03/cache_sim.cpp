@@ -16,8 +16,9 @@ using std::bitset;
 using std::cout;
 using std::endl;
 
-void print_bits(int num) {
+void print_bits(int num, unsigned len=32) {
     bitset<32> x(num);
+    // bitset<len> x(num);
     cout << x << endl;
 }
 
@@ -40,14 +41,14 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
         cout << "num offset bits: " << this->numOffsetBits << endl;
     }
     // get highest bit set for  index bit count
-    cout << "blocks: " << cache_settings.blocks << endl;
+    // cout << "blocks: " << cache_settings.blocks << endl;
     // while (cache_settings.blocks >>= 1) ++this->numIndexBits;
-    while (cache_settings.blocks >>= 1) {
+    cout << "num sets: " << this->numSets << endl;
+    while (cache_settings.sets >>= 1) {
         this->numIndexBits++;
         cout << "num index bits: " << this->numIndexBits << endl;
     }
-    cout << "num blocks: " << this->numBlockPerSet << endl;
-    cout << "num sets: " << this->numSets << endl;
+    // cout << "num blocks: " << this->numBlockPerSet << endl;
 
     // initialize empty sets
     block emptyBlk;
@@ -65,7 +66,7 @@ cacheAddress cache_sim::get_cache_addr(unsigned hex_addr) {
     cacheAddress cur;
     // Find the bit positions of index 
     unsigned index_bits = (((1 << this->numIndexBits) - 1) << this->numOffsetBits);
-    cout << index_bits << endl;
+    // cout << index_bits << endl;
     // find the values at those posistions, shift back to the index location
     cur.index = (hex_addr & index_bits) >> this->numOffsetBits;
     // Determine the bit positions for tag
@@ -79,11 +80,15 @@ void cache_sim::print_cache() {
     for (unsigned i=0; i<this->numSets; i++) {
         for (unsigned j=0; j<this->numBlockPerSet; j++) {
             block curBlock = this->sets.at(i).blocks.at(j);
-            cout << "Set: " << i << " Block: " << j << endl;
+            cout << "Set: ";
+            print_bits(i, this->numIndexBits); 
+            cout << " Block: " << j << endl;
             
             cout << "dirty: " << curBlock.is_dirty << endl;
             cout << "empty: " << curBlock.is_empty << endl;
-            cout << "tag: " << curBlock.cache_address.tag << endl;
+            cout << "tag: ";
+            print_bits(curBlock.cache_address.tag, 32-numIndexBits-numOffsetBits);
+            // cout << "tag: " << curBlock.cache_address.tag << endl;
             // cout << "index: " << curBlock.cache_address.index << endl;
 
         }
