@@ -91,31 +91,16 @@ int main(int args, char* argv[]) {
     traceLine curTraceLine; 
     int dummy; // for the 3rd input in the lines
     while (cin >> curTraceLine.operation >> hex >> curTraceLine.address >> dummy) {
-        // getline(cin, inputLine);
-        // cacheData.push_back(readLine(inputLine, function1, function2));
         cacheData.push_back(curTraceLine);
         cout << curTraceLine.operation << curTraceLine.address << endl;
     }
-
+    
     cache_sim cacheSimulator = cache_sim(cache_settings);
     cacheAddress test = cacheSimulator.get_cache_addr(cacheData.at(0).address);
     cout << cacheData.at(0).address << endl;
     cout << "test index, tag: " << test.index  << " " << test.tag <<endl; // should be 00??
     cacheSimulator.process_ops(cacheData);
-    // cacheSimulator.print_cache();
-    // Set up cache Sim 
-    // while (cin) {
-    //     getline(cin, inputLine, '\n');
-    // }
-
-    // Trying to test the input read of the memory? Planning to use string stream?
-    // string test_write;
-    // stringstream input;
-    // while (cin) {
-    //     cin >> input; 
-    //     cout << input.str();
-    // }
-    
+    cacheSimulator.print_cache();
     return 0; 
 }
 
