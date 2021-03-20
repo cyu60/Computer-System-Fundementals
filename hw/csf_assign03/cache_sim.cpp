@@ -38,16 +38,16 @@ cache_sim::cache_sim(cacheSettings cache_settings) {
     cout << "bytes: " << cache_settings.bytes << endl;
     while (cache_settings.bytes >>= 1) {
         this->numOffsetBits++;
-        cout << "num offset bits: " << this->numOffsetBits << endl;
     }
+    cout << "num offset bits: " << this->numOffsetBits << endl;
     // get highest bit set for  index bit count
     // cout << "blocks: " << cache_settings.blocks << endl;
     // while (cache_settings.blocks >>= 1) ++this->numIndexBits;
     cout << "num sets: " << this->numSets << endl;
     while (cache_settings.sets >>= 1) {
         this->numIndexBits++;
-        cout << "num index bits: " << this->numIndexBits << endl;
     }
+    cout << "num index bits: " << this->numIndexBits << endl;
     // cout << "num blocks: " << this->numBlockPerSet << endl;
 
     // initialize empty sets
@@ -146,8 +146,14 @@ void cache_sim::load(cacheAddress addr)
         } else {
             // miss
             this->cache_metrics.load_misses++;
-            // Assume store immediately -- write back
-            cur_block->cache_address.tag = addr.tag;
+            // write alloc --  store immediately 
+            if (WRITE_ALLOC == this->storeStrat) {
+                cur_block->cache_address.tag = addr.tag;
+                // NEED TO CHECK CYCLES??
+                // 4 bytes (32 mem address) are transfered to cache
+                this->cache_metrics.total_cycles+=100;
+            }
+            // No write alloc would just proceed
 
         }
         cout << "----------------" << endl;
@@ -161,17 +167,32 @@ void cache_sim::load(cacheAddress addr)
 
         //     }
         // }
-
-
-
-
 }
 void cache_sim::save(cacheAddress addr)
 {
-    return;
+    cout << "loading index: ";
+    print_bits(addr.index);
+    cout << "tag: ";
+    print_bits(addr.tag);
 
-
+    // Increase total loads
+    this->cache_metrics.total_stores++;
+    // NEED TO THINK ABOUT CYCLES???
+    cache_metrics.total_cycles++;
+    // save the new data
+        // check the set
+        set* cur_set = &this->sets.at(addr.index);
+        if (writeStrat == WRITE_THRU) {
+            // ignore dirty metric
+            cache_metrics.total_cycles+= 100; // transfer straight to main hardrive
+            block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
+            replace_block->cache_address.tag = addr.tag; // update tag
+        }
+        cout << "----------------" << endl;
+        this->print_cache();
 }
+
+
 
 void cache_sim::print_output() {
     cout << "Total loads: " << this->cache_metrics.total_loads << endl;
