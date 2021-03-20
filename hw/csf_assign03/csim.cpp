@@ -11,6 +11,8 @@
 #include <tuple>
 #include <sstream> 
 
+#include <bitset>
+
 #include "csim.h"
 
 using std::cin;
@@ -97,8 +99,10 @@ int main(int args, char* argv[]) {
 
     cache_sim cacheSimulator = cache_sim(cache_settings);
     cacheAddress test = cacheSimulator.get_cache_addr(cacheData.at(0).address);
-    cout << test.index << test.tag <<endl; // should be 00??
-    cacheSimulator.print_cache();
+    cout << cacheData.at(0).address << endl;
+    cout << "test index, tag: " << test.index  << " " << test.tag <<endl; // should be 00??
+    cacheSimulator.process_ops(cacheData);
+    // cacheSimulator.print_cache();
     // Set up cache Sim 
     // while (cin) {
     //     getline(cin, inputLine, '\n');
@@ -143,13 +147,6 @@ int noWriteAllocate() {
     return 0;
 }
 
-void print_output(int total_loads, int total_stores, int load_hits, int load_misses, int store_hits,int store_misses, int total_cycles) {
-    cout << "Total loads: " << total_loads << endl;
-    cout << "Total stores: " << total_stores << endl;
-    cout << "Load hits: " << load_hits << endl;
-    cout << "Load misses: " << load_misses << endl;
-    cout << "Store hits: " << store_hits << endl;
-    cout << "Store misses: " << store_misses << endl;
-    cout << "Total cycles: " << total_cycles << endl;
-}
 
+
+// ./csim 2 1 4 write-allocate write-back lru < read01.trace

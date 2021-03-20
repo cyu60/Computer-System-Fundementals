@@ -1,6 +1,3 @@
-//magarw13
-//cyu60
-
 #ifndef CSIM_H
 #define CSIM_H
 
@@ -20,6 +17,8 @@ using std::vector;
 #define NO_WRITE_ALLOC 0
 #define WRITE_BACK 1
 #define WRITE_THRU 0
+#define IS_EMPTY 0
+#define IS_NOT_EMPTY 1
 
 struct traceLine 
 {
@@ -56,7 +55,7 @@ struct cacheAddress
 struct block {
     cacheAddress cache_address;
     int is_dirty; // 1 is dirty, 0 is not dirty
-    int is_empty; // 1 is empty, 0 is not empty 
+    int is_empty; // 0 is empty, 1 is not empty 
 };
 
 struct set
@@ -66,6 +65,16 @@ struct set
     // LRU - previously accessed block
     // FIFO - cur index that is accessed
     unsigned tracker; 
+};
+
+struct metrics {
+    unsigned total_loads;
+    unsigned total_stores;
+    unsigned load_hits;
+    unsigned load_misses;
+    unsigned store_hits;
+    unsigned store_misses;
+    unsigned total_cycles;
 };
 
 class cache_sim {
@@ -82,7 +91,8 @@ class cache_sim {
     unsigned numBlockPerSet;
     unsigned numIndexBits; 
     unsigned numOffsetBits;
-    vector<set> sets; // stor all the sets
+    vector<set> sets; // store all the sets
+    metrics cache_metrics;
     // metric sim_metric;
 
     cache_sim(cacheSettings cache_settings);
@@ -90,9 +100,20 @@ class cache_sim {
     cacheAddress get_cache_addr(unsigned hex_addr);
     void print_cache(); // print the cache content for debug
     void process_ops(vector<traceLine> traces);
-    void print_metrics(); // print the metrics
-    int is_hit(cacheAddress cache_address);
+    void print_output(); // print the metrics
 
+    void load(cacheAddress addr);
+    void save(cacheAddress addr);
+    int is_hit(cacheAddress cache_address);
+    // // given a memory address, returns the corresponding set index, tag, etc
+    // // given a set index and block id, evict the block
+    std::pair<int, int> fetch_block(cacheAddress addr, char operation); // save/load
+    // // given a set index and tag, returns true if it is a hit.
+    // void flush_cache();
+    
+    // void restart_cache();
+    // // get/sets for debugging tec
+    // metric get_metrics();
 };
 
 #endif
