@@ -1,6 +1,6 @@
 //main file
 
-#include <string>
+#include <string.h>
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -50,7 +50,7 @@ int main(int args, char* argv[]) {
         fprintf(stderr, "%s\n", "Bytes is not a power of or is less than 4");
     }
 
-    if (0==strcmp(argv[4], "write-allocate")) {
+    if (0 == strcmp(argv[4], "write-allocate")) {
         cache_settings.storeStrat = WRITE_ALLOC;
     } else if(0==strcmp(argv[4], "no-write-allocate")){
 	    cache_settings.storeStrat = NO_WRITE_ALLOC;
