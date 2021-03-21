@@ -229,7 +229,8 @@ void cache_sim::load(cacheAddress addr)
     // 4 bytes (32 mem address) are transfered to cache
     this->cache_metrics.total_cycles+=(this->blockSize/4) * 100; 
     cur_block->cache_address.tag = addr.tag;
-    if (this->eviction == FIFO) {
+    if (this->storeStrat == WRITE_ALLOC) {
+        if (this->eviction == FIFO) {
         cur_set->blocks.erase(cur_set->blocks.begin());
         cur_set->blocks.push_back(*cur_block);
     } else if (this->eviction == LRU) { // Should use tracker that has the index???
@@ -244,6 +245,8 @@ void cache_sim::load(cacheAddress addr)
         cur_set->blocks.erase(cur_set->blocks.begin() + index);
         cur_set->blocks.push_back(*cur_block);
     }
+    }
+    
     //UPdate LRU
     unsigned recent_update_index = cur_set->tracker; 
     update_lru(cur_set, recent_update_index); // the new loaded block needs to update counter
@@ -280,7 +283,7 @@ void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
 // //     // Assumes LRU
 
 
-// // }
+// }
 void cache_sim::save(cacheAddress addr)
 {
     // cout << "loading index: ";
@@ -320,10 +323,29 @@ void cache_sim::save(cacheAddress addr)
     cache_metrics.store_misses++;
     if (this->writeStrat == WRITE_THRU) {
         //check if need to evict
-        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
-        block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
-        replace_block->cache_address.tag = addr.tag; // update tag
+        if (this->eviction == FIFO) {
+            cur_set->blocks.erase(cur_set->blocks.begin());
+            cur_set->blocks.push_back(*cur_block);
+        } else if (this->eviction == LRU) { // Should use tracker that has the index???
+            int maxCounter = 0;
+            int index = 0;
+            for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+                if (maxCounter < cur_set->blocks.at(i).counter) {
+                    maxCounter = cur_set->blocks.at(i).counter;
+                    printf("%d \n", cur_set->blocks.at(i).counter);
+                    index = i;
+                }
+            }
+            cur_block->cache_address.index = addr.index;
+            cur_block->cache_address.tag = addr.tag;
+            cur_set->blocks.erase(cur_set->blocks.begin() + index);
+            cur_set->blocks.push_back(*cur_block);
+        }
     }
+        
+        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
+        // block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
+        // replace_block->cache_address.tag = addr.tag; // update tag
     // cout << "----------------" << endl;
     // this->print_cache();
 }
