@@ -343,7 +343,7 @@ void cache_sim::save(cacheAddress addr)
         }
     }
         
-        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
+        this->cache_metrics.total_cycles += 100; // transfer straight to main hardrive
         // block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
         // replace_block->cache_address.tag = addr.tag; // update tag
     // cout << "----------------" << endl;
