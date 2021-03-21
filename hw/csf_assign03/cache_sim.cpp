@@ -232,19 +232,23 @@ void cache_sim::load(cacheAddress addr)
     if (this->eviction == FIFO) {
         cur_set->blocks.erase(cur_set->blocks.begin());
         cur_set->blocks.push_back(*cur_block);
-    } else if (this->eviction == LRU) { // Should use tracker that has the index???
-        int maxCounter = 0;
-        int index = 0;
-        for (unsigned i = 0; i < this->numBlockPerSet; i++) {
-            if (maxCounter < cur_set->blocks.at(i).counter) {
-                maxCounter = cur_set->blocks.at(i).counter;
-                index = i;
-            }
-        }
-        cur_set->blocks.erase(cur_set->blocks.begin() + index);
-        cur_set->blocks.push_back(*cur_block);
     }
-    //UPdate LRU
+    if (this->writeStrat == WRITE_BACK) {
+        process_dirty(cur_block);
+    }
+    // } else if (this->eviction == LRU) { // Should use tracker that has the index???
+    //     int maxCounter = 0;
+    //     int index = 0;
+    //     for (unsigned i = 0; i < this->numBlockPerSet; i++) {
+    //         if (maxCounter < cur_set->blocks.at(i).counter) {
+    //             maxCounter = cur_set->blocks.at(i).counter;
+    //             index = i;
+    //         }
+    //     }
+    //     cur_set->blocks.erase(cur_set->blocks.begin() + index);
+    //     cur_set->blocks.push_back(*cur_block);
+    // }
+    //Update LRU
     unsigned recent_update_index = cur_set->tracker; 
     update_lru(cur_set, recent_update_index); // the new loaded block needs to update counter
 
@@ -269,13 +273,13 @@ void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
 
 }
 
-// void cache_sim::process_dirty(block* cur_block) {
-//     if (cur_block->is_dirty == 1) {
-//         // load the existing back 
-//         this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
-//         cur_block->is_dirty = 0;
-//     }
-// }
+void cache_sim::process_dirty(block* cur_block) {
+    if (cur_block->is_dirty == 1) {
+        // load the existing back 
+        this->cache_metrics.total_cycles+=(this->blockSize/4) * 100;
+        cur_block->is_dirty = 0;
+    }
+}
 // // block cache_sim::find_evict_block(&set cur_set) {
 // //     // Assumes LRU
 
@@ -320,9 +324,17 @@ void cache_sim::save(cacheAddress addr)
     cache_metrics.store_misses++;
     if (this->writeStrat == WRITE_THRU) {
         //check if need to evict
-        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
-        block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
-        replace_block->cache_address.tag = addr.tag; // update tag
+        this->cache_metrics.total_cycles += 100; // only write through with main mem
+        block* replace_block = &cur_set->blocks.at(cur_set->tracker); // assume direct mapping
+        if (this->storeStrat == WRITE_ALLOC) {
+            replace_block->cache_address.tag = addr.tag; // update tag
+        }
+        
+        //Update LRU
+        unsigned recent_update_index = cur_set->tracker; 
+        update_lru(cur_set, recent_update_index); // the new loaded block needs to update counter
+    } else {
+        cur_block->is_dirty = 1;
     }
     // cout << "----------------" << endl;
     // this->print_cache();
