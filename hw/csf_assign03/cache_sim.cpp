@@ -229,13 +229,13 @@ void cache_sim::load(cacheAddress addr)
     // 4 bytes (32 mem address) are transfered to cache
     this->cache_metrics.total_cycles+=(this->blockSize/4) * 100; 
     cur_block->cache_address.tag = addr.tag;
-        if (this->eviction == FIFO) {
+    if (this->eviction == FIFO) {
         cur_set->blocks.erase(cur_set->blocks.begin());
         cur_set->blocks.push_back(*cur_block);
-    } else if (this->eviction == LRU) {
+    } else if (this->eviction == LRU) { // Should use tracker that has the index???
         int maxCounter = 0;
         int index = 0;
-        for (int i = 0; i < this->numBlockPerSet; i++) {
+        for (unsigned i = 0; i < this->numBlockPerSet; i++) {
             if (maxCounter < cur_set->blocks.at(i).counter) {
                 maxCounter = cur_set->blocks.at(i).counter;
                 index = i;
