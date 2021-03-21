@@ -229,7 +229,8 @@ void cache_sim::load(cacheAddress addr)
     // 4 bytes (32 mem address) are transfered to cache
     this->cache_metrics.total_cycles+=(this->blockSize/4) * 100; 
     cur_block->cache_address.tag = addr.tag;
-    if (this->eviction == FIFO) {
+    if (this->storeStrat == WRITE_ALLOC) {
+        if (this->eviction == FIFO) {
         cur_set->blocks.erase(cur_set->blocks.begin());
         cur_set->blocks.push_back(*cur_block);
     }
@@ -256,6 +257,7 @@ void cache_sim::load(cacheAddress addr)
     // cout << "cur: " << cur_block->cache_address.tag << endl;
     // cout << "----------------" << endl;
     // this->print_cache();
+}
 }
 
 void cache_sim::update_lru(set* cur_set, unsigned cur_block_index) {
@@ -284,7 +286,7 @@ void cache_sim::process_dirty(block* cur_block) {
 // //     // Assumes LRU
 
 
-// // }
+// }
 void cache_sim::save(cacheAddress addr)
 {
     // cout << "loading index: ";
@@ -336,6 +338,10 @@ void cache_sim::save(cacheAddress addr)
     } else {
         cur_block->is_dirty = 1;
     }
+        
+        this->cache_metrics.total_cycles += (this->blockSize/4) * 100; // transfer straight to main hardrive
+        // block* replace_block = &cur_set->blocks.at(0); // assume direct mapping
+        // replace_block->cache_address.tag = addr.tag; // update tag
     // cout << "----------------" << endl;
     // this->print_cache();
 }
