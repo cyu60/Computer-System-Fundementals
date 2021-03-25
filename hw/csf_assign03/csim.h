@@ -1,3 +1,7 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+//header file
+
 #ifndef CSIM_H
 #define CSIM_H
 
@@ -38,9 +42,9 @@ struct cacheSettings
     // number of bytes in each block (a positive power-of-2, at least 4)
     unsigned bytes;
     // write-allocate or no-write-allocate
-    int storeStrat;
+    int store_strat;
     // write-through or write-back
-    int writeStrat;
+    int write_strat;
     // lru (least-recently-used) or fifo evictions
     int eviction; 
 };
@@ -82,17 +86,17 @@ class cache_sim {
     public:
     cacheSettings cache_settings;
     // write-allocate or no-write-allocate
-    int writeStrat;
+    int write_strat;
     // write-through or write-back
-    int storeStrat;
+    int store_strat;
     // lru (least-recently-used) or fifo evictions
     int eviction; 
-    unsigned bytePerBlock; 
-    unsigned numSets; 
-    unsigned numBlockPerSet;
-    unsigned numIndexBits; 
-    unsigned numOffsetBits;
-    unsigned blockSize;
+    unsigned byte_per_block; 
+    unsigned num_sets; 
+    unsigned num_block_per_set;
+    unsigned num_index_bits; 
+    unsigned num_offset_bits;
+    unsigned block_size;
     vector<set> sets; // store all the sets
     metrics cache_metrics;
     // metric sim_metric;
@@ -103,27 +107,13 @@ class cache_sim {
     void print_cache(); // print the cache content for debug
     void process_ops(vector<traceLine> traces);
     void print_output(); // print the metrics
-    void directLoad(cacheAddress addr);
-    void associativeLoad(cacheAddress addr);
-    void fullyAssLoad(cacheAddress addr);
-    void directSave(cacheAddress addr);
-    void associativeSave(cacheAddress addr);
-    void fullyAssSave(cacheAddress addr);
     void load(cacheAddress addr);
     void save(cacheAddress addr);
     int is_hit(cacheAddress cache_address);
     void find_evict_block(set* cur_set);
     void process_dirty(block* cur_block);
     void update_lru(set* cur_set, unsigned cur_block_index);
-    // // given a memory address, returns the corresponding set index, tag, etc
-    // // given a set index and block id, evict the block
-    // std::pair<int, int> fetch_block(cacheAddress addr, char operation); // save/load
-    // // given a set index and tag, returns true if it is a hit.
-    // void flush_cache();
-    
-    // void restart_cache();
-    // // get/sets for debugging tec
-    // metric get_metrics();
+    int handleEviction(set* cur_set, block cur_block);
 };
 
 #endif

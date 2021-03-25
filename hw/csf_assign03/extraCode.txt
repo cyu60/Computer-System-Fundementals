@@ -1,0 +1,112 @@
+void print_bits(int num, unsigned len=32) {
+    bitset<32> x(num);
+    // bitset<len> x(num);
+    cout << x << endl;
+}
+// (this->blockSize/4) * 100 + 1????
+
+void cache_sim::print_cache() {
+    for (unsigned i=0; i<this->numSets; i++) {
+        for (unsigned j=0; j<this->numBlockPerSet; j++) {
+            block curBlock = this->sets.at(i).blocks.at(j);
+            cout << "Set: ";
+            print_bits(i, this->numIndexBits); 
+            cout << " Block: " << j << endl;
+            
+            cout << "dirty: " << curBlock.is_dirty << endl;
+            cout << "empty: " << curBlock.is_empty << endl;
+            cout << "tag: ";
+            print_bits(curBlock.cache_address.tag, 32-numIndexBits-numOffsetBits);
+            // cout << "tag: " << curBlock.cache_address.tag << endl;
+            // cout << "index: " << curBlock.cache_address.index << endl;
+
+        }
+    }
+} 
+
+
+Code for calling different type of cache types
+// if (this->numSets >= 1 && this->numBlockPerSet == 1) {
+//     this->directLoad(curAddress);
+// } else if (this->numSets > 1 && this->numBlockPerSet > 1) {
+//     this->associativeLoad(curAddress);
+// } else if (this->numSets == 1 && this->numBlockPerSet > 1) {
+//     this->fullyAssLoad(curAddress);
+// }
+
+
+// if (this->numSets >= 1 && this->numBlockPerSet == 1) {
+//     this->directSave(curAddress);
+// } else if (this->numSets > 1 && this->numBlockPerSet > 1) {
+//     this->associativeSave(curAddress);
+// } else if (this->numSets == 1 && this->numBlockPerSet > 1) {
+//     this->fullyAssSave(curAddress);
+// }
+
+// void cache_sim::directLoad(cacheAddress addr) {
+//     set* cur_set = &this->sets.at(addr.index);
+//     block* cur_block;
+//     cur_block = &cur_set->blocks.at(0);
+//     if (cur_block->cache_address.tag == addr.tag) {
+//         // hit
+//         this->cache_metrics.load_hits++;
+//         this->cache_metrics.total_cycles++;
+//     } else {
+//         this->cache_metrics.load_misses++;
+//         this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         cur_block->cache_address.tag = addr.tag;
+//     }
+//     // Update LRU
+//     // if (this->eviction == LRU) {
+//     //     update_lru(cur_set, 0);
+//     // }
+// }
+
+// void cache_sim::associativeLoad(cacheAddress addr) {
+
+// }
+// void cache_sim::fullyAssLoad(cacheAddress addr) {
+
+// }
+
+// void cache_sim::directSave(cacheAddress addr) {
+//     set* cur_set = &this->sets.at(addr.index);
+//     block* cur_block;
+//     cur_block = &cur_set->blocks.at(0);
+//     if (cur_block->cache_address.tag == addr.tag) {
+//         // hit
+//         this->cache_metrics.store_hits++;
+//         if (!this->writeStrat) {
+//             this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         } else {
+//             this->cache_metrics.total_cycles++;
+//             cur_block->is_dirty = 1;
+//         }
+//     } else {
+//         this->cache_metrics.store_misses++;
+//         this->cache_metrics.total_cycles += ((this->blockSize/4 * 100) + 1);
+//         cur_block->cache_address.tag = addr.tag;
+        
+//     }
+// }
+
+// void cache_sim::associativeSave(cacheAddress addr) {
+
+// }
+// void cache_sim::fullyAssSave(cacheAddress addr) {
+
+// }
+
+
+
+// std::pair<int, int> cache_sim::fetch_block(cacheAddress addr, char operation)
+// {
+//     // write-allocate we bring the relevant memory block into the cache before the store proceed
+//     if (operation == "l") {
+//         // Check to see if it exists in the cache
+//         // if tag is not in cache
+//         // Then add it to the cache
+
+//         // otherwise it is a hit
+//     }
+// }
