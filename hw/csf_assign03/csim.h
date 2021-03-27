@@ -24,8 +24,7 @@ using std::vector;
 #define IS_EMPTY 0
 #define IS_NOT_EMPTY 1
 
-struct traceLine 
-{
+struct traceLine {
     /* The first field is either l or s depending on whether the processor is “loading” from or “storing” to memory. */
     char operation;
     /* The second field is a 32-bit memory address given in hexadecimal; 
@@ -33,8 +32,7 @@ struct traceLine
     unsigned address;
 };
 
-struct cacheSettings
-{
+struct cacheSettings {
     /*number of sets in the cache (a positive power-of-2) */
     unsigned sets;
     // /* number of blocks in each set (a positive power-of-2)
@@ -49,8 +47,7 @@ struct cacheSettings
     int eviction; 
 };
 
-struct cacheAddress
-{
+struct cacheAddress {
     unsigned index;
     unsigned tag; 
     // Offset is not used and is ignored
@@ -63,8 +60,7 @@ struct block {
     int counter; // LRU tracking/FIFO trakcing
 };
 
-struct set
-{
+struct set {
     /* data */
     vector<block> blocks;
     // LRU - previously accessed block

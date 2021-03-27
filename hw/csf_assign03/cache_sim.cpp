@@ -155,24 +155,16 @@ void cache_sim::process_dirty(block* cur_block) {
 }
 
 void cache_sim::save(cacheAddress addr) {   
-    // check the set
     set* cur_set = &this->sets.at(addr.index);
-    // check if hit or miss
     block* cur_block;
-    
     for (unsigned i = 0; i < this->num_block_per_set; i++) {
         if (!(cur_set->blocks.at(i).is_empty)) {
             continue;
         }
         cur_block = &cur_set->blocks.at(i);
         if (cur_block->cache_address.tag == addr.tag) {
-            // hit
             this->cache_metrics.store_hits++;
-            // Update LRU
-            
             update_lru(cur_set, i);
-            
-            // update write through
             if ( WRITE_THRU == this->write_strat) {
                 this->cache_metrics.total_cycles += 101; // transfer straight to main hardrive
             } else { 
@@ -182,7 +174,6 @@ void cache_sim::save(cacheAddress addr) {
             return;
         }
     }
-    //miss
     cache_metrics.store_misses++;
     block cur2_block;
     cur2_block.cache_address.tag = addr.tag;
