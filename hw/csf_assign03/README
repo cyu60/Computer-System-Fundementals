@@ -1,9 +1,346 @@
 magarw13
 cyu60
 
+# Distribution of work
 We both worked on the assignment together. 
 However, we were very confused about how to make the prgoram work. 
 We think we have a nice data structure that should be fine to make the program work.
-We still need to finish the LRU functioning. 
+We did quite a bit of paired programming. Chinat's biking accident set us back a bit, but we managed to pull through in the end
 
+-------------------------------------------------------------------------------
+# Analysis
+
+- For the test to find the best overall effectiveness, we tested all the different types of caches, including the m-way set associative cache, with a 4 way set associativity (256 sets, 4 blocks, 16 bytes); the direct mapping (1024 sets, 1 block, 16 bytes) and fully set associative (1 set 1024 blocks 16 bytes). Note that we chose these numbers to ensure that the cache size maintains consistent throughout our tests, and that we are able to at least hold that factor consistent.
+- With regarding the write strategies, we considered all 3 types of write strategies including  "write through, write allocate", "write back, write allocate", "write through, no write allocate". We also took into account the different eviction strategies, including FIFO and LRU. This allowed us to compare all the different factors that may contribute to differences in the cache outcome. Furthermore, we used the primarily the total cycles and to some extent the individual miss values to assess the overall effectiveness.
+- We used the test files swim.trace and gcc.trace as they were suggested to be real trace files from the computer. Based on our observations, we noticed that the total cache cycles was less on the swim.trace than the gcc.trace, which is why we decided to place more emphasis on the analysis based on the gcc.trace results and the magnitude of the differences tended to be larger and would result in clearer patterns. However, it was still useful to have the swim.trace as a back up and to make sure that the patterns were not just an anomaly.
+- For the caches, we observed that the more associativity the better the performance, where we notices that fully associative performed better than the m-way set associative cache or the direct mappings. For example, when considering no write allocate, write through, fifo for the different caches, we see that that the total cycles differ as below  23102502 (4 way set associative) vs 23045793 (fully associative) vs 23864978 (direct).
+- For the writing strategies, we observed that write back, write allocate performed consistently better, with the total cycles being only 7 figures for all the combos, with significantly less store misses and an overall improved hit accuracy. This is contrasted with the 8 figures that were observed in the other strategies. It is interesting to note that write allocate, write through was the worst performing strategy overall, as it combined the memory accesses of the other 2 strategies.
+- Finally, for the eviction strategy, LRU was observed to perform better with less cycles and misses, though it only performed marginally better. For example, with the gcc.trace file considering a full set associative cache with no write allocate and write through, FIFO was 23045793 while LRU was only 22884714. However, it is worth noting that theory suggests that FIFO would work better in sequentially accessed data that exhibited spatial locality, therefore, the results for the eviction strategy must be taken with a grain of salt, and be assessed more based on other trace files with different access patterns.
+-  Nonetheless, overall, the cache with the best overall effectiveness is one that is set-associative, write back, write allocate and uses LRU strategy based on our experiments. It is worth noting however, that write-back requires the dirty bit which could lead to more overhead in the cache, though this was not taken into consideration when assessing the effectiveness of the caches.
+
+
+-------------------------------------------------------------------------------
+# 4-way set associative 
+
+## Compare different eviction strategies
+## No write allocate, write through, fifo (same result as LRU)
+./csim 256 4 16 no-write-allocate write-through fifo < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 311017
+Load misses: 7180
+Store hits: 163705
+Store misses: 33781
+Total cycles: 23102502
+
+./csim 256 4 16 no-write-allocate write-through fifo < swim.trace
+Total loads: 220668
+Total stores: 82525
+Load hits: 217968
+Load misses: 2700
+Store hits: 57994
+Store misses: 24531
+Total cycles: 9611162
+
+## write allocate, write through, fifo
+./csim 256 4 16 write-allocate write-through fifo < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 314171
+Load misses: 4026
+Store hits: 188047
+Store misses: 9439
+Total cycles: 25659722
+
+./csim 256 4 16 write-allocate write-through fifo < swim.trace
+
+Total loads: 220668
+Total stores: 82525
+Load hits: 218357
+Load misses: 2311
+Store hits: 71787
+Store misses: 10738
+Total cycles: 13786031
+
+## write allocate, write through, LRU 
+./csim 256 4 16 write-allocate write-through lru < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 314171
+Load misses: 4026
+Store hits: 188047
+Store misses: 9439
+Total cycles: 25659722
+
+./csim 256 4 16 write-allocate write-through lru < swim.trace
+Total loads: 220668
+Total stores: 82525
+Load hits: 218357
+Load misses: 2311
+Store hits: 71787
+Store misses: 10738
+Total cycles: 13786031
+
+## write allocate, write back, fifo (same result as lru)
+./csim 256 4 16 write-allocate write-back fifo < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 314171
+Load misses: 4026
+Store hits: 188047
+Store misses: 9439
+Total cycles: 9685683
+
+./csim 256 4 16 write-allocate write-back fifo < swim.trace
+
+Total loads: 220668
+Total stores: 82525
+Load hits: 218357
+Load misses: 2311
+Store hits: 71787
+Store misses: 10738
+Total cycles: 9136793
+
+-------------------------------------------------------------------------------
+
+# Direct mapping
+
+#write allocate, write through, fifo
+./csim 1024 1 16 write-allocate write-through fifo < gcc.trace 
+
+Total loads: 318197
+Total stores: 197486
+Load hits: 312238
+Load misses: 5959
+Store hits: 187502
+Store misses: 9984
+Total cycles: 26651467
+
+./csim 1024 1 16 write-allocate write-through fifo < swim.trace
+
+Total loads: 220668
+Total stores: 82525
+Load hits: 217735
+Load misses: 2933
+Store hits: 71538
+Store misses: 10987
+Total cycles: 14134680
+
+#write allocate, write through, lru
+./csim 1024 1 16 write-allocate write-through lru < gcc.trace  
+
+Total loads: 318197
+Total stores: 197486
+Load hits: 312238
+Load misses: 5959
+Store hits: 187502
+Store misses: 9984
+Total cycles: 26651467
+
+./csim 1024 1 16 write-allocate write-through lru < swim.trace 
+
+Total loads: 220668
+Total stores: 82525
+Load hits: 217735
+Load misses: 2933
+Store hits: 71538
+Store misses: 10987
+Total cycles: 14134680
+
+#no write allocate, write through, fifo
+./csim 1024 1 16 no-write-allocate write-through fifo < gcc.trace  
+
+Total loads: 318197
+Total stores: 197486
+Load hits: 309108
+Load misses: 9089
+Store hits: 162581
+Store misses: 34905
+Total cycles: 23864978
+
+./csim 1024 1 16 no-write-allocate write-through fifo < swim.trace 
+Total loads: 220668
+Total stores: 82525
+Load hits: 217402
+Load misses: 3266
+Store hits: 57696
+Store misses: 24829
+Total cycles: 9837264
+
+#no write allocate, write through, lru
+./csim 1024 1 16 no-write-allocate write-through lru < gcc.trace  
+Total loads: 318197
+Total stores: 197486
+Load hits: 309108
+Load misses: 9089
+Store hits: 162581
+Store misses: 34905
+Total cycles: 23864978
+
+./csim 1024 1 16 no-write-allocate write-through lru < swim.trace 
+Total loads: 220668
+Total stores: 82525
+Load hits: 217402
+Load misses: 3266
+Store hits: 57696
+Store misses: 24829
+Total cycles: 9837264
+
+#write allocate, write back, fifo
+./csim 1024 1 16 write-allocate write-back fifo < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 312238
+Load misses: 5959
+Store hits: 187502
+Store misses: 9984
+Total cycles: 10900483
+
+./csim 1024 1 16 write-allocate write-back fifo < swim.trace  
+
+Total loads: 220668
+Total stores: 82525
+Load hits: 217735
+Load misses: 2933
+Store hits: 71538
+Store misses: 10987
+Total cycles: 9580793
+
+#write allocate, write back, lru
+./csim 1024 1 16 write-allocate write-back lru < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 312238
+Load misses: 5959
+Store hits: 187502
+Store misses: 9984
+Total cycles: 10900483
+
+./csim 1024 1 16 write-allocate write-back lru < swim.trace
+Total loads: 220668
+Total stores: 82525
+Load hits: 217735
+Load misses: 2933
+Store hits: 71538
+Store misses: 10987
+Total cycles: 9580793
+
+---------------------------------------------------------------------------
+# Fully set associative - 1 set 1024 blocks 16 bytes
+
+- write through, write allocate
+- FIFO
+./csim 1 1024 16 write-allocate write-through fifo < gcc.trace  
+Total loads: 318197
+Total stores: 197486
+Load hits: 314311
+Load misses: 3886
+Store hits: 188117
+Store misses: 9369
+Total cycles: 25575652
+
+./csim 1 1024 16 write-allocate write-through fifo < swim.trace  
+Total loads: 220668
+Total stores: 82525
+Load hits: 218377
+Load misses: 2291
+Store hits: 71797
+Store misses: 10728
+Total cycles: 13774021
+
+- LRU
+./csim 1 1024 16 write-allocate write-through lru < gcc.trace  
+Total loads: 318197
+Total stores: 197486
+Load hits: 314452
+Load misses: 3745
+Store hits: 188156
+Store misses: 9330
+Total cycles: 25503613
+
+./csim 1 1024 16 write-allocate write-through lru < swim.trace  
+Total loads: 220668
+Total stores: 82525
+Load hits: 219202
+Load misses: 1466
+Store hits: 71814
+Store misses: 10711
+Total cycles: 13437204
+
+- write back, write allocate
+- FIFO
+./csim 1 1024 16 write-allocate write-back fifo < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 314311
+Load misses: 3886
+Store hits: 188117
+Store misses: 9369
+Total cycles: 9586083
+./csim 1 1024 16 write-allocate write-back fifo < swim.trace  
+Total loads: 220668
+Total stores: 82525
+Load hits: 218377
+Load misses: 2291
+Store hits: 71797
+Store misses: 10728
+Total cycles: 9135193
+
+- LRU
+./csim 1 1024 16 write-allocate write-back lru < gcc.trace
+Total loads: 318197
+Total stores: 197486
+Load hits: 314452
+Load misses: 3745
+Store hits: 188156
+Store misses: 9330
+Total cycles: 9472483
+
+./csim 1 1024 16 write-allocate write-back lru < swim.trace 
+Total loads: 220668
+Total stores: 82525
+Load hits: 219202
+Load misses: 1466
+Store hits: 71814
+Store misses: 10711
+Total cycles: 8790793 
+
+- write through, no write allocate
+- FIFO
+./csim 1 1024 16 no-write-allocate write-through fifo < gcc.trace  
+Total loads: 318197
+Total stores: 197486
+Load hits: 311160
+Load misses: 7037
+Store hits: 164196
+Store misses: 33290
+Total cycles: 23045793
+
+./csim 1 1024 16 no-write-allocate write-through fifo < swim.trace  
+Total loads: 220668
+Total stores: 82525
+Load hits: 217963
+Load misses: 2705
+Store hits: 57990
+Store misses: 24535
+Total cycles: 9613158
+
+- LRU
+./csim 1 1024 16 no-write-allocate write-through lru < gcc.trace  
+Total loads: 318197
+Total stores: 197486
+Load hits: 311564
+Load misses: 6633
+Store hits: 164717
+Store misses: 32769
+Total cycles: 22884714
+
+./csim 1 1024 16 no-write-allocate write-through lru < swim.trace  
+Total loads: 220668
+Total stores: 82525
+Load hits: 218038
+Load misses: 2630
+Store hits: 58038
+Store misses: 24487
+Total cycles: 9583206
 
