@@ -29,7 +29,7 @@
 // int check_power_of_two(int n);
 // int handle_errors(cacheSettings cache_settings);
 
-// int main(int args, char* argv[]) {
+int main(int args, char* argv[]) {
 //     if (args > 7 || args < 6) {
 //         fprintf(stderr, "%s\n", "Invalid number of arguments");
 //         return 1;
@@ -75,8 +75,8 @@
 //     }
 //     cache_sim cacheSimulator = cache_sim(cache_settings);
 //     cacheSimulator.process_ops(cacheData);
-//     return 0;
-// }
+    return 0;
+}
 
 // //checks if a number is a power of 2
 // //returns 1 if true, otherwise returns 0.
