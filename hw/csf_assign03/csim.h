@@ -54,10 +54,24 @@ struct cacheAddress {
 };
 
 struct block {
+    block() {
+        this->cache_address.index = 0;
+        this->cache_address.tag = 0;
+        this->is_dirty = 0;
+        this->is_empty = 0;
+        this->counter = 0;
+    }
+    block(cacheAddress address, int dirty, int empty, unsigned count) {
+        this->cache_address.index = address.index;
+        this->cache_address.tag = address.tag;
+        this->is_dirty = dirty;
+        this->is_empty = empty;
+        this->counter = count;
+    }
     cacheAddress cache_address;
     int is_dirty; // 1 is dirty, 0 is not dirty
     int is_empty; // 0 is empty, 1 is not empty 
-    int counter; // LRU tracking/FIFO trakcing
+    unsigned counter; // LRU tracking/FIFO trakcing
 };
 
 struct set {
@@ -109,7 +123,10 @@ class cache_sim {
     void find_evict_block(set* cur_set);
     void process_dirty(block* cur_block);
     void update_lru(set* cur_set, unsigned cur_block_index);
-    int handleEviction(set* cur_set, block cur_block);
+    int handle_eviction(set* cur_set, block cur_block);
+    void store_miss(cacheAddress addr, set* cur_set);
+    void load_miss(cacheAddress addr, set* cur_set);
+    void set_metric_to_zero();
 };
 
 #endif
