@@ -37,6 +37,12 @@ struct Plugin {
     struct Image *(*transform_image)(struct Image *source, void *arg_data);
 };
 
+void * list(Plugin plugin_list[], int num_plugins) {
+    cout << "Loaded " << num_plugins << "plugin(s)" << endl;
+    for (int i = 0; i < num_plugins; i++) {
+        cout << plugin_list[i].get_plugin_name() << ": " << plugin_list[i].get_plugin_desc() << endl;
+    }
+}
 int main(int args, char* argv[]) {
     // No message
 
@@ -75,6 +81,7 @@ int main(int args, char* argv[]) {
                 cout << cur_plugin_details->get_plugin_desc() << endl;
                 *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
                 *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
+                num_plugin++; // move to the next plugin
             }
         }
     }
@@ -82,9 +89,11 @@ int main(int args, char* argv[]) {
     closedir(dir_content);
     
     // List
+    if (0 == strcmp(argv[1], "list")) {
+        list(plugin_list);    
+    }
     // exec command
 
-    // delete plugin_list;
     return 0;
 }
 
