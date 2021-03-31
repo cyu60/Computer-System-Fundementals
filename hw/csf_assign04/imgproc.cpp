@@ -70,7 +70,7 @@ int main(int args, char* argv[]) {
                 *(void **) (cur_plugin_details.transform_image) = dlsym(cur_plugin_details.handle, "transform_image");
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
-                cout << cur_plugin_details.get_plugin_desc << endl;
+                cout << cur_plugin_details.get_plugin_desc() << endl;
             }
         }
     }
