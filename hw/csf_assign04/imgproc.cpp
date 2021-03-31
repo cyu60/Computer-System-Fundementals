@@ -59,10 +59,11 @@ int main(int args, char* argv[]) {
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
             if (file_extension.compare(".so") == 0) {
-                cout << "cur plugin: " << cur_name.substr(cur_name.size() - 3) << endl; // check .so
+                cout << "cur plugin: " << cur_name << endl; // check .so
                 cur_plugin_details = plugin_list[num_plugin];
                 const char* plugin_path = (string(plugin_dir) + "/" + cur_name).c_str();
                 cur_plugin_details.handle = dlopen(plugin_path, RTLD_LAZY); // lazy loading
+                cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
             }
         }
     }
