@@ -64,13 +64,14 @@ int main(int args, char* argv[]) {
                 
                 string plugin_dir_string = plugin_dir;
                 cur_plugin_details.handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
+                cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
+                cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
+
                 *(void **) (cur_plugin_details.get_plugin_name) = dlsym(cur_plugin_details.handle, "get_plugin_name");
+                cout << cur_plugin_details.get_plugin_name() << endl;
                 *(void **) (cur_plugin_details.get_plugin_desc) = dlsym(cur_plugin_details.handle, "get_plugin_desc");
                 *(void **) (cur_plugin_details.parse_arguments) = dlsym(cur_plugin_details.handle, "parse_arguments");
                 *(void **) (cur_plugin_details.transform_image) = dlsym(cur_plugin_details.handle, "transform_image");
-                cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
-                cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
-                cout << cur_plugin_details.get_plugin_desc() << endl;
             }
         }
     }
