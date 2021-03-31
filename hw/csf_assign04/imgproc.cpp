@@ -67,6 +67,7 @@ int main(int args, char* argv[]) {
                 cur_plugin_details.handle = dlopen(plugin_path, RTLD_LAZY); // lazy loading
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << plugin_path << endl; // check .so
+                cout << "path: " << (string(plugin_dir)).c_str << endl; // check .so
             }
         }
     }
