@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <dlfcn.h>
 
 // using std::cin;
 using std::cout;
