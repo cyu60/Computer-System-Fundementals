@@ -69,7 +69,7 @@ int main(int args, char* argv[]) {
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << plugin_path << endl; // check .so
                 cout << "path: " << plugin_dir_string << endl; // check .so
-                cout << "path: " << ("/" + cur_name).c_str() << endl; // check .so
+                cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
             }
         }
     }
