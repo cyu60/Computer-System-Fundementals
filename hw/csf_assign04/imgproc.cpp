@@ -49,12 +49,18 @@ int main(int args, char* argv[]) {
     
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
+
+    Plugin plugin_list[5]; // max 5
+    int num_plugin = 0;
+    Plugin cur_plugin_details;
     while (cur_plugin = readdir(dir_content)) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
             if (file_extension.compare(".so") == 0) {
                 cout << "cur plugin: " << cur_name.substr(cur_name.size() - 3) << endl; // check .so
+                cur_plugin_details = plugin_list[num_plugin];
+                cur_plugin_details.handle = dlopen(plugin_dir + "/" + cur_name, RTLD_LAZY); // lazy loading
             }
         }
     }
