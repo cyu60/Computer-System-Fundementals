@@ -24,8 +24,7 @@ using std::vector;
 #define IS_EMPTY 0
 #define IS_NOT_EMPTY 1
 
-struct traceLine 
-{
+struct traceLine {
     /* The first field is either l or s depending on whether the processor is “loading” from or “storing” to memory. */
     char operation;
     /* The second field is a 32-bit memory address given in hexadecimal; 
@@ -33,8 +32,7 @@ struct traceLine
     unsigned address;
 };
 
-struct cacheSettings
-{
+struct cacheSettings {
     /*number of sets in the cache (a positive power-of-2) */
     unsigned sets;
     // /* number of blocks in each set (a positive power-of-2)
@@ -49,22 +47,34 @@ struct cacheSettings
     int eviction; 
 };
 
-struct cacheAddress
-{
+struct cacheAddress {
     unsigned index;
     unsigned tag; 
     // Offset is not used and is ignored
 };
 
 struct block {
+    block() {
+        this->cache_address.index = 0;
+        this->cache_address.tag = 0;
+        this->is_dirty = 0;
+        this->is_empty = 0;
+        this->counter = 0;
+    }
+    block(cacheAddress address, int dirty, int empty, unsigned count) {
+        this->cache_address.index = address.index;
+        this->cache_address.tag = address.tag;
+        this->is_dirty = dirty;
+        this->is_empty = empty;
+        this->counter = count;
+    }
     cacheAddress cache_address;
     int is_dirty; // 1 is dirty, 0 is not dirty
     int is_empty; // 0 is empty, 1 is not empty 
-    int counter; // LRU tracking/FIFO trakcing
+    unsigned counter; // LRU tracking/FIFO trakcing
 };
 
-struct set
-{
+struct set {
     /* data */
     vector<block> blocks;
     // LRU - previously accessed block
@@ -113,7 +123,10 @@ class cache_sim {
     void find_evict_block(set* cur_set);
     void process_dirty(block* cur_block);
     void update_lru(set* cur_set, unsigned cur_block_index);
-    int handleEviction(set* cur_set, block cur_block);
+    int handle_eviction(set* cur_set, block cur_block);
+    void store_miss(cacheAddress addr, set* cur_set);
+    void load_miss(cacheAddress addr, set* cur_set);
+    void set_metric_to_zero();
 };
 
 #endif

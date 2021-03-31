@@ -28,40 +28,23 @@ using std::hex;
 
 int check_power_of_two(int n);
 int handle_errors(cacheSettings cache_settings);
+cacheSettings readInput(char* argv[]);
 
+/*
+ * Main function of the program. 
+ *
+ * Parameters:
+ *   args - number of arguments provided by the user.
+ *   argv[] - Arguments provided by the user in an array.
+ * Returns:
+ *   int representing state of the program. 
+ */
 int main(int args, char* argv[]) {
     if (args > 7 || args < 6) {
         fprintf(stderr, "%s\n", "Invalid number of arguments");
         return 1;
     }
-    cacheSettings cache_settings;
-    cache_settings.sets = atoi(argv[1]); 
-    cache_settings.blocks = atoi(argv[2]);
-    cache_settings.bytes = atoi(argv[3]);
-    if (0 == strcmp(argv[4], "write-allocate")) {
-        cache_settings.store_strat = WRITE_ALLOC;
-    } else if(0 == strcmp(argv[4], "no-write-allocate")) {
-	    cache_settings.store_strat = NO_WRITE_ALLOC;
-    } else {
-        cout << "unrecognized input" << endl;
-        return 1;
-    }
-    if (0 == strcmp(argv[5], "write-back")) {
-        cache_settings.write_strat = WRITE_BACK;
-    } else if(0 == strcmp(argv[5], "write-through")) {
-	    cache_settings.write_strat = WRITE_THRU;
-    } else {
-        cout << "unrecognized input" << endl;
-        return 1;
-    }
-    if (0 == strcmp(argv[6], "lru")) {
-        cache_settings.eviction = LRU;
-    } else if(0 == strcmp(argv[6], "fifo")) {
-	    cache_settings.eviction = FIFO;
-    } else {        
-        cout << "unrecognized input" << endl;
-        return 1;
-    }
+    cacheSettings cache_settings = readInput(argv);
     if (handle_errors(cache_settings) == 1) {
         fprintf(stderr, "%s\n", "Invalid Input");
         return 1;
@@ -78,8 +61,52 @@ int main(int args, char* argv[]) {
     return 0;
 }
 
-//checks if a number is a power of 2
-//returns 1 if true, otherwise returns 0.
+/*
+ * Reads input data and adds it to cacheSettings struct. 
+ *
+ * Parameters:
+ *   argv[] - raw input data from the user.
+ * 
+ * Return:
+ *   CacheSettings - Struct with all the input added. 
+ */
+cacheSettings readInput(char* argv[]) {
+    cacheSettings cache_settings;
+    cache_settings.sets = atoi(argv[1]); 
+    cache_settings.blocks = atoi(argv[2]);
+    cache_settings.bytes = atoi(argv[3]);
+    if (0 == strcmp(argv[4], "write-allocate")) {
+        cache_settings.store_strat = WRITE_ALLOC;
+    } else if(0 == strcmp(argv[4], "no-write-allocate")) {
+	    cache_settings.store_strat = NO_WRITE_ALLOC;
+    } else {
+        exit(1);
+    }
+    if (0 == strcmp(argv[5], "write-back")) {
+        cache_settings.write_strat = WRITE_BACK;
+    } else if(0 == strcmp(argv[5], "write-through")) {
+	    cache_settings.write_strat = WRITE_THRU;
+    } else {
+        exit(1);
+    }
+    if (0 == strcmp(argv[6], "lru")) {
+        cache_settings.eviction = LRU;
+    } else if(0 == strcmp(argv[6], "fifo")) {
+	    cache_settings.eviction = FIFO;
+    } else {        
+        exit(1);
+    }
+    return cache_settings;
+}
+
+/*
+ * Checks if a number is a power of two. 
+ *
+ * Parameters:
+ *   n - the numbe to be checked for power of two. 
+ * Return:
+ *   An integer. 1 if it is a power of 2. 0 if it is not a power of two. 
+ */
 int check_power_of_two(int n) {
     if(n<=0) { return 0; }
     return (n & (n - 1)) == 0; // Compare the bits should all be different
@@ -90,6 +117,14 @@ int check_power_of_two(int n) {
     return 1;
 }
 
+/*
+ * Checks if all input is valid. 
+ *
+ * Parameters:
+ *   cache_settings - A struct with all the input data from the user. 
+ * Returns:
+ *   an integer that shows if an errro occured or not. 1, error occurred. 0, no error occurred. 
+ */ 
 int handle_errors(cacheSettings cache_settings) {
     if (check_power_of_two(cache_settings.sets) == 0) {
         fprintf(stderr, "%s\n", "Sets is not a power of 2.");
