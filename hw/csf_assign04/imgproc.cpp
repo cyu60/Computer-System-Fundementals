@@ -28,6 +28,13 @@ using std::endl;
 
 // int check_power_of_two(int n);
 // int handle_errors(cacheSettings cache_settings);
+struct Plugin {
+    void *handle;
+    const char *(*get_plugin_name)(void);
+    const char *(*get_plugin_desc)(void);
+    void *(*parse_arguments)(int num_args, char *args[]);
+    struct Image *(*transform_image)(struct Image *source, void *arg_data);
+};
 
 int main(int args, char* argv[]) {
     // No message
@@ -43,10 +50,11 @@ int main(int args, char* argv[]) {
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
     while (cur_plugin = readdir(dir_content)) {
-        cout << "cur plugin: " << cur_plugin->d_name << endl;
+        cout << "cur plugin: " << cur_plugin->d_name << endl; // check .so
+        cout << "cur plugin: " << cur_plugin->d_type << endl; // check .so
     }
 
-
+    closedir(dir_content);
     
     // List
     // exec command
