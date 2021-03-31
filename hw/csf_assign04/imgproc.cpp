@@ -44,10 +44,7 @@ void print_instructions() {
 //         "Commands are:
 //   list
 //   exec <plugin> <input img> <output img> [<plugin args...>]
-    cout << "Usage: imgproc <command> [<command args...>] \
-Commands are: \
-  list \
-  exec <plugin> <input img> <output img> [<plugin args...>]" << endl;
+    cout << "Usage: imgproc <command> [<command args...>]\nCommands are:\n  list\n  exec <plugin> <input img> <output img> [<plugin args...>]" << endl;
 }
 
 void list(Plugin plugin_list[], int num_plugins) {
