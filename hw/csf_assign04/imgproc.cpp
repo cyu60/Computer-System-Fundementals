@@ -63,7 +63,7 @@ int main(int args, char* argv[]) {
                 cur_plugin_details = plugin_list[num_plugin];
                 // const char* plugin_path = (cur_name).c_str();
                 string plugin_dir_string = plugin_dir;
-                const char* plugin_path[100] = (plugin_dir_string + "/" + cur_name).c_str();
+                const char* plugin_path = (plugin_dir_string + "/" + cur_name).c_str();
                 // const char* plugin_path = (string(plugin_dir) + "/" + cur_name).c_str();
                 cur_plugin_details.handle = dlopen("./plugins/swapbg.so", RTLD_LAZY); // lazy loading
                 // cur_plugin_details.handle = dlopen(plugin_path, RTLD_LAZY); // lazy loading
