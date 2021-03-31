@@ -37,7 +37,7 @@ struct Plugin {
     struct Image *(*transform_image)(struct Image *source, void *arg_data);
 };
 
-void * list(Plugin plugin_list[], int num_plugins) {
+void list(Plugin plugin_list[], int num_plugins) {
     cout << "Loaded " << num_plugins << "plugin(s)" << endl;
     for (int i = 0; i < num_plugins; i++) {
         cout << plugin_list[i].get_plugin_name() << ": " << plugin_list[i].get_plugin_desc() << endl;
