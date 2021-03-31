@@ -51,7 +51,8 @@ int main(int args, char* argv[]) {
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
 
-    Plugin plugin_list[5]; // max 5
+    Plugin * plugin_list;
+    plugin_list = new Plugin [5]; // max 5
     int num_plugin = 0;
     Plugin cur_plugin_details;
     while (cur_plugin = readdir(dir_content)) {
@@ -67,7 +68,7 @@ int main(int args, char* argv[]) {
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
 
-                *(void **) (cur_plugin_details.get_plugin_name) = dlsym(cur_plugin_details.handle, "get_plugin_name");
+                *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details.handle, "get_plugin_name");
                 cout << cur_plugin_details.get_plugin_name() << endl;
                 *(void **) (cur_plugin_details.get_plugin_desc) = dlsym(cur_plugin_details.handle, "get_plugin_desc");
                 *(void **) (cur_plugin_details.parse_arguments) = dlsym(cur_plugin_details.handle, "parse_arguments");
@@ -125,6 +126,7 @@ int main(int args, char* argv[]) {
 //     }
 //     cache_sim cacheSimulator = cache_sim(cache_settings);
 //     cacheSimulator.process_ops(cacheData);
+    delete plugin_list;
     return 0;
 }
 
