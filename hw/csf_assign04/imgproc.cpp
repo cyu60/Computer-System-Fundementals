@@ -39,9 +39,14 @@ struct Plugin {
 };
 
 void print_instructions() {
-    cout << "Usage: imgproc <command> [<command args...>]
-Commands are:
-  list
+//     const char* text =
+//         "Usage: imgproc <command> [<command args...>]"
+//         "Commands are:
+//   list
+//   exec <plugin> <input img> <output img> [<plugin args...>]
+    cout << "Usage: imgproc <command> [<command args...>] \
+Commands are: \
+  list \
   exec <plugin> <input img> <output img> [<plugin args...>]" << endl;
 }
 
