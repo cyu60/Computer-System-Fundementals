@@ -64,15 +64,15 @@ int main(int args, char* argv[]) {
                 cur_plugin_details = plugin_list[num_plugin];
                 
                 string plugin_dir_string = plugin_dir;
-                cur_plugin_details.handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
-                cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
+                cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
+                cout << "cur plugin: " << cur_plugin_details->handle << endl; // check .so
                 cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
 
-                *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details.handle, "get_plugin_name");
-                cout << cur_plugin_details.get_plugin_name() << endl;
-                *(void **) (cur_plugin_details.get_plugin_desc) = dlsym(cur_plugin_details.handle, "get_plugin_desc");
-                *(void **) (cur_plugin_details.parse_arguments) = dlsym(cur_plugin_details.handle, "parse_arguments");
-                *(void **) (cur_plugin_details.transform_image) = dlsym(cur_plugin_details.handle, "transform_image");
+                *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details->handle, "get_plugin_name");
+                cout << cur_plugin_details->get_plugin_name() << endl;
+                // *(void **) (cur_plugin_details.get_plugin_desc) = dlsym(cur_plugin_details.handle, "get_plugin_desc");
+                // *(void **) (cur_plugin_details.parse_arguments) = dlsym(cur_plugin_details.handle, "parse_arguments");
+                // *(void **) (cur_plugin_details.transform_image) = dlsym(cur_plugin_details.handle, "transform_image");
             }
         }
     }
@@ -81,6 +81,11 @@ int main(int args, char* argv[]) {
     
     // List
     // exec command
+
+    delete plugin_list;
+    return 0;
+}
+
 //     if (args > 7 || args < 6) {
 //         fprintf(stderr, "%s\n", "Invalid number of arguments");
 //         return 1;
@@ -126,9 +131,9 @@ int main(int args, char* argv[]) {
 //     }
 //     cache_sim cacheSimulator = cache_sim(cache_settings);
 //     cacheSimulator.process_ops(cacheData);
-    delete plugin_list;
-    return 0;
-}
+
+
+
 
 // //checks if a number is a power of 2
 // //returns 1 if true, otherwise returns 0.
