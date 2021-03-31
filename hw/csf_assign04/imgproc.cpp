@@ -62,12 +62,13 @@ int main(int args, char* argv[]) {
                 cout << "cur plugin: " << cur_name << endl; // check .so
                 cur_plugin_details = plugin_list[num_plugin];
                 // const char* plugin_path = (cur_name).c_str();
-                const char* plugin_path = ("/" + cur_name).c_str();
+                string plugin_dir_string = plugin_dir;
+                const char* plugin_path = (plugin_dir_string + "/" + cur_name).c_str();
                 // const char* plugin_path = (string(plugin_dir) + "/" + cur_name).c_str();
                 cur_plugin_details.handle = dlopen(plugin_path, RTLD_LAZY); // lazy loading
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << plugin_path << endl; // check .so
-                cout << "path: " << (string(plugin_dir)).c_str << endl; // check .so
+                // cout << "path: " << (string(plugin_dir) << endl; // check .so
             }
         }
     }
