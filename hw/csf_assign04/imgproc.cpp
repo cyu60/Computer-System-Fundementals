@@ -65,7 +65,7 @@ int main(int args, char* argv[]) {
                 string plugin_dir_string = plugin_dir;
                 const char* plugin_path = (plugin_dir_string + "/" + cur_name).c_str();
                 // const char* plugin_path = (string(plugin_dir) + "/" + cur_name).c_str();
-                cur_plugin_details.handle = dlopen("./plugins/swapbg.so"); // lazy loading
+                cur_plugin_details.handle = dlopen("./plugins/swapbg.so", RTLD_LAZY); // lazy loading
                 // cur_plugin_details.handle = dlopen(plugin_path, RTLD_LAZY); // lazy loading
                 cout << "cur plugin: " << cur_plugin_details.handle << endl; // check .so
                 cout << "path: " << plugin_path << endl; // check .so
