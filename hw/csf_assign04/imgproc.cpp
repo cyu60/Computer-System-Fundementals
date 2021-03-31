@@ -51,8 +51,9 @@ int main(int args, char* argv[]) {
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
 
-    Plugin * plugin_list;
-    plugin_list = new Plugin [5]; // max 5
+    Plugin plugin_list [5]; // max 5
+    // Plugin * plugin_list;
+    // plugin_list = new Plugin [5]; // max 5
     int num_plugin = 0;
     Plugin * cur_plugin_details;
     while (cur_plugin = readdir(dir_content)) {
@@ -82,7 +83,7 @@ int main(int args, char* argv[]) {
     // List
     // exec command
 
-    delete plugin_list;
+    // delete plugin_list;
     return 0;
 }
 
