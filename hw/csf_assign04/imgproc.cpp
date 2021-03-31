@@ -54,7 +54,7 @@ int main(int args, char* argv[]) {
     Plugin * plugin_list;
     plugin_list = new Plugin [5]; // max 5
     int num_plugin = 0;
-    Plugin cur_plugin_details;
+    Plugin * cur_plugin_details;
     while (cur_plugin = readdir(dir_content)) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
