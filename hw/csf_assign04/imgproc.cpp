@@ -51,7 +51,7 @@ int main(int args, char* argv[]) {
     dirent * cur_plugin;
     while (cur_plugin = readdir(dir_content)) {
         string cur_name = cur_plugin->d_name;
-        cout << "cur plugin: " << cur_name.substr(cur_name.size - 3) << endl; // check .so
+        cout << "cur plugin: " << cur_name.substr(cur_name.size() - 3) << endl; // check .so
     }
 
     closedir(dir_content);
