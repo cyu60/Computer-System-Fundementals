@@ -59,8 +59,9 @@ void list(Plugin plugin_list[], int num_plugins) {
 
 int main(int args, char* argv[]) {
     // No message
-    if (args == 0) {
+    if (args == 1) {
         print_instructions();
+        return 0;
     }
     // load plugins -- https://piazza.com/class/kkblbt3kbvz36i?cid=656
     const char* plugin_dir = getenv("PLUGIN_DIR");
