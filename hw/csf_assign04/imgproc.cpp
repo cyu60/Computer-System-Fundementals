@@ -41,7 +41,7 @@ int main(int args, char* argv[]) {
     // No message
 
     // load plugins -- https://piazza.com/class/kkblbt3kbvz36i?cid=656
-    string plugin_dir = getenv("PLUGIN_DIR");
+    const char* plugin_dir = getenv("PLUGIN_DIR");
     if (plugin_dir == NULL) {
     // use default plugin directory
     plugin_dir = "./plugins";
