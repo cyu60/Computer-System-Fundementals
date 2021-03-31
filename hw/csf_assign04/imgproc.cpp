@@ -58,8 +58,6 @@ int main(int args, char* argv[]) {
     dirent * cur_plugin;
 
     Plugin plugin_list [5]; // max 5
-    // Plugin * plugin_list;
-    // plugin_list = new Plugin [5]; // max 5
     int num_plugin = 0;
     Plugin * cur_plugin_details;
     while (cur_plugin = readdir(dir_content)) {
@@ -90,7 +88,7 @@ int main(int args, char* argv[]) {
     
     // List
     if (0 == strcmp(argv[1], "list")) {
-        list(plugin_list);    
+        list(plugin_list, num_plugin);    
     }
     // exec command
 
