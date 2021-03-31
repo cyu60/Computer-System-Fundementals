@@ -52,8 +52,10 @@ int main(int args, char* argv[]) {
     while (cur_plugin = readdir(dir_content)) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
-            cout << "cur plugin: " << cur_name.substr(cur_name.size() - 3) << endl; // check .so
-
+            string file_extension = cur_name.substr(cur_name.size() - 3);
+            if (file_extension.compare(".so") == 0) {
+                cout << "cur plugin: " << cur_name.substr(cur_name.size() - 3) << endl; // check .so
+            }
         }
     }
 
