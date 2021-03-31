@@ -12,13 +12,13 @@
 #include <tuple>
 #include <sstream> 
 
-#include <bitset>
-
-// #include "csim.h"
+#include <stdlib.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 // using std::cin;
-// using std::cout;
-// using std::endl; 
+using std::cout;
+using std::endl; 
 // using std::string;   
 // using std::vector;
 // using std::map;
@@ -30,6 +30,26 @@
 // int handle_errors(cacheSettings cache_settings);
 
 int main(int args, char* argv[]) {
+    // No message
+
+    // load plugins -- https://piazza.com/class/kkblbt3kbvz36i?cid=656
+    const char *plugin_dir = getenv("PLUGIN_DIR");
+    if (plugin_dir == NULL) {
+    // use default plugin directory
+    plugin_dir = "./plugins";
+    }
+    cout << "plugin dir:" << plugin_dir << endl;
+    
+    DIR * dir_content = opendir(plugin_dir);
+    dirent * cur_plugin;
+    while (cur_plugin = readdir(dir_content)) {
+        cout << "cur plugin: " << cur_plugin->d_name << endl;
+    }
+
+
+    
+    // List
+    // exec command
 //     if (args > 7 || args < 6) {
 //         fprintf(stderr, "%s\n", "Invalid number of arguments");
 //         return 1;
