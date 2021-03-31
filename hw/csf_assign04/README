@@ -1,0 +1,6 @@
+-  [[March 31st, 2021]]
+    - Started working on the driver program
+    - Can parse plugins into array
+    - list functions is working well
+    - instructions can be printed
+    - Need to work on exec and handling left
