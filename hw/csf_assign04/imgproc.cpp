@@ -19,7 +19,7 @@
 // using std::cin;
 using std::cout;
 using std::endl; 
-// using std::string;   
+using std::string;   
 // using std::vector;
 // using std::map;
 // using std::tuple;
@@ -50,8 +50,8 @@ int main(int args, char* argv[]) {
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
     while (cur_plugin = readdir(dir_content)) {
-        cout << "cur plugin: " << cur_plugin->d_name << endl; // check .so
-        cout << "cur plugin: " << cur_plugin->d_type << endl; // check .so
+        string cur_name = cur_plugin->d_name;
+        cout << "cur plugin: " << cur_name.substr(cur_name.size - 3) << endl; // check .so
     }
 
     closedir(dir_content);
