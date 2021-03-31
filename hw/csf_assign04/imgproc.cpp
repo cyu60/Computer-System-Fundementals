@@ -62,7 +62,7 @@ int main(int args, char* argv[]) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
             if (file_extension.compare(".so") == 0) {
                 cout << "cur plugin: " << cur_name << endl; // check .so
-                cur_plugin_details = plugin_list[num_plugin];
+                cur_plugin_details = &plugin_list[num_plugin];
                 
                 string plugin_dir_string = plugin_dir;
                 cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
