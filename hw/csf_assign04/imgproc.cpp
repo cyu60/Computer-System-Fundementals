@@ -17,6 +17,8 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <iomanip>
+#include "image.h"
+#include "pnglite.h"
 
 // using std::cin;
 using std::cout;
@@ -39,12 +41,12 @@ struct Plugin {
 };
 
 void print_instructions() {
-//     const char* text =
-//         "Usage: imgproc <command> [<command args...>]"
-//         "Commands are:
-//   list
-//   exec <plugin> <input img> <output img> [<plugin args...>]
     cout << "Usage: imgproc <command> [<command args...>]\nCommands are:\n  list\n  exec <plugin> <input img> <output img> [<plugin args...>]" << endl;
+}
+
+void error(string error_message) {
+    cout << "Error: " << error_message << endl;
+    print_instructions();
 }
 
 void list(Plugin plugin_list[], int num_plugins) {
@@ -58,7 +60,7 @@ int main(int args, char* argv[]) {
     // No message
     if (args == 1) {
         print_instructions();
-        return 0;
+        return 0; // missing command line arg return non-0??
     }
     // load plugins -- https://piazza.com/class/kkblbt3kbvz36i?cid=656
     const char* plugin_dir = getenv("PLUGIN_DIR");
@@ -66,7 +68,7 @@ int main(int args, char* argv[]) {
     // use default plugin directory
     plugin_dir = "./plugins";
     }
-    cout << "plugin dir:" << plugin_dir << endl;
+    cout << "plugin dir: " << plugin_dir << endl;
     
     DIR * dir_content = opendir(plugin_dir);
     dirent * cur_plugin;
@@ -74,23 +76,23 @@ int main(int args, char* argv[]) {
     Plugin plugin_list [5]; // max 5
     int num_plugin = 0;
     Plugin * cur_plugin_details;
-    while (cur_plugin = readdir(dir_content)) {
+    while ((cur_plugin = readdir(dir_content))) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
-            if (file_extension.compare(".so") == 0) {
-                cout << "cur plugin: " << cur_name << endl; // check .so
+            if (file_extension.compare(".so") == 0) { // check .so
+                cout << "cur plugin: " << cur_name << endl; 
                 cur_plugin_details = &plugin_list[num_plugin];
                 
                 string plugin_dir_string = plugin_dir;
                 cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
-                cout << "cur plugin: " << cur_plugin_details->handle << endl; // check .so
+                cout << "cur plugin: " << cur_plugin_details->handle << endl; // check exists
                 cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
 
                 *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details->handle, "get_plugin_name");
-                cout << cur_plugin_details->get_plugin_name() << endl;
+                // cout << cur_plugin_details->get_plugin_name() << endl;
                 *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
-                cout << cur_plugin_details->get_plugin_desc() << endl;
+                // cout << cur_plugin_details->get_plugin_desc() << endl;
                 *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
                 *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
                 num_plugin++; // move to the next plugin
@@ -102,11 +104,27 @@ int main(int args, char* argv[]) {
     
     // List
     if (0 == strcmp(argv[1], "list")) {
-
         list(plugin_list, num_plugin);
     }
-    // exec command
+    // exec command -- need to watch out for ERROR handling!!
+    if (0 == strcmp(argv[1], "exec")) {
+        Image* input = img_read_png(argv[3]);
+        // check for null
+        if (input == NULL) {
+            error("input image not found");
+            return 1;
+        }
 
+        // find the plugin
+
+        // parse args
+
+        // transform image
+
+        // return data
+
+        // img_write_png(argv[4])
+    }
     return 0;
 }
 
