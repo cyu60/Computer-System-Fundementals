@@ -77,8 +77,8 @@ int main(int args, char* argv[]) {
                 cout << cur_plugin_details->get_plugin_name() << endl;
                 *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
                 cout << cur_plugin_details->get_plugin_desc() << endl;
-                *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
-                *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
+                // *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
+                // *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
                 num_plugin++; // move to the next plugin
             }
         }
