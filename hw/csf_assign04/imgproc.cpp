@@ -138,7 +138,7 @@ int main(int args, char* argv[]) {
         cout << selected_plugin.get_plugin_name() << endl;
 
         // parse args
-        int num_non_args = 4;
+        int num_non_args = 5;
         for (int i = num_non_args; i < args; i++) {
             argv[i-num_non_args] = argv[i]; // copy to earlier entries
         }
