@@ -127,17 +127,48 @@ int main(int args, char* argv[]) {
 
         // find the plugin
         int selected_plugin_idx = find_plugin(argv[2], plugin_list, num_plugin); // should return a shallow copy?
+        
+        // check for error
+        if (selected_plugin_idx == -1) {
+            error("plugin not found");
+            return 1;
+        } 
+
         Plugin selected_plugin = plugin_list[selected_plugin_idx]; // should return a shallow copy?
         cout << selected_plugin.get_plugin_name() << endl;
 
         // parse args
+        int num_non_args = 4;
+        for (int i = num_non_args; i < args; i++) {
+            argv[i-num_non_args] = argv[i]; // copy to earlier entries
+        }
+        void* arg_object = selected_plugin.parse_arguments(args - num_non_args, argv);
+
+        // check for null
+        if (arg_object == NULL) {
+            error("argments not recognized");
+            return 1;
+        }
 
         // transform image
+        Image* output = selected_plugin.transform_image(input, arg_object);
+        
+        // check for null
+        if (output == NULL) {
+            error("image cannot be generated");
+            return 1;
+        }
 
         // return data
+        int image_output_success = img_write_png(output, argv[4]);
 
-        // img_write_png(argv[4])
+        // check for error
+        if (image_output_success == 0) { // 0 is not successuful
+            error("image cannot be created");
+            return 1;
+        }
     }
+
     return 0;
 }
 
