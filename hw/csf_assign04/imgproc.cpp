@@ -56,7 +56,7 @@ void list(Plugin plugin_list[], int num_plugins) {
     }
 }
 
-Pulgin find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
+Plugin find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
     for (int i = 0; i < num_plugins; i++) {
         if (0 == strcmp(plugin_name, plugin_list[i].get_plugin_name())) {
             return plugin_list[i];
