@@ -77,18 +77,16 @@ int main(int args, char* argv[]) {
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
             if (file_extension.compare(".so") == 0) { // check .so
-                cout << "cur plugin: " << cur_name << endl; 
+                // cout << "cur plugin: " << cur_name << endl; 
                 cur_plugin_details = &plugin_list[num_plugin];
                 
                 string plugin_dir_string = plugin_dir;
                 cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
-                cout << "cur plugin: " << cur_plugin_details->handle << endl; // check exists
-                cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
+                // cout << "cur plugin: " << cur_plugin_details->handle << endl; // check exists
+                // cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
 
                 *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details->handle, "get_plugin_name");
-                // cout << cur_plugin_details->get_plugin_name() << endl;
                 *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
-                // cout << cur_plugin_details->get_plugin_desc() << endl;
                 *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
                 *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
                 num_plugin++; // move to the next plugin
