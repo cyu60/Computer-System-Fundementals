@@ -4,3 +4,4 @@
     - list functions is working well
     - instructions can be printed
     - Need to work on exec and handling left
+    - Maybe we should create a seperate header file??

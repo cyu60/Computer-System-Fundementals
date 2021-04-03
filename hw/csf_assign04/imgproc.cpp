@@ -56,6 +56,16 @@ void list(Plugin plugin_list[], int num_plugins) {
     }
 }
 
+Pulgin find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
+    for (int i = 0; i < num_plugins; i++) {
+        if (0 == strcmp(plugin_name, plugin_list[i].get_plugin_name())) {
+            return plugin_list[i];
+        }
+        // cout << plugin_list[i].get_plugin_name() << ": " << plugin_list[i].get_plugin_desc() << endl;
+    }
+    return NULL;
+}
+
 int main(int args, char* argv[]) {
     // No message
     if (args == 1) {
@@ -116,6 +126,8 @@ int main(int args, char* argv[]) {
         }
 
         // find the plugin
+        Plugin selected_plugin = find_plugin(argv[2], plugin_list, num_plugin); // should return a shallow copy?
+        cout << selected_plugin.get_plugin_name() << endl;
 
         // parse args
 
