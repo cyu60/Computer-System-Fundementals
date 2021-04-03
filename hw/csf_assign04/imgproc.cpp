@@ -142,6 +142,7 @@ int main(int args, char* argv[]) {
         for (int i = num_non_args; i < args; i++) {
             argv[i-num_non_args] = argv[i]; // copy to earlier entries
         }
+        cout << args - num_non_args << endl;
         void* arg_object = selected_plugin.parse_arguments(args - num_non_args, argv);
 
         // check for null
