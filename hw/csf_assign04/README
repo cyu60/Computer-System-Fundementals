@@ -5,3 +5,10 @@
     - instructions can be printed
     - Need to work on exec and handling left
     - Maybe we should create a seperate header file??
+
+- - [[April 3rd, 2021]]
+    - Finished coding up the driver
+    - Need to test out for different `plugins`
+    - Need to test out for alternative `plugin routes`
+    - Need to tidy up the code style? -- refactor to make main smaller
+        - Consider having separate header and cpp files

@@ -39,7 +39,7 @@ plugins/swapbg.so : swapbg.o
 # TODO: add targets for other plugins
 
 # E.g.,
-#plugins/mirrorh.so : plugins/mirrorh.o
+plugins/mirrorh.so : plugins/mirrorh.o
 
 clean :
 	rm -f *.o imgproc plugins/*.so depend.mak
