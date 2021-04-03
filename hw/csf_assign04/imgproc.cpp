@@ -119,14 +119,14 @@ int main(int args, char* argv[]) {
         } 
 
         Plugin selected_plugin = plugin_list[selected_plugin_idx]; // should return a shallow copy?
-        cout << selected_plugin.get_plugin_name() << endl;
+        // cout << selected_plugin.get_plugin_name() << endl;
 
         // parse args
         int num_non_args = 5;
         for (int i = num_non_args; i < args; i++) {
             argv[i-num_non_args] = argv[i]; // copy to earlier entries
         }
-        cout << args - num_non_args << endl;
+        // cout << args - num_non_args << endl;
         void* arg_object = selected_plugin.parse_arguments(args - num_non_args, argv);
 
         // check for null

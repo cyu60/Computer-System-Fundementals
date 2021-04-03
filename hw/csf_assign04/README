@@ -7,8 +7,14 @@
     - Maybe we should create a seperate header file??
 
 - - [[April 3rd, 2021]]
-    - Finished coding up the driver
-    - Need to test out for different `plugins`
-    - Need to test out for alternative `plugin routes`
-    - Need to tidy up the code style? -- refactor to make main smaller
-        - Consider having separate header and cpp files
+- Finished coding up the driver
+- Need to test out for different `plugins`
+    - Plugins can be recognized -- name and description can be generated
+    - Tested out the mirror files, `mirrorh` truncates the file
+- Need to tidy up the code style? -- refactor to make main smaller
+    - Consider having separate header and cpp files
+    - [601.229 (S21): CSF coding style guidelines (jhucsf.github.io)](https://jhucsf.github.io/spring2021/assign/style.html)
+    - 30-50 non-comment lines of code: it __might__ be reasonable for one or two functions in your program to be this long (perhaps your main function), but deductions for over-complexity are a possibility
+    - More than 50 non-comment lines of code: expect a style deduction
+
+
