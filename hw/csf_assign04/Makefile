@@ -11,10 +11,10 @@ DRIVER_C_SRCS = pnglite.c image.c
 DRIVER_CXX_SRCS = imgproc.cpp
 
 # C plugin source files
-PLUGIN_C_SRCS = swapbg.c mirrorh.c
+PLUGIN_C_SRCS = swapbg.c mirrorh.c mirrorv.c tile.c expose.c
 
 # C++ plugin source files
-PLUGIN_CXX_SRCS = mirrorv.cpp tile.cpp expose.cpp
+PLUGIN_CXX_SRCS = 
 # PLUGIN_CXX_SRCS =  mirrorh.cpp mirrorv.cpp tile.cpp expose.cpp
 
 DRIVER_OBJS = $(DRIVER_C_SRCS:%.c=%.o) $(DRIVER_CXX_SRCS:%.cpp=%.o)
