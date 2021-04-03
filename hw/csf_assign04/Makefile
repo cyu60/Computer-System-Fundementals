@@ -27,8 +27,8 @@ PLUGINS = $(PLUGIN_C_SRCS:%.c=plugins/%.so) $(PLUGIN_CXX_SRCS:%.cpp=%.o)
 	$(CXX) $(CXXFLAGS) -c $*.cpp -o $*.o
 
 plugins/%.so : %.o
-	mkdir -p plugins
-	$(CXX) -o plugins/$*.so -shared $*.o
+	mkdir -p pluginsx
+	$(CXX) -o pluginsx/$*.so -shared $*.o
 
 all : imgproc $(PLUGINS)
 
