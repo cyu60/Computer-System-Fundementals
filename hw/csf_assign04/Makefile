@@ -39,8 +39,10 @@ plugins/swapbg.so : swapbg.o
 
 # TODO: add targets for other plugins
 
-# E.g.,
 plugins/mirrorh.so : mirrorh.o
+plugins/mirrorv.so : mirrorv.o
+plugins/expose.so : expose.o
+plugins/tile.so : tile.o
 # plugins/mirrorh.so : plugins/mirrorh.o
 
 clean :
