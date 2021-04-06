@@ -153,6 +153,7 @@ int main(int args, char* argv[]) {
             return 1;
         }
     }
+    // else not recognized 
 
     return 0;
 }

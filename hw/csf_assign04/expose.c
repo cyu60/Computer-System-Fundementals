@@ -5,7 +5,7 @@
 struct Arguments {
 	// This plugin doesn't accept any command line arguments;
 	// just define a single dummy field.
-	double dummy;
+	double expose_factor;
 };
 
 const char *get_plugin_name(void) {
@@ -16,14 +16,19 @@ const char *get_plugin_desc(void) {
 	return "adjust the intensity of all pixels";
 }
 
-// TODO!!
 void *parse_arguments(int num_args, char *args[]) {
-	(void) args; // this is just to avoid a warning about an unused parameter
+	// (void) args; // this is just to avoid a warning about an unused parameter
 
-	if (num_args != 0) {
+	if (num_args != 1) {
 		return NULL;
 	}
-	return calloc(1, sizeof(struct Arguments));
+
+	// Arguments* expose_args = (Arguments *) malloc(sizeof(struct Arguments));
+	Arguments* expose_args = calloc(1, sizeof(struct Arguments));
+	expose_args->expose_factor = args[0];
+
+	return expose_args;
+	// return calloc(1, sizeof(struct Arguments));
 }
 
 static uint32_t expose(uint32_t pix, double exposeNumber) {
@@ -45,7 +50,7 @@ struct Image *transform_image(struct Image *source, void *arg_data) {
 
 
     for (unsigned i = 0; i < num_pixels; i++) {
-		out->data[i] = expose(source->data[i], args->dummy);
+		out->data[i] = expose(source->data[i], args->expose_factor);
 	}
 
 	free(args);
