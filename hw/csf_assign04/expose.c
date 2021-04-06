@@ -4,6 +4,8 @@
 #include <string.h>
 #include <ctype.h>
 
+#include <stdio.h>
+
 struct Arguments {
 	double expose_factor;
 };
