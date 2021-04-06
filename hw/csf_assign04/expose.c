@@ -24,7 +24,11 @@ void *parse_arguments(int num_args, char *args[]) {
 
 	struct Arguments * expose_args = calloc(1, sizeof(struct Arguments));
 	expose_args->expose_factor = atof(args[0]);
-	// Need to perform error check??? atof would return 0.0
+	
+	// Check true 0 -- atof would return 0.0 if not recognized
+	if (args[0][0] != '0' && expose_args->expose_factor == 0) {
+		return NULL;
+	}
 
 	return expose_args;
 }
