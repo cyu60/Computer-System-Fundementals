@@ -1,10 +1,8 @@
 
 #include <stdlib.h>
 #include "image_plugin.h"
-
+#include <string.h>
 struct Arguments {
-	// This plugin doesn't accept any command line arguments;
-	// just define a single dummy field.
 	double expose_factor;
 };
 
@@ -21,14 +19,20 @@ void *parse_arguments(int num_args, char *args[]) {
 	if (num_args != 1) {
 		return NULL;
 	}
+	// Check is all digits
+	for (int i = 0; i < strlen(args[0]); i++) {
+		if (isdigit(args[0][i]) == 0 && args[0][i != '.']) { // check is digit or floating point
+			return NULL;
+		}
+	}
 
 	struct Arguments * expose_args = calloc(1, sizeof(struct Arguments));
 	expose_args->expose_factor = atof(args[0]);
 	
-	// Check true 0 -- atof would return 0.0 if not recognized
-	if (args[0][0] != '0' && expose_args->expose_factor == 0) {
-		return NULL;
-	}
+	// // Check true 0 -- atof would return 0.0 if not recognized
+	// if (args[0][0] != '0' && expose_args->expose_factor == 0) {
+	// 	return NULL;
+	// }
 
 	return expose_args;
 }

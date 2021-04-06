@@ -35,6 +35,10 @@ void error(string error_message) {
     print_instructions();
 }
 
+void runtime_error(string error_message) {
+    cout << "Error: " << error_message << endl;
+}
+
 void list(Plugin plugin_list[], int num_plugins) {
     cout << "Loaded " << num_plugins << " plugin(s)" << endl;
     for (int i = 0; i < num_plugins; i++) {
@@ -100,12 +104,18 @@ int main(int args, char* argv[]) {
     if (0 == strcmp(argv[1], "list")) {
         list(plugin_list, num_plugin);
     }
+
+    // error
+    if (args < 4) {
+        error("insufficient args")
+        return 1;
+    }
     // exec command -- need to watch out for ERROR handling!!
     if (0 == strcmp(argv[1], "exec")) {
         Image* input = img_read_png(argv[3]);
         // check for null
         if (input == NULL) {
-            error("input image not found");
+            runtime_error("input image not found");
             return 1;
         }
 
