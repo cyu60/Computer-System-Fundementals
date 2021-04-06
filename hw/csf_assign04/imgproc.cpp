@@ -120,6 +120,7 @@ int main(int args, char* argv[]) {
         }
 
         // success return 0
+        return 0;
     }
     // else invalid args
     error("invalid args");
