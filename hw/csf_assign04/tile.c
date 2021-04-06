@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 #include "image_plugin.h"
+#include <string.h>
+#include <ctype.h>
 
 struct Arguments {
 	int num_tiles;
