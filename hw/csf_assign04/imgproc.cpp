@@ -131,7 +131,7 @@ int main(int args, char* argv[]) {
 
         // check for null
         if (arg_object == NULL) {
-            error("argments not recognized");
+            error("argments malformed or not recognized");
             return 1;
         }
 

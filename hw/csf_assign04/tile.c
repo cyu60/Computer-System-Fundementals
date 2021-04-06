@@ -7,9 +7,7 @@
 #include "image_plugin.h"
 
 struct Arguments {
-	// This plugin doesn't accept any command line arguments;
-	// just define a single dummy field.
-	int dummy;
+	int num_tiles;
 };
 
 const char *get_plugin_name(void) {
@@ -21,14 +19,15 @@ const char *get_plugin_desc(void) {
 }
 
 void *parse_arguments(int num_args, char *args[]) {
-	(void) args; // this is just to avoid a warning about an unused parameter
-
 	if (num_args != 1) {
 		return NULL;
 	}
 
-    //TODO: Check return value for tile parse argument function. 
-	return calloc(1, sizeof(struct Arguments)); //unsure of what this should return 
+	struct Arguments * tile_args = calloc(1, sizeof(struct Arguments));
+	tile_args->num_tiles = atoi(args[0]);
+	// Need to perform error check??? atof would return 0.0
+
+	return tile_args;
 }
 
 

@@ -17,18 +17,16 @@ const char *get_plugin_desc(void) {
 }
 
 void *parse_arguments(int num_args, char *args[]) {
-	// (void) args; // this is just to avoid a warning about an unused parameter
 
 	if (num_args != 1) {
 		return NULL;
 	}
 
-	// Arguments* expose_args = (Arguments *) malloc(sizeof(struct Arguments));
 	struct Arguments * expose_args = calloc(1, sizeof(struct Arguments));
 	expose_args->expose_factor = atof(args[0]);
+	// Need to perform error check??? atof would return 0.0
 
 	return expose_args;
-	// return calloc(1, sizeof(struct Arguments));
 }
 
 static uint32_t expose(uint32_t pix, double exposeNumber) {
