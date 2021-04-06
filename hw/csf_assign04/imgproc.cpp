@@ -56,7 +56,7 @@ int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
     return -1;
 }
 
-void read_plugins(const char* plugin_dir, DIR * dir_content, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* &num_plugin) {
+void read_plugins(const char* plugin_dir, DIR * dir_content, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* num_plugin) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
@@ -73,7 +73,7 @@ void read_plugins(const char* plugin_dir, DIR * dir_content, dirent * cur_plugin
                 *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
                 *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
                 *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
-                *num_plugin++; // move to the next plugin
+                *num_plugin = *num_plugin+1; // move to the next plugin
             }
         }
 }
