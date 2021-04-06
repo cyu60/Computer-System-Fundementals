@@ -24,7 +24,7 @@ void *parse_arguments(int num_args, char *args[]) {
 	// Check is all digits
 	for (unsigned i = 0; i < strlen(args[0]); i++) {
 		if (isdigit(args[0][i]) == 0 && args[0][i] != '.') { // check is digit or floating point
-		printf("%c\n", args[0]);
+		printf("%c\n", args[0][i]);
 			return NULL;
 		}
 	}
