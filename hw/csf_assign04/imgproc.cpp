@@ -56,13 +56,13 @@ int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
     return -1;
 }
 
-void read_plugins(DIR * dir_content, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* &num_plugin) {
+void read_plugins(const char* plugin_dir, DIR * dir_content, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* &num_plugin) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
             if (file_extension.compare(".so") == 0) { // check .so
                 // cout << "cur plugin: " << cur_name << endl; 
-                cur_plugin_details = &plugin_list[num_plugin];
+                cur_plugin_details = &plugin_list[*num_plugin];
                 
                 string plugin_dir_string = plugin_dir;
                 cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
@@ -89,7 +89,7 @@ int main(int args, char* argv[]) {
     const char* plugin_dir = getenv("PLUGIN_DIR");
     if (plugin_dir == NULL) {
     // use default plugin directory
-    plugin_dir = "./plugins";
+        plugin_dir = "./plugins";
     }
     // cout << "plugin dir: " << plugin_dir << endl;
     
@@ -101,7 +101,7 @@ int main(int args, char* argv[]) {
     int num_plugin = 0;
 
     while ((cur_plugin = readdir(dir_content))) {
-        read_plugins(dir_content, cur_plugin, plugin_list, cur_plugin_details, &num_plugin);
+        read_plugins(plugin_dir, dir_content, cur_plugin, plugin_list, cur_plugin_details, &num_plugin);
     }
     // while ((cur_plugin = readdir(dir_content))) {
     //     string cur_name = cur_plugin->d_name;
