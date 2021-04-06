@@ -56,7 +56,7 @@ int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
     return -1;
 }
 
-void read_plugins(Plugin plugin_list[], Plugin* cur_plugin_details, int* &num_plugin) {
+void read_plugins(DIR * dir_content, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* &num_plugin) {
         string cur_name = cur_plugin->d_name;
         if (cur_name.size() > 3) {
             string file_extension = cur_name.substr(cur_name.size() - 3);
@@ -101,7 +101,7 @@ int main(int args, char* argv[]) {
     int num_plugin = 0;
 
     while ((cur_plugin = readdir(dir_content))) {
-        read_plugins(plugin_list, cur_plugin_details, &num_plugin);
+        read_plugins(dir_content, cur_plugin, plugin_list, cur_plugin_details, &num_plugin);
     }
     // while ((cur_plugin = readdir(dir_content))) {
     //     string cur_name = cur_plugin->d_name;
