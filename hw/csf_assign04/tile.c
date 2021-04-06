@@ -20,9 +20,16 @@ void *parse_arguments(int num_args, char *args[]) {
 		return NULL;
 	}
 
+
+	// Check is all digits
+	for (unsigned i = 0; i < strlen(args[0]); i++) {
+		if (isdigit(args[0][i]) == 0) { // check is digit
+			return NULL;
+		}
+	}
+
 	struct Arguments * tile_args = calloc(1, sizeof(struct Arguments));
 	tile_args->num_tiles = atoi(args[0]);
-	// Need to perform error check??? atof would return 0.0
 
 	return tile_args;
 }

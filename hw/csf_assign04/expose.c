@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <stdio.h>
+// #include <stdio.h>
 
 struct Arguments {
 	double expose_factor;
@@ -26,7 +26,7 @@ void *parse_arguments(int num_args, char *args[]) {
 	// Check is all digits
 	for (unsigned i = 0; i < strlen(args[0]); i++) {
 		if (isdigit(args[0][i]) == 0 && args[0][i] != '.') { // check is digit or floating point
-		printf("%c\n", args[0][i]);
+		// printf("%c\n", args[0][i]);
 			return NULL;
 		}
 	}
@@ -34,11 +34,6 @@ void *parse_arguments(int num_args, char *args[]) {
 	struct Arguments * expose_args = calloc(1, sizeof(struct Arguments));
 	expose_args->expose_factor = atof(args[0]);
 	
-	// // Check true 0 -- atof would return 0.0 if not recognized
-	// if (args[0][0] != '0' && expose_args->expose_factor == 0) {
-	// 	return NULL;
-	// }
-
 	return expose_args;
 }
 
