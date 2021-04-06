@@ -54,11 +54,10 @@ int main(int args, char* argv[]) {
     dirent * cur_plugin;
 
     Plugin plugin_list[15]; // max 15 according to piazza
-    Plugin * cur_plugin_detail = NULL;
     int num_plugin = 0;
 
     while ((cur_plugin = readdir(dir_content))) {
-        read_plugins(plugin_dir, cur_plugin, plugin_list, cur_plugin_details, &num_plugin);
+        read_plugins(plugin_dir, cur_plugin, plugin_list, &num_plugin);
     }
 
     closedir(dir_content);
@@ -123,7 +122,7 @@ int main(int args, char* argv[]) {
         // success return 0
     }
     // else invalid args
-    error("invalid args")
+    error("invalid args");
     return 1;
 }
 
@@ -157,24 +156,26 @@ int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
     return -1;
 }
 
-void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* num_plugin) {
-        string cur_name = cur_plugin->d_name;
-        if (cur_name.size() > 3) {
-            string file_extension = cur_name.substr(cur_name.size() - 3);
-            if (file_extension.compare(".so") == 0) { // check .so
-                // cout << "cur plugin: " << cur_name << endl; 
-                cur_plugin_details = &plugin_list[*num_plugin];
-                
-                string plugin_dir_string = plugin_dir;
-                cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
-                // cout << "cur plugin: " << cur_plugin_details->handle << endl; // check exists
-                // cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
+void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], int* num_plugin) {
+    Plugin * cur_plugin_detail;
 
-                *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details->handle, "get_plugin_name");
-                *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
-                *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
-                *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
-                *num_plugin = *num_plugin+1; // move to the next plugin
-            }
+    string cur_name = cur_plugin->d_name;
+    if (cur_name.size() > 3) {
+        string file_extension = cur_name.substr(cur_name.size() - 3);
+        if (file_extension.compare(".so") == 0) { // check .so
+            // cout << "cur plugin: " << cur_name << endl; 
+            cur_plugin_details = &plugin_list[*num_plugin];
+            
+            string plugin_dir_string = plugin_dir;
+            cur_plugin_details->handle = dlopen((plugin_dir_string + "/" + cur_name).c_str(), RTLD_LAZY); // lazy loading
+            // cout << "cur plugin: " << cur_plugin_details->handle << endl; // check exists
+            // cout << "path: " << (plugin_dir_string + "/" + cur_name).c_str() << endl; // check .so
+
+            *(void **) (&cur_plugin_details->get_plugin_name) = dlsym(cur_plugin_details->handle, "get_plugin_name");
+            *(void **) (&cur_plugin_details->get_plugin_desc) = dlsym(cur_plugin_details->handle, "get_plugin_desc");
+            *(void **) (&cur_plugin_details->parse_arguments) = dlsym(cur_plugin_details->handle, "parse_arguments");
+            *(void **) (&cur_plugin_details->transform_image) = dlsym(cur_plugin_details->handle, "transform_image");
+            *num_plugin = *num_plugin+1; // move to the next plugin
         }
+    }
 }
