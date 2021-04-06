@@ -31,7 +31,7 @@ void error(string error_message);
 void runtime_error(string error_message);
 void list(Plugin plugin_list[], int num_plugins);
 int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins);
-void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], Plugin* cur_plugin_details, int* num_plugin);
+void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], int* num_plugin);
 
 
 
