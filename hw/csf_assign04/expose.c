@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "image_plugin.h"
 #include <string.h>
+#include <ctype.h>
+
 struct Arguments {
 	double expose_factor;
 };
@@ -20,7 +22,7 @@ void *parse_arguments(int num_args, char *args[]) {
 		return NULL;
 	}
 	// Check is all digits
-	for (int i = 0; i < strlen(args[0]); i++) {
+	for (unsigned i = 0; i < strlen(args[0]); i++) {
 		if (isdigit(args[0][i]) == 0 && args[0][i != '.']) { // check is digit or floating point
 			return NULL;
 		}
