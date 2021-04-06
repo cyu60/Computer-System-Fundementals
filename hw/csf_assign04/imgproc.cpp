@@ -157,7 +157,7 @@ int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins) {
 }
 
 void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], int* num_plugin) {
-    Plugin * cur_plugin_detail;
+    Plugin * cur_plugin_details;
 
     string cur_name = cur_plugin->d_name;
     if (cur_name.size() > 3) {
