@@ -49,8 +49,8 @@ struct Image *transform_image(struct Image *source, void *arg_data) {
 	}
 
     unsigned i,j = 0;
-    for (i = 0; i < source->height/2; i++) {
-        for (j = 0; j < source->width; j++) {
+    for (i = 0; i < source->height; i++) {
+        for (j = 0; j < source->width/2; j++) {
             out->data[i*source->width + j] = source->data[i*source->width + source->width - j -1];
             out->data[i*source->width + source->width - j - 1] = source->data[i*source->width + j];
         }

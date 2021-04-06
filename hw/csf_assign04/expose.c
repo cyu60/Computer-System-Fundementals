@@ -5,7 +5,7 @@
 struct Arguments {
 	// This plugin doesn't accept any command line arguments;
 	// just define a single dummy field.
-	int dummy;
+	double dummy;
 };
 
 const char *get_plugin_name(void) {
@@ -26,10 +26,16 @@ void *parse_arguments(int num_args, char *args[]) {
 	return calloc(1, sizeof(struct Arguments));
 }
 
+static uint32_t expose(uint32_t pix, double exposeNumber) {
+	uint8_t r, g, b, a;
+	img_unpack_pixel(pix, &r, &g, &b, &a);
+	return img_pack_pixel(exposeNumber * r, exposeNumber * g, exposeNumber * b, a);
+}
 
 struct Image *transform_image(struct Image *source, void *arg_data) {
-	void *args = arg_data;
+	struct Arguments *args = arg_data;
 
+	int num_pixels = source->height * source->width;
 	// Allocate a result Image
 	struct Image *out = img_create(source->width, source->height);
 	if (!out) {
@@ -37,14 +43,10 @@ struct Image *transform_image(struct Image *source, void *arg_data) {
 		return NULL;
 	}
 
-	unsigned i, j = 0;
 
-    for (i = 0; i < source->height/2; i++) {
-        for (j = 0; j < source->width; j++) {
-            out->data[i*source->width + j] = source->data[(source->height - i - 1) * source->width + j];
-            out->data[(source->height - i - 1)*source->width + j] = source->data[i * source->width + j];
-        }
-    }
+    for (unsigned i = 0; i < num_pixels; i++) {
+		out->data[i] = expose(source->data[i], args->dummy);
+	}
 
 	free(args);
 
