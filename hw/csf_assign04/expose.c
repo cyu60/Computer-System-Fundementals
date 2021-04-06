@@ -25,7 +25,7 @@ void *parse_arguments(int num_args, char *args[]) {
 
 	// Arguments* expose_args = (Arguments *) malloc(sizeof(struct Arguments));
 	struct Arguments * expose_args = calloc(1, sizeof(struct Arguments));
-	expose_args->expose_factor = args[0];
+	expose_args->expose_factor = atof(args[0]);
 
 	return expose_args;
 	// return calloc(1, sizeof(struct Arguments));
