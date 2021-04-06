@@ -107,7 +107,7 @@ int main(int args, char* argv[]) {
 
     // error
     if (args < 4) {
-        error("insufficient args")
+        error("insufficient args");
         return 1;
     }
     // exec command -- need to watch out for ERROR handling!!
