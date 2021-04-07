@@ -1,3 +1,6 @@
+//Mehul Agarwal, magarw13
+//Chinat Yu, cyu60
+
 /*  pnglite.c - pnglite library
     For conditions of distribution and use, see copyright notice in pnglite.h
 */

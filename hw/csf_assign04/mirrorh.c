@@ -1,3 +1,6 @@
+//Mehul Agarwal, magarw13
+//Chinat Yu, cyu60
+
 //
 // Example plugin: it just swaps the blue and green color component
 // values for each pixel in the source image.
