@@ -33,10 +33,6 @@ void list(Plugin plugin_list[], int num_plugins);
 int find_plugin(char* plugin_name, Plugin plugin_list[], int num_plugins);
 void read_plugins(const char* plugin_dir, dirent * cur_plugin, Plugin plugin_list[], int* num_plugin);
 
-
-
-
-
 int main(int args, char* argv[]) {
     // No message
     if (args == 1) {
