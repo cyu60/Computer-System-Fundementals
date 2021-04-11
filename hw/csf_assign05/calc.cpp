@@ -6,19 +6,29 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string.h>
+#include <cctype>
 
 #include <sys/types.h>
 #include <map>
+#include <vector>
+#include <sstream>      // std::stringstream
+
+#define SUCCESS 1
+#define FAILURE 0
 
 using std::map;
 using std::cout;
 using std::endl;
+using std::stoi;
 
+
+using std::vector;
+using std::string;
 
 struct Calc {
 private:
     // fields
-    map<char, int> vars;
+    map<string, int> vars;
 
 public:
     // public member functions
@@ -27,9 +37,114 @@ public:
 
     int evalExpr(const std::string &expr, int &result);
 
-// private:
+private:
     // private member functions
+    std::vector<std::string> tokenize(const std::string &expr);
+    int getOperand(string s);
+    int evalOp(string op, int left, int right, int &result);
+
 };
+
+std::vector<std::string> Calc::tokenize(const std::string &expr) {
+    std::vector<std::string> vec;
+    std::stringstream s(expr);
+
+    std::string tok;
+    while (s >> tok) {
+        vec.push_back(tok);
+    }
+
+    return vec;
+}
+int Calc::getOperand(string s) {
+    try
+        {
+            return stoi(s);
+        }
+        catch(const std::invalid_argument& ia)
+        {
+            // check if var exist?
+            return this->vars.at(s);
+        }
+}
+
+int Calc::evalOp(string op, int left, int right, int &result) {
+
+    if (op.compare("+") == 0)
+        result = left + right;
+    if (op.compare("-") == 0)
+        result = left - right;
+    if (op.compare("*") == 0)
+        result = left * right;
+    if (op.compare("/") == 0) {
+        if (right == 0) {
+            throw "division by 0";
+        }
+        result = left / right;
+    }
+
+    // cout << result << endl;
+    return result;
+}
+
+int Calc::evalExpr(const std::string &expr, int &result) {
+    // tokenise the expression
+    vector<string> tokens = this->tokenize(expr);
+
+    try
+    {
+    // check expression type
+    // operand
+    if (tokens.size() == 1) {
+            result = this->getOperand(tokens.at(0));
+            return SUCCESS;
+    }
+
+    // var = operand (Assignment)
+    if (tokens.size() == 3) {
+        if (tokens.at(1) == "=") {
+            // get the operand
+            result = this->getOperand(tokens.at(2));
+            // save to var
+            this->vars[tokens.at(0)] = result;
+            return SUCCESS; 
+        } else {
+            // operand op operand
+            // get the op
+            string op = tokens.at(1);
+            // get left, right
+            int left = this->getOperand(tokens.at(0));
+            int right = this->getOperand(tokens.at(2));
+            // eval op
+            this->evalOp(op, left, right, result);
+            return SUCCESS;
+        }
+    }
+
+    // var = operand op operand
+    if (tokens.size() == 5) {
+        // get the op
+        string op = tokens.at(3);
+        // get left, right
+        int left = this->getOperand(tokens.at(2));
+        int right = this->getOperand(tokens.at(4));
+        // eval op
+        this->evalOp(op, left, right, result);
+
+        // save to var
+        this->vars[tokens.at(0)] = result; 
+        // cout << result << endl;
+        return SUCCESS;
+    }
+    
+    }
+    // catch (const std::out_of_range& oor) {
+    catch (...) { // include out of range and fp
+        return FAILURE;
+    } 
+
+    return FAILURE;
+}
 
 Calc::Calc() {
     cout << "create calc" << endl;
@@ -38,11 +153,6 @@ Calc::Calc() {
 Calc::~Calc() {
     cout << "destroy calc" << endl;
 }
-
-int Calc::evalExpr(const std::string &expr, int &result) {
-    return 0;
-}
-
 
 extern "C" struct Calc *calc_create(void) {
     return new Calc();
@@ -55,7 +165,3 @@ extern "C" void calc_destroy(struct Calc *calc) {
 extern "C" int calc_eval(struct Calc *calc, const char *expr, int *result) {
     return calc->evalExpr(expr, *result);
 }
-
-// struct Calc *calc_create(void);
-// void calc_destroy(struct Calc *calc);
-// int calc_eval(struct Calc *calc, const char *expr, int *result);
