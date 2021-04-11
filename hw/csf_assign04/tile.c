@@ -49,8 +49,8 @@ struct Image *transform_image(struct Image *source, void *arg_data) {
     }
     int limitX = (source->width % args->num_tiles) * (source->width / args->num_tiles + 1);
     int limitY = (source->height % args->num_tiles) * (source->height / args->num_tiles + 1);
-    int src1, src2;
 	int i, j = 0;
+	int src1, src2;
     for (i = 0; i < (int)source->height; i++) {
       for (j = 0; j < (int)source->width; j++){
 		src1 = cordinate_conversion(i, limitY, source->height / args->num_tiles, args->num_tiles);
@@ -63,7 +63,7 @@ struct Image *transform_image(struct Image *source, void *arg_data) {
 }
 
 static int cordinate_conversion(int point, int limit_point, int tile_size, int factor){
-  int source;
+	int source;
 	if(point >= limit_point) {
 		source = ((point - limit_point) % (tile_size)) * factor;
     } else {
