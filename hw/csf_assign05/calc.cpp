@@ -39,6 +39,11 @@ Calc::~Calc() {
     cout << "destroy calc" << endl;
 }
 
+int Calc::evalExpr(const std::string &expr, int &result) {
+    return 0;
+}
+
+
 extern "C" struct Calc *calc_create(void) {
     return new Calc();
 }
