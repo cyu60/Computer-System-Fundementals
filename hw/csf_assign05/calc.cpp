@@ -8,11 +8,17 @@
 #include <string.h>
 
 #include <sys/types.h>
+#include <map>
+
+using std::map;
+using std::cout;
+using std::endl;
 
 
 struct Calc {
-// private:
+private:
     // fields
+    map<char, int> vars;
 
 public:
     // public member functions
@@ -24,6 +30,14 @@ public:
 // private:
     // private member functions
 };
+
+Calc::Calc() {
+    cout << "create calc" << endl;
+}
+
+Calc::~Calc() {
+    cout << "destroy calc" << endl;
+}
 
 extern "C" struct Calc *calc_create(void) {
     return new Calc();
