@@ -1,3 +1,6 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+
 /*
  * TCTest - a tiny unit test framework for C
  * Copyright (c) 2013,2019-2020 David H. Hovemeyer <david.hovemeyer@gmail.com>

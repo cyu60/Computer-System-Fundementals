@@ -1,3 +1,6 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+
 /* 
  * csapp.c - Functions for the CS:APP3e book
  *

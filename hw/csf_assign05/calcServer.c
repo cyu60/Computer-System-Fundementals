@@ -1,3 +1,6 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+
 #include <stdio.h>      /* for snprintf */
 #include "csapp.h"
 #include "calc.h"

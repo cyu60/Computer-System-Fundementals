@@ -1,4 +1,7 @@
 # HW6 Makefile
+# //magarw13 - Mehul Agarwal
+# //cyu60 - Chinat Yu
+
 # The *only* change you should make is choosing the appropriate
 # dependencies for calc.o according to whether you implemented
 # the calculator in C or C++.
