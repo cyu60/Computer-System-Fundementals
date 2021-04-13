@@ -1,3 +1,6 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+
 #ifndef CALC_H
 #define CALC_H
 

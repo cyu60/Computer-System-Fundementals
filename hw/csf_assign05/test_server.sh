@@ -1,3 +1,6 @@
+# //magarw13 - Mehul Agarwal
+# //cyu60 - Chinat Yu
+
 #! /bin/bash
 
 if [ $# -ne 3 ]; then
