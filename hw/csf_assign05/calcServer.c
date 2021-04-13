@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 	}
 	int open_indicator = Open_listenfd(argv[1]);
 	if (open_indicator < 0) {
-		fprintf("%s\m", "Error opening the server.");
+		fprintf("%s\n", "Error opening the server.");
 		return 1;
 	}
 	struct calc* calc_server = calc_create();
