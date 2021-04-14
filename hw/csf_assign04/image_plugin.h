@@ -1,3 +1,6 @@
+//Mehul Agarwal, magarw13
+//Chinat Yu, cyu60
+
 //
 // This header file defines functions that image plugins must implement.
 //

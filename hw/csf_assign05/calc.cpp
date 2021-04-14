@@ -34,7 +34,6 @@ public:
     // public member functions
     Calc();
     ~Calc();
-
     int evalExpr(const std::string &expr, int &result);
 
 private:

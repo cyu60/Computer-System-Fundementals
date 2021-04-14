@@ -1,3 +1,6 @@
+//Mehul Agarwal, magarw13
+//Chinat Yu, cyu60
+
 /*  pnglite.h - Interface for pnglite library
 	Copyright (c) 2007 Daniel Karling
 

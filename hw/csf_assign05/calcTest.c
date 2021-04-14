@@ -1,3 +1,6 @@
+//magarw13 - Mehul Agarwal
+//cyu60 - Chinat Yu
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "tctest.h"

@@ -1,5 +1,7 @@
 /*
  * Interactive calculator program
+ * //magarw13 - Mehul Agarwal
+ * //cyu60 - Chinat Yu
  *
  * This should work correctly once you have implemented
  * and tested your calc_ functions

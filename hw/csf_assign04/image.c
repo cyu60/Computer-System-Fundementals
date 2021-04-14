@@ -1,3 +1,6 @@
+//Mehul Agarwal, magarw13
+//Chinat Yu, cyu60
+
 //
 // Image data type and support for reading/writing PNG files
 // See image.h for documentation
