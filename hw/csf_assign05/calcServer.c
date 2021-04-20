@@ -5,8 +5,19 @@
 #include "csapp.h"
 #include "calc.h"
 #include "stdbool.h"
+#include "pthread.h"
+#include <sys/types.h>
 
 #define LINEBUF_SIZE 1024
+
+//for each client connneciton, server will start a new thread. 
+//with each thread that you're detaching, have a worker method that is called everytime a thread is detached
+//worker method handles metadata that does the actual chatting with the client
+//variables are consistent across client-connections
+struct ThreadData {
+	struct Calc *calc;
+	int client_fd;
+};
 
 bool chat_with_client(struct Calc *calc, int infd, int outfd) {
 	rio_t in;
@@ -50,34 +61,44 @@ bool chat_with_client(struct Calc *calc, int infd, int outfd) {
 	return true;
 }
 
+void * worker_function(void *arg) {
+	struct ThreadData *info = arg;
+	pthread_detach(pthread_self());
+	chat_with_client(info->calc, info->client_fd, info->client_fd);
+	close(info->client_fd);
+	free(info);
+	return NULL;
+}
+
 int main(int argc, char **argv) {
 	/* TODO: implement this program */
 	if (argc != 2) {
-		fprintf("%s\n", "Invalid number of arguments");
+		printf("%s\n", "Invalid number of arguments");
 		return 1;
 	}
-	if (argv[1] < 1024) {
-		fprintf("%s\n", "Invalid number for server port");
+	int server_number = atoi(argv[1]);
+	if (server_number < 1024) {
+		printf("%s\n", "Invalid number for server port");
 		return 1;	
-	} else {
-		int serverNumber = argv[1];
 	}
 	int open_indicator = Open_listenfd(argv[1]);
 	if (open_indicator < 0) {
-		fprintf("%s\n", "Error opening the server.");
+		printf("%s\n", "Error opening the server.");
 		return 1;
 	}
-	struct calc* calc_server = calc_create();
+	struct Calc* calc_server = calc_create();
 	while (true) {
 		int client_indicator = Accept(open_indicator, NULL, NULL); 
 		if (client_indicator < 0){
-      		fprintf("%s\n", "Couldn't create a connection with the client.");
+      		printf("%s\n", "Couldn't create a connection with the client.");
     	}
-		int result = chat_with_client(calc_server, client_indicator, client_indicator);
-		if (!result) {
-			return 0;
+		struct ThreadData *info = malloc(sizeof(struct ThreadData));
+		info->client_fd = client_indicator;
+		info->calc = calc_server;
+		pthread_t thr_id;
+		if (pthread_create(&thr_id, NULL, worker_function, info) != 0) {
+			printf("%s\n", "pthread_create failed.");
 		}
-		close(client_indicator);
 	}
 	close(open_indicator);
 	calc_destroy(calc_server);
