@@ -29,6 +29,7 @@ struct Calc {
 private:
     // fields
     map<string, int> vars;
+    pthread_mutex_t lock;
 
 public:
     // public member functions
@@ -102,10 +103,14 @@ int Calc::evalExpr(const std::string &expr, int &result) {
     // var = operand (Assignment)
     if (tokens.size() == 3) {
         if (tokens.at(1) == "=") {
+            pthread_mutex_lock(&lock);
             // get the operand
             result = this->getOperand(tokens.at(2));
-            // save to var
+            // save to var -- use mut lock!!!
             this->vars[tokens.at(0)] = result;
+            pthread_mutex_unlock(&lock);
+
+
             return SUCCESS; 
         } else {
             // operand op operand
@@ -124,6 +129,9 @@ int Calc::evalExpr(const std::string &expr, int &result) {
     if (tokens.size() == 5) {
         // get the op
         string op = tokens.at(3);
+
+        // lock vars
+        pthread_mutex_lock(&lock);
         // get left, right
         int left = this->getOperand(tokens.at(2));
         int right = this->getOperand(tokens.at(4));
@@ -131,8 +139,8 @@ int Calc::evalExpr(const std::string &expr, int &result) {
         this->evalOp(op, left, right, result);
 
         // save to var
-        this->vars[tokens.at(0)] = result; 
-        // cout << result << endl;
+        this->vars[tokens.at(0)] = result;
+        pthread_mutex_unlock(&lock);        // cout << result << endl;
         return SUCCESS;
     }
     
@@ -146,11 +154,11 @@ int Calc::evalExpr(const std::string &expr, int &result) {
 }
 
 Calc::Calc() {
-    cout << "create calc" << endl;
+    pthread_mutex_init(&lock, NULL);
 }
 
 Calc::~Calc() {
-    cout << "destroy calc" << endl;
+    pthread_mutex_destroy(&lock);
 }
 
 extern "C" struct Calc *calc_create(void) {

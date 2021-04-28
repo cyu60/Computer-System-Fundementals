@@ -2,6 +2,5 @@
 //cyu60 - Chinat Yu
 
 We spend quite a bit of time understanding the concepts and questions together. 
-We both worked together on the implementation of the calculator and the server. Chinat focused more on the calculator. On the other hand, Mehul focused nmore on the server. Both helped each other in debugging the programs. 
-This assignment was easier than the previous ones so didn't take as long. 
+We both worked together on the implementation of the multi-thread calculator. Chinat focused more on ensuring the syncronization of variables. Mehul focused more on the worker function. Both helped each other in debugging the programs. 
 Overall, we have a really productive time learning and working with each other.
