@@ -76,8 +76,7 @@ int main(int argc, char **argv) {
 		printf("%s\n", "Invalid number of arguments");
 		return 1;
 	}
-	int server_number = atoi(argv[1]);
-	if (server_number < 1024) {
+	if (atoi(argv[1]) < 1024) {
 		printf("%s\n", "Invalid number for server port");
 		return 1;	
 	}
